@@ -1,4 +1,4 @@
-import os, sqlite3, secrets, hmac, html, uuid
+import os, sqlite3, secrets, hmac, html, uuid, math
 from datetime import datetime, timezone, date
 from contextlib import contextmanager
 from urllib.parse import urljoin
@@ -20,7 +20,8 @@ app.add_middleware(SessionMiddleware, secret_key=SECRET, same_site='lax', https_
 
 @contextmanager
 def database():
-    con = sqlite3.connect(DB)
+    con = sqlite3.connect(DB, timeout=15)
+    con.execute('PRAGMA busy_timeout=15000')
     con.row_factory = sqlite3.Row
     try:
         yield con
@@ -29,6 +30,8 @@ def database():
         con.close()
 
 with database() as con:
+    con.execute('PRAGMA journal_mode=WAL')
+    con.execute('PRAGMA synchronous=FULL')
     con.execute('''CREATE TABLE IF NOT EXISTS accounts (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT UNIQUE NOT NULL,
@@ -79,7 +82,12 @@ td:first-child,th:first-child{border-radius:0}td:last-child,th:last-child{border
 @media(max-width:900px){.shell{display:block}.sidebar{position:relative;width:auto;height:auto;padding:12px 14px;border-left:0;border-bottom:1px solid #263248}.sidebrand{padding:11px 13px}.sidenav{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}.side-bottom{display:none}.workspace{margin-right:0;width:100%;padding:16px 12px}}
 @media(max-width:560px){.workspace{padding:10px 8px}.top{padding:14px}.card{padding:14px}.stats{grid-template-columns:1fr}.stat{padding:14px}.sidenav a{padding:9px;font-size:12px}}
 </style></head><body><div class="shell"><aside class="sidebar"><div class="sidebrand"><strong>POMP NET MOHAMMAD</strong><small>SUPER JINX · CONTROL CENTER</small></div><div class="side-label">منوی مدیریت</div><nav class="sidenav"><a class="active" href="/"><span class="side-icon">⌂</span>داشبورد اصلی</a><a href="/#accounts"><span class="side-icon">▤</span>مدیریت حساب‌ها</a><a href="/#create"><span class="side-icon">＋</span>ایجاد حساب</a><a href="/#subscription-info"><span class="side-icon">↗</span>اطلاعات اشتراک</a><a href="/logout"><span class="side-icon">⇥</span>خروج امن</a></nav><div class="side-bottom">به پنل پمپ نت محمد خوش آمدید<br>قدرت ساخت، آزادی انتخاب، کنترل در دستان تو</div></aside><main class="workspace"><header class="top"><div><div class="brand">POMP NET MOHAMMAD</div><h1 class="hero">SUPER JINX</h1><div class="tag">به پنل پمپ نت محمد خوش آمدید</div></div></header>""" + body + '<footer class="foot">قدرت ساخت، آزادی انتخاب، کنترل در دستان تو</footer></main></div></body></html>'
-    return HTMLResponse(page, status_code=code)
+    response = HTMLResponse(page, status_code=code)
+    response.headers['Cache-Control'] = 'no-store'
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['Referrer-Policy'] = 'same-origin'
+    response.headers['X-Frame-Options'] = 'DENY'
+    return response
 
 def authenticated(request):
     return request.session.get('admin') is True
@@ -177,10 +185,14 @@ async def add_account(request: Request):
     form = await request.form()
     username = str(form.get('username','')).strip()
     try: quota = float(form.get('quota','0'))
-    except ValueError: return render('<section class="card">مقدار حجم نامعتبر است.</section>', 'خطا', 400)
+    except (ValueError, TypeError): return render('<section class="card">مقدار حجم نامعتبر است.</section>', 'خطا', 400)
     expires = str(form.get('expires','')).strip() or None
     note = str(form.get('note','')).strip()[:300]
-    if not username or len(username)>64 or quota < 0: return render('<section class="card">اطلاعات نامعتبر است.</section>', 'خطا', 400)
+    if not username or len(username)>64 or not math.isfinite(quota) or quota < 0:
+        return render('<section class="card">اطلاعات نامعتبر است.</section>', 'خطا', 400)
+    if expires:
+        try: date.fromisoformat(expires)
+        except ValueError: return render('<section class="card">تاریخ انقضا نامعتبر است.</section>', 'خطا', 400)
     try:
         with database() as con:
             con.execute('INSERT INTO accounts(username,quota_gb,expires,note,status,public_id,created_at) VALUES(?,?,?,?,?,?,?)', (username,quota,expires,note,'active',str(uuid.uuid4()),datetime.now(timezone.utc).isoformat()))
