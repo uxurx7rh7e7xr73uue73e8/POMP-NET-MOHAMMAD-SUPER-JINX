@@ -102,7 +102,32 @@ def health():
 
 @app.get('/login')
 def login_page():
-    return render('<section class="card"><h2>ورود مدیر</h2><form method="post" action="/login"><input name="username" autocomplete="username" placeholder="نام کاربری" required><br><input name="password" type="password" autocomplete="current-password" placeholder="رمز عبور" required><br><button>ورود امن</button></form></section>', 'ورود')
+    body = """
+    <section class="card login-card">
+      <div class="brand">POMP NET MOHAMMAD · SECURE ADMIN ACCESS</div>
+      <h1 class="hero">ورود به SUPER JINX</h1>
+      <p class="muted">برای ورود به مرکز مدیریت، اطلاعات مدیر را وارد کنید.</p>
+      <form method="post" action="/login" class="login-form">
+        <label for="admin-user">نام کاربری مدیر</label>
+        <input id="admin-user" name="username" autocomplete="username" placeholder="نام کاربری" required maxlength="128">
+        <label for="admin-pass">رمز عبور</label>
+        <input id="admin-pass" name="password" type="password" autocomplete="current-password" placeholder="رمز عبور مدیر" required maxlength="256">
+        <button type="submit">ورود امن به پنل ←</button>
+      </form>
+      <div class="login-note">ورود فقط با متغیرهای ADMIN_USERNAME و ADMIN_PASSWORD تنظیم‌شده در محیط سرویس امکان‌پذیر است.</div>
+    </section>
+    <style>
+      .login-card{max-width:480px;margin:7vh auto;padding:30px;border-color:#55408a}
+      .login-card .hero{font-size:27px;margin:15px 0}
+      .login-form{display:grid;gap:9px;margin-top:22px}
+      .login-form label{font-size:13px;color:#c9c2dc;margin-top:7px}
+      .login-form input{width:100%;margin:0;padding:14px}
+      .login-form button{width:100%;margin:12px 0 0;padding:14px}
+      .login-note{font-size:11px;line-height:2;color:#9aa9c1;margin-top:18px;border-top:1px solid #29364d;padding-top:12px}
+      @media(max-width:560px){.login-card{margin:20px auto;padding:20px}}
+    </style>
+    """
+    return render(body, 'ورود مدیر')
 
 @app.post('/login')
 async def login(request: Request):
