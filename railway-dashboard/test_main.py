@@ -33,6 +33,13 @@ def test_login_account_create_list_toggle_and_logout(client):
     assert items[0]['username'] == 'sample-user'
     assert items[0]['quota_gb'] == 12.5
     assert items[0]['status'] == 'active'
+    assert len(items[0]['public_id']) == 36
+    public_page = client.get('/sub/' + items[0]['public_id'])
+    assert public_page.status_code == 200
+    assert 'اطلاعات اشتراک' in public_page.text
+    renewed = client.post('/accounts/1/renew', data={'expires':'2031-05-10'}, follow_redirects=False)
+    assert renewed.status_code == 303
+    assert client.get('/sub/' + items[0]['public_id']).status_code == 200
     toggled = client.post('/accounts/1/toggle', follow_redirects=False)
     assert toggled.status_code == 303
     assert client.get('/api/accounts').json()[0]['status'] == 'suspended'
