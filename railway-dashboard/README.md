@@ -1,11 +1,20 @@
-# POMP NET MOHAMMAD — SUPER JINX: Railway dashboard
+# POMP NET MOHAMMAD — SUPER JINX: Railway management dashboard
 
-This is a standalone management dashboard for account metadata. It supports administrator login, account records, quota labels, expiry dates, activation/suspension and a protected JSON listing endpoint. SQLite data is stored under `/data`.
+This is a standalone, non-VPN account-management application. It provides administrator login, account creation, private UUID-style subscription identifiers, public subscription-information pages, recorded quota labels, expiry dates, renewals, activation/suspension, deletion, search, and a protected JSON listing endpoint. SQLite data is stored under `/data`.
 
-**Important limitation:** this service does not run Xray, VPN, proxy, anonymization, generate VLESS/VMess/Trojan connection profiles, enforce network traffic quotas, or provide working VPN subscriptions. Railway prohibits VPN/proxy/anonymization workloads; this dashboard is intentionally limited to permitted non-network account management.
+## Subscription information pages
+
+- Each newly created account receives a unique UUID at creation.
+- Its private public-information URL is `/sub/{UUID}`; the dashboard provides an open and copy-link action.
+- The public page displays username, recorded quota, expiry, and active/suspended/expired status. It does not expose the administrator's private note.
+- Administrators can renew expiry dates and toggle account status.
+- Deleting an account also makes its public information URL unavailable.
+
+**Important limitation:** these are real, database-backed account-information pages, not VPN subscriptions. This service does not run Xray, VPN, proxy, anonymization, generate VLESS/VMess/Trojan connection profiles, enforce network traffic quotas, or provide a working VPN subscription feed. The quota is metadata only. Railway prohibits VPN/proxy/anonymization workloads; this application is intentionally limited to non-network account management.
 
 ## Deploy
-1. Create a new Railway service from branch `railway-safe-dashboard`.
+
+1. Create a Railway service from branch `railway-safe-dashboard`.
 2. Set Root Directory to `/railway-dashboard`.
 3. Add a Railway Volume mounted at `/data`.
 4. Set `ADMIN_USERNAME` (3+ characters), `ADMIN_PASSWORD` (14+ characters), and `SESSION_SECRET` (at least 32 random characters).
