@@ -51,7 +51,37 @@ main{max-width:1180px;margin:28px auto;padding:16px}.top{display:flex;justify-co
 h2{color:#d6bcff;margin:0 0 15px;font-size:19px}.muted{color:var(--muted)}.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.stat{padding:16px;border:1px solid #ffffff13;border-radius:14px;background:#0d0b16}.stat b{display:block;font-size:26px;color:#fff;margin-top:5px}
 input,button{font:inherit;padding:11px 13px;border-radius:10px;border:1px solid #51465f;background:#0e0c17;color:#fff;margin:4px;max-width:100%}input:focus{outline:1px solid var(--blue)}button{background:linear-gradient(110deg,#6222b2,#245eb6);border:0;cursor:pointer}button.danger{background:#702a43}button.secondary{background:#30263f;border:1px solid #51465f}a{color:#8dbbff;text-decoration:none}.row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:850px}td,th{padding:12px 9px;border-bottom:1px solid #383344;text-align:right;white-space:nowrap}th{color:#bca0ff;font-weight:600}.pill{display:inline-block;padding:4px 9px;border-radius:30px;background:#163d32;color:#8ff0c5;font-size:12px}.pill.off{background:#492132;color:#ff9fbd}.actions form{display:inline}.actions input{width:135px}.search{display:flex;gap:6px;flex-wrap:wrap}.search input{flex:1;min-width:150px}.foot{margin:22px 0;color:#8e879e;font-size:12px}.suburl{font-size:11px;max-width:220px;overflow-wrap:anywhere;color:#9bc7ff}
 @media(max-width:620px){main{margin:8px auto;padding:10px}.card{padding:14px}.stats{grid-template-columns:1fr}.hero{font-size:25px}}
-</style></head><body><main><header class="top"><div><div class="brand">POMP NET MOHAMMAD</div><h1 class="hero">SUPER JINX</h1><div class="tag">به پنل پمپ نت محمد خوش آمدید</div></div></header>""" + body + '<footer class="foot">قدرت ساخت، آزادی انتخاب، کنترل در دستان تو</footer></main></body></html>'
+
+/* SUPER JINX independent SideRail-inspired visual refresh */
+:root{--bg:#090812;--panel:#11101b;--line:#373044;--purple:#8b35ff;--blue:#168cff;--text:#f6f2ff;--muted:#aaa2bd}
+body{background:radial-gradient(ellipse at 75% -10%,#30135b 0,transparent 34%),linear-gradient(135deg,#090812,#0c0a15 60%,#080711)}
+.shell{min-height:100vh;display:grid;grid-template-columns:250px minmax(0,1fr);direction:rtl}
+.sidebar{position:sticky;top:0;height:100vh;padding:24px 17px;background:#0d0b15;border-left:3px solid #282033;display:flex;flex-direction:column;gap:22px}
+.sidebrand{padding:16px 13px;border:2px solid #8b35ff;border-radius:12px;background:#171126;box-shadow:5px 5px 0 #4c2780}
+.sidebrand strong{display:block;font-size:15px;letter-spacing:.4px}.sidebrand small{display:block;color:#b9a6d7;margin-top:7px}
+.side-label{font-size:10px;color:#80768f;font-weight:800;letter-spacing:1.5px;padding:0 10px}
+.sidenav{display:grid;gap:9px}.sidenav a{display:flex;align-items:center;gap:11px;padding:12px 13px;border:2px solid transparent;border-radius:10px;color:#d9d1e8;font-weight:700;font-size:13px;transition:.18s}
+.sidenav a:hover,.sidenav a.active{background:#211633;border-color:#8b35ff;color:#fff;box-shadow:4px 4px 0 #43256b;transform:translate(-2px,-2px)}
+.side-icon{width:27px;height:27px;display:grid;place-items:center;border:1px solid #58416e;border-radius:8px;background:#171121;color:#a77aff}
+.side-bottom{margin-top:auto;border:1px solid #352941;border-radius:11px;padding:13px;color:#a99bbd;font-size:11px;line-height:1.9}
+.workspace{min-width:0;padding:28px clamp(12px,3vw,36px);max-width:1500px;width:100%;margin:0 auto}
+.top{padding:17px 21px;border:2px solid #3c3150;border-radius:13px;background:#12101c;box-shadow:6px 6px 0 #241936;margin-bottom:23px}
+.brand{font-size:11px;font-weight:800;letter-spacing:2px;color:#b991ff}.hero{font-size:clamp(24px,4vw,34px);margin:5px 0}.tag{font-size:12px}
+.stats{margin:18px 0}.stat,.card{border:2px solid #383044;border-radius:13px;box-shadow:5px 5px 0 #21182e;background:linear-gradient(145deg,#171321,#100e18)}
+.stat{position:relative;overflow:hidden}.stat:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:linear-gradient(#8b35ff,#168cff)}
+.stat b{font-size:29px;color:#fff}
+.card{padding:21px;margin:20px 0}.card h2{font-weight:800;color:#d9c5ff}
+button{border-radius:8px;box-shadow:3px 3px 0 #291b3b;font-weight:800;transition:transform .15s,box-shadow .15s}
+button:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 #291b3b}
+input{border-radius:8px;border:2px solid #40364d}
+table{border-collapse:separate;border-spacing:0 5px;min-width:850px}
+td,th{border-bottom:1px solid #30283b;background:#151220}th{background:#211831;color:#c9a9ff}
+td:first-child,th:first-child{border-radius:0 8px 8px 0}td:last-child,th:last-child{border-radius:8px 0 0 8px}
+.pill{border:1px solid #2c8d68}.pill.off{border-color:#8a3c59}
+.foot{border-top:1px solid #30283b;padding-top:15px}
+@media(max-width:850px){.shell{grid-template-columns:1fr}.sidebar{position:relative;height:auto;padding:12px 14px;border-left:0;border-bottom:2px solid #282033;gap:12px}.sidebrand{padding:10px 13px}.sidenav{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.sidenav a{padding:9px;font-size:12px}.side-bottom{display:none}.workspace{padding:14px 10px}}
+@media(max-width:520px){.sidenav{grid-template-columns:repeat(2,minmax(0,1fr))}.workspace{padding:10px 8px}.top{padding:14px}.card{padding:14px}.stats{grid-template-columns:1fr}.stat{padding:14px}}
+</style></head><body><div class="shell"><aside class="sidebar"><div class="sidebrand"><strong>POMP NET MOHAMMAD</strong><small>SUPER JINX · CONTROL CENTER</small></div><div class="side-label">منوی مدیریت</div><nav class="sidenav"><a class="active" href="/"><span class="side-icon">⌂</span>داشبورد اصلی</a><a href="/#accounts"><span class="side-icon">▤</span>مدیریت حساب‌ها</a><a href="/#create"><span class="side-icon">＋</span>ایجاد حساب</a><a href="/#subscription-info"><span class="side-icon">↗</span>اطلاعات اشتراک</a><a href="/logout"><span class="side-icon">⇥</span>خروج امن</a></nav><div class="side-bottom">به پنل پمپ نت محمد خوش آمدید<br>قدرت ساخت، آزادی انتخاب، کنترل در دستان تو</div></aside><main class="workspace"><header class="top"><div><div class="brand">POMP NET MOHAMMAD</div><h1 class="hero">SUPER JINX</h1><div class="tag">به پنل پمپ نت محمد خوش آمدید</div></div></header>""" + body + '<footer class="foot">قدرت ساخت، آزادی انتخاب، کنترل در دستان تو</footer></main></div></body></html>'
     return HTMLResponse(page, status_code=code)
 
 def authenticated(request):
