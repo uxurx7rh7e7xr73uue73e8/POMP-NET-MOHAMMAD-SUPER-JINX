@@ -1,0 +1,23 @@
+name: SUPER JINX Railway dashboard validation
+on:
+  push:
+    branches: [railway-safe-dashboard]
+    paths:
+      - 'railway-dashboard/**'
+      - '.github/workflows/railway-dashboard.yml'
+  workflow_dispatch:
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: railway-dashboard
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile Python
+        run: python -m py_compile main.py
+      - name: Validate Docker build
+        run: docker build -t super-jinx-dashboard:ci .
