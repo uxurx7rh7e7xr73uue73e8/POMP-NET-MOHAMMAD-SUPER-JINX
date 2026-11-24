@@ -13,12 +13,8 @@ CRED = "/run/jinx/system.json"
 # The owner password must be supplied as a Railway service secret.
 # Never generate a different password automatically and never print credentials to logs.
 DEFAULT_PW = os.environ.get("ADMIN_PASSWORD", "").strip()
-if not DEFAULT_PW:
-    try:
-        with open(PASSWORD_FILE, encoding="utf-8") as f:
-            DEFAULT_PW = f.read().strip()
-    except OSError:
-        pass
+# Do not read a previously generated one-time password file: owner credentials
+# are operator-controlled and must come from the ADMIN_PASSWORD secret only.
 ALLOW_INSECURE = os.environ.get("ALLOW_INSECURE_ADMIN_PASSWORD", "").strip().lower() in ("1", "true", "yes", "on")
 RESET = os.environ.get("RESET_ADMIN_PASSWORD", "").strip().lower() in ("1", "true", "yes", "on")
 
