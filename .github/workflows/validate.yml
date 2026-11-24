@@ -2,7 +2,7 @@ name: POMP NET SUPER JINX validation
 
 on:
   push:
-    branches: [main]
+    branches: [main, pompnet-pasarguard-core-migration]
   pull_request:
     branches: [main]
   workflow_dispatch:
