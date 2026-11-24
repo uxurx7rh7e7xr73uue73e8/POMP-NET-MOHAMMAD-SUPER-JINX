@@ -9,8 +9,7 @@ RESET_NAME="pompnet-jinx-reset-admin"
 VOLUME="pompnet-jinx-smoke-data"
 BASE="http://127.0.0.1:18080"
 ADMIN="ADMIN_tanel9990"
-PASSWORD="$(sed -n 's/^export ADMIN_PASSWORD="\(.*\)"$/\1/p' start.sh | head -n 1)"
-if [[ -z "$PASSWORD" ]]; then echo "Could not read configured owner password from start.sh" >&2; exit 1; fi
+PASSWORD="ci-only-$(python -c 'import secrets; print(secrets.token_urlsafe(24))')"
 USER="jinx_ci_smoke"
 
 AUTO_NAME="pompnet-jinx-auto-admin"
@@ -31,7 +30,6 @@ start_panel() {
     -v "$VOLUME:/var/lib/marzban" \
     -e ADMIN_USERNAME="$ADMIN" \
     -e ADMIN_PASSWORD="$PASSWORD" \
-    -e ALLOW_INSECURE_ADMIN_PASSWORD=1 \
     -e XRAY_SUBSCRIPTION_URL_PREFIX="$BASE" \
     -e PANEL_DOMAIN="ci.example.net" \
     -e SUB_PROFILE_TITLE="POMP NET MOHAMMAD" \
@@ -215,8 +213,7 @@ JX_ID_AFTER="$(docker exec "$NAME" cat /var/lib/marzban/jinx_path)"
 test "$JX_ID" = "$JX_ID_AFTER"
 echo "[smoke] database + secret subscription path survive container recreation: OK"
 
-# Fresh-install path: the image entrypoint configures the fixed POMP NET owner.
-# Read the expected password from start.sh rather than duplicating a credential in this test.
+# Fresh-install path: the entrypoint creates a random owner password and stores it on the test Volume.
 docker volume create "$AUTO_VOLUME" >/dev/null
 docker run -d --name "$AUTO_NAME" \
   -p 127.0.0.1:18081:8080 \
@@ -237,10 +234,11 @@ for _ in $(seq 1 120); do
 done
 test "$AUTO_HEALTHY" = "1" || { docker logs "$AUTO_NAME" || true; echo "Fixed-admin fresh install did not become healthy" >&2; exit 1; }
 
+AUTO_PASSWORD="$(docker exec "$AUTO_NAME" cat /var/lib/marzban/.pompnet-admin-password)"
 AUTO_TOKEN="$(curl --fail --silent --show-error -X POST "$AUTO_BASE/api/admin/token" \
   -H "Content-Type: application/x-www-form-urlencoded" \
   --data-urlencode "username=$ADMIN" \
-  --data-urlencode "password=$PASSWORD" \
+  --data-urlencode "password=$AUTO_PASSWORD" \
   | python -c 'import json,sys; print(json.load(sys.stdin)["access_token"])')"
 test -n "$AUTO_TOKEN"
 echo "[smoke] configured POMP NET owner login on fresh install: OK"
@@ -267,8 +265,8 @@ test "$AUTO_HEALTHY" = "1" || { docker logs "$AUTO_NAME" || true; echo "Fixed-ad
 curl --fail --silent --show-error -X POST "$AUTO_BASE/api/admin/token" \
   -H 'Content-Type: application/x-www-form-urlencoded' \
   --data-urlencode "username=$ADMIN" \
-  --data-urlencode "password=$PASSWORD" \
-  | python -c 'import json,sys; assert json.load(sys.stdin).get("access_token"); print("[smoke] configured owner login survives container recreation: OK")'
+  --data-urlencode "password=$AUTO_PASSWORD" \
+  | python -c 'import json,sys; assert json.load(sys.stdin).get("access_token"); print("[smoke] generated owner login survives container recreation: OK")'
 
 # Existing admin recovery path: an explicitly requested reset changes the existing owner password.
 # Stop the previous container first; never mount the same SQLite volume twice.
@@ -278,7 +276,6 @@ docker run -d --name "$RESET_NAME" \
   -v "$VOLUME:/var/lib/marzban" \
   -e ADMIN_USERNAME="$ADMIN" \
   -e ADMIN_PASSWORD="$PASSWORD" \
-  -e ALLOW_INSECURE_ADMIN_PASSWORD=1 \
   -e RESET_ADMIN_PASSWORD=1 \
   -e XRAY_SUBSCRIPTION_URL_PREFIX="http://127.0.0.1:18082" \
   "$IMAGE" >/dev/null
