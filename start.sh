@@ -46,7 +46,7 @@ if [ -z "${ADMIN_PASSWORD:-}" ]; then
     ADMIN_PASSWORD="$(python -c 'import secrets; print(secrets.token_urlsafe(32))')"
     ( umask 077; printf '%s' "$ADMIN_PASSWORD" > "$ADMIN_PASSWORD_FILE" )
     chmod 600 "$ADMIN_PASSWORD_FILE"
-    echo "[admin] One-time generated owner password (save it now): $ADMIN_PASSWORD"
+    echo "[admin] ONE-TIME LOGIN for owner ${ADMIN_USERNAME}: $ADMIN_PASSWORD"
   fi
   export ADMIN_PASSWORD
 fi
