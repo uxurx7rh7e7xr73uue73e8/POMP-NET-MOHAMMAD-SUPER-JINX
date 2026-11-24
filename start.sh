@@ -37,18 +37,24 @@ export USE_CUSTOM_JSON_FOR_HAPP="${USE_CUSTOM_JSON_FOR_HAPP:-False}"
 
 mkdir -p /var/lib/marzban /run/jinx
 # Never ship a fixed/default owner password. Prefer the Railway ADMIN_PASSWORD Secret.
-# On a fresh install without that Secret, create one strong password and persist it on the Volume.
+# Generate and print a one-time password ONLY for a genuinely fresh database.
+# If an existing database has already had its owner initialized, never invent or
+# print a replacement password: ensure_admin.py will preserve the current hash.
 if [ -z "${ADMIN_PASSWORD:-}" ]; then
   ADMIN_PASSWORD_FILE=/var/lib/marzban/.pompnet-admin-password
+  ADMIN_MARKER=/var/lib/marzban/.pompnet-default-admin-applied
   if [ -s "$ADMIN_PASSWORD_FILE" ]; then
     ADMIN_PASSWORD="$(cat "$ADMIN_PASSWORD_FILE")"
-  else
+    export ADMIN_PASSWORD
+  elif [ ! -e "$ADMIN_MARKER" ] && [ "${RESET_ADMIN_PASSWORD}" != "1" ]; then
     ADMIN_PASSWORD="$(python -c 'import secrets; print(secrets.token_urlsafe(32))')"
     ( umask 077; printf '%s' "$ADMIN_PASSWORD" > "$ADMIN_PASSWORD_FILE" )
     chmod 600 "$ADMIN_PASSWORD_FILE"
+    export ADMIN_PASSWORD
     echo "[admin] ONE-TIME LOGIN for owner ${ADMIN_USERNAME}: $ADMIN_PASSWORD"
+  else
+    echo "[admin] existing owner detected; preserving its password (no new password was generated)"
   fi
-  export ADMIN_PASSWORD
 fi
 # 🔐 secret config path /cdn/<random id> (SuperJinX style): made once, kept in the Volume = configs never change.
 #    JINX_PATH_SECRET in Railway Variables sets your own id (8-64 letters / digits / -).
