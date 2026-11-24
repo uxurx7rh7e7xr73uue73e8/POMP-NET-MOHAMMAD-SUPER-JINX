@@ -36,25 +36,15 @@ export USE_CUSTOM_JSON_FOR_STREISAND="${USE_CUSTOM_JSON_FOR_STREISAND:-False}"
 export USE_CUSTOM_JSON_FOR_HAPP="${USE_CUSTOM_JSON_FOR_HAPP:-False}"
 
 mkdir -p /var/lib/marzban /run/jinx
-# Never ship a fixed/default owner password. Prefer the Railway ADMIN_PASSWORD Secret.
-# Generate and print a one-time password ONLY for a genuinely fresh database.
-# If an existing database has already had its owner initialized, never invent or
-# print a replacement password: ensure_admin.py will preserve the current hash.
+# Owner password is fixed by the operator through the ADMIN_PASSWORD Railway Secret.
+# Never generate, rotate, or print a random owner password during startup.
+ADMIN_MARKER=/var/lib/marzban/.pompnet-default-admin-applied
 if [ -z "${ADMIN_PASSWORD:-}" ]; then
-  ADMIN_PASSWORD_FILE=/var/lib/marzban/.pompnet-admin-password
-  ADMIN_MARKER=/var/lib/marzban/.pompnet-default-admin-applied
-  if [ -s "$ADMIN_PASSWORD_FILE" ]; then
-    ADMIN_PASSWORD="$(cat "$ADMIN_PASSWORD_FILE")"
-    export ADMIN_PASSWORD
-  elif [ ! -e "$ADMIN_MARKER" ] && [ "${RESET_ADMIN_PASSWORD}" != "1" ]; then
-    ADMIN_PASSWORD="$(python -c 'import secrets; print(secrets.token_urlsafe(32))')"
-    ( umask 077; printf '%s' "$ADMIN_PASSWORD" > "$ADMIN_PASSWORD_FILE" )
-    chmod 600 "$ADMIN_PASSWORD_FILE"
-    export ADMIN_PASSWORD
-    echo "[admin] ONE-TIME LOGIN for owner ${ADMIN_USERNAME}: $ADMIN_PASSWORD"
-  else
-    echo "[admin] existing owner detected; preserving its password (no new password was generated)"
+  if [ ! -e "$ADMIN_MARKER" ] || [ "${RESET_ADMIN_PASSWORD}" = "1" ]; then
+    echo "[admin] FATAL: set ADMIN_PASSWORD as a Railway Secret before first setup or an explicit reset."
+    exit 1
   fi
+  echo "[admin] existing owner detected; preserving the password hash in the persistent database"
 fi
 # 🔐 secret config path /cdn/<random id> (SuperJinX style): made once, kept in the Volume = configs never change.
 #    JINX_PATH_SECRET in Railway Variables sets your own id (8-64 letters / digits / -).
