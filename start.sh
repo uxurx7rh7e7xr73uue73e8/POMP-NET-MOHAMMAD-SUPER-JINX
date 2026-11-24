@@ -1,12 +1,11 @@
 #!/bin/bash
 set -e
 
-# POMP NET MOHAMMAD: fixed owner account for this deployment
-# ensure_admin.py hashes this password into the Marzban database.
-export ADMIN_USERNAME="ADMIN_tanel9990"
-export ADMIN_PASSWORD="ADMIN_tanel9990"
-export ALLOW_INSECURE_ADMIN_PASSWORD="1"
-export RESET_ADMIN_PASSWORD="1"
+# Owner identity is stable; credentials come from a Railway Secret or a one-time
+# random password stored on the persistent Volume. Never reset an existing owner on boot.
+export ADMIN_USERNAME="${ADMIN_USERNAME:-ADMIN_tanel9990}"
+export ALLOW_INSECURE_ADMIN_PASSWORD="${ALLOW_INSECURE_ADMIN_PASSWORD:-0}"
+export RESET_ADMIN_PASSWORD="${RESET_ADMIN_PASSWORD:-0}"
 
 echo "=== ⚡ POMP NET MOHAMMAD | SUPER JINX ==="
 # ⚡ more open connections for nginx + Xray (many users / many tabs at once), never fatal
@@ -37,6 +36,20 @@ export USE_CUSTOM_JSON_FOR_STREISAND="${USE_CUSTOM_JSON_FOR_STREISAND:-False}"
 export USE_CUSTOM_JSON_FOR_HAPP="${USE_CUSTOM_JSON_FOR_HAPP:-False}"
 
 mkdir -p /var/lib/marzban /run/jinx
+# Never ship a fixed/default owner password. Prefer the Railway ADMIN_PASSWORD Secret.
+# On a fresh install without that Secret, create one strong password and persist it on the Volume.
+if [ -z "${ADMIN_PASSWORD:-}" ]; then
+  ADMIN_PASSWORD_FILE=/var/lib/marzban/.pompnet-admin-password
+  if [ -s "$ADMIN_PASSWORD_FILE" ]; then
+    ADMIN_PASSWORD="$(cat "$ADMIN_PASSWORD_FILE")"
+  else
+    ADMIN_PASSWORD="$(python -c 'import secrets; print(secrets.token_urlsafe(32))')"
+    ( umask 077; printf '%s' "$ADMIN_PASSWORD" > "$ADMIN_PASSWORD_FILE" )
+    chmod 600 "$ADMIN_PASSWORD_FILE"
+    echo "[admin] One-time generated owner password (save it now): $ADMIN_PASSWORD"
+  fi
+  export ADMIN_PASSWORD
+fi
 # 🔐 secret config path /cdn/<random id> (SuperJinX style): made once, kept in the Volume = configs never change.
 #    JINX_PATH_SECRET in Railway Variables sets your own id (8-64 letters / digits / -).
 JX_FILE=/var/lib/marzban/jinx_path
