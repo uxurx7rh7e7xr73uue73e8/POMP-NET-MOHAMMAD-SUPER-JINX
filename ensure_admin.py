@@ -22,10 +22,10 @@ if not DEFAULT_PW:
 ALLOW_INSECURE = os.environ.get("ALLOW_INSECURE_ADMIN_PASSWORD", "").strip().lower() in ("1", "true", "yes", "on")
 RESET = os.environ.get("RESET_ADMIN_PASSWORD", "").strip().lower() in ("1", "true", "yes", "on")
 
-if not DEFAULT_PW:
-    print("[admin] FATAL: set ADMIN_PASSWORD in Railway service Variables; no password was generated", flush=True)
+if not DEFAULT_PW and (not os.path.exists(APPLIED_MARKER) or RESET):
+    print("[admin] FATAL: a password is required for a fresh owner or an explicit password reset", flush=True)
     sys.exit(1)
-if len(DEFAULT_PW) < 14 and not ALLOW_INSECURE:
+if DEFAULT_PW and len(DEFAULT_PW) < 14 and not ALLOW_INSECURE:
     print("[admin] FATAL: ADMIN_PASSWORD must contain at least 14 characters.", flush=True)
     sys.exit(1)
 
@@ -75,6 +75,9 @@ with GetDB() as db:
         if not owners:
             existing = db.query(Admin).filter(Admin.username == ADMIN).first()
             if existing is None:
+                if not DEFAULT_PW:
+                    print("[admin] FATAL: no owner exists and no initial ADMIN_PASSWORD is available", flush=True)
+                    sys.exit(1)
                 owner = Admin(username=ADMIN, hashed_password=pwd.hash(DEFAULT_PW), is_sudo=True)
                 db.add(owner)
                 print(f"[admin] created full-access owner account {ADMIN}", flush=True)
