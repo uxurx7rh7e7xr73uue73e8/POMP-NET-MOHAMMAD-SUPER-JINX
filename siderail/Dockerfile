@@ -33,6 +33,8 @@ COPY --from=build --chown=node:node /build/upstream/README.md ./UPSTREAM-README.
 COPY --from=build --chown=node:node /build/upstream/apps/server/package.json ./apps/server/package.json
 COPY --from=build --chown=node:node /build/upstream/node_modules ./node_modules
 COPY --from=build --chown=node:node /build/upstream/apps/server/dist ./apps/server/dist
+# Serve the complete official SideRail React SPA from the same authenticated SideRail service.
+COPY --from=build --chown=node:node /build/upstream/apps/web/dist ./apps/web/dist
 USER node
 EXPOSE 8080
 CMD ["node","apps/server/dist/index.js"]

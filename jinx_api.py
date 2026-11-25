@@ -1108,6 +1108,13 @@ class H(BaseHTTPRequestHandler):
         caller = self.caller(True)
         if not caller:
             return
+        if path == "/siderail/open" and method == "GET":
+            # Return the native UI URL only after the existing POMP NET owner check above.
+            public_url = (os.environ.get("SIDERAIL_PUBLIC_URL") or "").strip().rstrip("/")
+            parsed = urllib.parse.urlsplit(public_url)
+            if parsed.scheme != "https" or not parsed.hostname or parsed.username or parsed.password or parsed.query or parsed.fragment:
+                return self.send(503, {"error": "siderail_public_url_not_configured", "detail": "Set SIDERAIL_PUBLIC_URL to the HTTPS public URL of the full SideRail service."})
+            return self.send(200, {"ok": True, "url": public_url})
         if path == "/siderail/health" and method == "GET":
             target = "/healthz"
             raw = b""

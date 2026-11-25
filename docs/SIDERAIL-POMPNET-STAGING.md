@@ -32,6 +32,7 @@ Required SideRail variables:
 
 The POMP NET service must have these server-side secrets:
 - `SIDERAIL_INTERNAL_URL` — private URL of the SideRail service (preferred).
+- `SIDERAIL_PUBLIC_URL` — HTTPS public URL of the full SideRail web app; the owner-only POMP NET page displays a launch button for it.
 - `SIDERAIL_OWNER_USERNAME`
 - `SIDERAIL_OWNER_PASSWORD`
 
