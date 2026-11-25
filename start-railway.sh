@@ -21,8 +21,13 @@ if [ ! -s "$CERT" ] || [ ! -s "$KEY" ]; then
   chmod 644 "$CERT"
 fi
 
+if ! awk -v p="$DATA_DIR" '$2 == p { found=1 } END { exit !found }' /proc/mounts; then
+  echo "[POMP NET] FATAL: no mounted Railway Volume found at $DATA_DIR."
+  echo "[POMP NET] Attach a persistent Volume at exactly $DATA_DIR, then redeploy."
+  exit 1
+fi
 if [ ! -w "$DATA_DIR" ]; then
-  echo "[POMP NET] FATAL: attach a Railway Volume at $DATA_DIR."
+  echo "[POMP NET] FATAL: $DATA_DIR is mounted but not writable."
   exit 1
 fi
 
@@ -89,4 +94,12 @@ if [ "$ready" -ne 1 ]; then
 fi
 
 echo "[POMP NET] PasarGuard is ready. Starting Railway HTTP ingress on port $PUBLIC_PORT."
-exec nginx -g 'daemon off;'
+nginx -g 'daemon off;' &
+NGINX_PID=$!
+while kill -0 "$APP_PID" 2>/dev/null && kill -0 "$NGINX_PID" 2>/dev/null; do
+  sleep 5
+done
+echo "[POMP NET] Application or ingress process stopped; shutting down container."
+kill "$APP_PID" "$NGINX_PID" 2>/dev/null || true
+cat /tmp/pasarguard-app.log
+exit 1
