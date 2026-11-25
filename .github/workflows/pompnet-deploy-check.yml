@@ -148,7 +148,7 @@ jobs:
           [ "$helper_ready" = "1" ] || { echo "POMP NET helper API did not start"; exit 1; }
           owner_dashboard_code=$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:18080/pompnet/)
           [ "$owner_dashboard_code" = "200" ] || { echo "POMP NET dashboard returned HTTP $owner_dashboard_code"; exit 1; }
-          curl -fsS http://127.0.0.1:18080/pompnet/ | grep -q 'مدیریت واقعی SideRail' || { echo "SideRail page missing from POMP NET dashboard"; exit 1; }
+          curl -fsS http://127.0.0.1:18080/pompnet/ | grep -q 'مدیریت یکپارچه هسته POMP NET' || { echo "SideRail page missing from POMP NET dashboard"; exit 1; }
           bridge_code=$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:18080/jinx-api/siderail/status)
           [ "$bridge_code" = "401" ] || { echo "SideRail bridge route returned unexpected HTTP $bridge_code (expected auth challenge)"; exit 1; }
           admin_token=$(curl -fsS -X POST http://127.0.0.1:18080/api/admin/token -H 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'username=ADMIN_tanel9990' --data-urlencode 'password=CI-only-test-password' --data-urlencode 'grant_type=password' | python3 -c 'import json,sys; print(json.load(sys.stdin)["access_token"])')
