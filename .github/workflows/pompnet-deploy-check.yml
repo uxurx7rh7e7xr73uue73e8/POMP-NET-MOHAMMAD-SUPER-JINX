@@ -2,9 +2,11 @@ name: POMP NET deployment validation
 
 on:
   push:
-    branches: [main]
+    branches: [main, pompnet-xray-core-native, siderail-pompnet-staging]
   pull_request:
-    branches: [main]
+    branches: [main, pompnet-xray-core-native, siderail-pompnet-staging]
+  push:
+    branches: [siderail-pompnet-staging]
   workflow_dispatch:
 
 permissions:
@@ -29,6 +31,20 @@ jobs:
             exit 1
           fi
           grep -q 'اطلاعات اشتراک در دسترس نیست' sub.html
+
+      - name: Validate POMP NET SideRail integration routes
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          html = Path("pompnet-dashboard.html").read_text(encoding="utf-8")
+          api = Path("jinx_api.py").read_text(encoding="utf-8")
+          nginx = Path("nginx.conf").read_text(encoding="utf-8")
+          assert 'data-page="siderail"' in html and 'id="page-siderail"' in html
+          assert 'loadSideRail()' in html and '/jinx-api/siderail' in html
+          assert 'def subscription(self, path' in api and 'siderail_base()' in api
+          assert 'location ^~ /sub/' in nginx and 'proxy_pass http://127.0.0.1:8090;' in nginx
+          print("SideRail dashboard, API bridge and legacy subscription gateway routes are present.")
+          PY
 
       - name: Validate Python syntax
         run: |
@@ -101,6 +117,13 @@ jobs:
           # (422 for an empty form is acceptable; 404/502 means routing is broken).
           dashboard_code=$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:18080/dashboard/)
           [ "$dashboard_code" = "200" ] || { echo "Dashboard returned HTTP $dashboard_code"; exit 1; }
+          owner_dashboard_code=$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:18080/pompnet/)
+          [ "$owner_dashboard_code" = "200" ] || { echo "POMP NET dashboard returned HTTP $owner_dashboard_code"; exit 1; }
+          curl -fsS http://127.0.0.1:18080/pompnet/ | grep -q 'مدیریت واقعی SideRail' || { echo "SideRail page missing from POMP NET dashboard"; exit 1; }
+          bridge_code=$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:18080/jinx-api/siderail/status)
+          [ "$bridge_code" = "401" ] || { echo "SideRail bridge route returned unexpected HTTP $bridge_code (expected auth challenge)"; exit 1; }
+          legacy_sub_code=$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:18080/sub/invalid-legacy-token)
+          [ "$legacy_sub_code" = "404" ] || { echo "Legacy subscription fallback returned HTTP $legacy_sub_code (expected 404 for nonexistent token)"; exit 1; }
 
           token_code=$(curl -sS -o /dev/null -w '%{http_code}' -X POST http://127.0.0.1:18080/api/admin/token)
           case "$token_code" in 400|401|422) ;; *) echo "Admin API route returned unexpected HTTP $token_code"; exit 1 ;; esac
