@@ -25,7 +25,7 @@ grep -q 'id="root"' <<< "$HTML"
 STATUS="$(curl --fail --silent --show-error "$BASE/api/status")"
 grep -q '"setup":false' <<< "$STATUS"
 TOKEN="$(curl --fail --silent --show-error -X POST "$BASE/api/setup" -H 'Content-Type: application/json' \
-  --data "$(python -c 'import json,os; print(json.dumps({"username":os.environ["CI_OWNER"],"password":os.environ["CI_PASS"]}))' CI_OWNER="$ADMIN" CI_PASS="$PASSWORD")" \
+  --data "$(CI_OWNER="$ADMIN" CI_PASS="$PASSWORD" python -c 'import json,os; print(json.dumps({"username":os.environ["CI_OWNER"],"password":os.environ["CI_PASS"]}))')" \
   | python -c 'import json,sys; print(json.load(sys.stdin)["token"])')"
 curl --fail --silent --show-error "$BASE/api/me" -H "Authorization: Bearer $TOKEN" \
   | python -c 'import json,sys; d=json.load(sys.stdin); assert d["admin"]["role"]=="owner"'
