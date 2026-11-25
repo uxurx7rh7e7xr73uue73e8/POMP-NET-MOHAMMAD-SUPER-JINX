@@ -56,3 +56,8 @@ The repository's `tests/runtime-smoke.sh` exercises the local Docker image, user
 ## Current status
 
 This branch now contains Railway's Docker/healthcheck config and this deployment checklist. The actual Railway Volume, domain target-port setting, owner secret, deployment and external v2rayNG test still require access to the Railway service and a real deployment. No live connectivity is claimed until those checks pass.
+
+
+## Live Doctor dashboard
+
+After deployment, open `/doctor/` for a Persian live status page. It reads the existing `/jx-status` payload and displays monitored components, container RAM, last check time, and automatic repair count. It refreshes every 15 seconds. This is monitoring only; it does not prove public Xray reachability or a successful v2rayNG tunnel.
