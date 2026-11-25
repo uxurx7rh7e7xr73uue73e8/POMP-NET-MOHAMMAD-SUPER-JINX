@@ -33,7 +33,7 @@ jobs:
           from pathlib import Path
           import re
           html = Path("pompnet-dashboard.html").read_text(encoding="utf-8")
-          scripts = re.findall(r'<script(?![^>]*\\bsrc=)(?![^>]*type="application/json")[^>]*>(.*?)</script>', html, re.S | re.I)
+          scripts = re.findall(r'<script(?![^>]*\bsrc=)(?![^>]*type="application/json")[^>]*>(.*?)</script>', html, re.S | re.I)
           if not scripts:
               raise SystemExit("No inline dashboard scripts found")
           for i, script in enumerate(scripts):
