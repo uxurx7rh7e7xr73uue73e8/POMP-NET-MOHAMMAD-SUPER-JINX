@@ -120,6 +120,32 @@ if ! python /opt/xray_preflight.py; then
   exit 1
 fi
 
+# SideRail is the real management/Xray backend behind the integrated POMP NET dashboard.
+# POMP NET login, skin and public subscription routes remain the only public interface.
+if [ -z "${SIDERAIL_INTERNAL_URL:-${SIDERAIL_URL:-}}" ]; then
+  export SIDERAIL_INTERNAL_URL="http://127.0.0.1:8092"
+  export SIDERAIL_OWNER_USERNAME="${SIDERAIL_OWNER_USERNAME:-pompnet-owner}"
+  mkdir -p /var/lib/marzban/siderail /var/lib/marzban/siderail/core
+  chmod 700 /var/lib/marzban/siderail
+  if [ -z "${SIDERAIL_OWNER_PASSWORD:-}" ]; then
+    SR_SECRET_FILE=/var/lib/marzban/.siderail-owner-secret
+    if [ ! -s "$SR_SECRET_FILE" ]; then
+      python -c 'import secrets; print(secrets.token_urlsafe(48))' > "$SR_SECRET_FILE.tmp"
+      chmod 600 "$SR_SECRET_FILE.tmp"
+      mv -f "$SR_SECRET_FILE.tmp" "$SR_SECRET_FILE"
+    fi
+    export SIDERAIL_OWNER_PASSWORD="$(cat "$SR_SECRET_FILE")"
+  fi
+  export NODE_ENV=production PORT=8092
+  export SIDERAIL_DATA_DIR=/var/lib/marzban/siderail
+  export CORE_DIR=/var/lib/marzban/siderail/core
+  export CORE_VERSION="${CORE_VERSION:-v26.9.9}"
+  ( set +e; while true; do node /opt/siderail/apps/server/dist/index.js; echo "[siderail] internal engine restarting in 3s"; sleep 3; done ) &
+  echo "[siderail] private SideRail engine enabled; POMP NET remains the only public UI"
+else
+  echo "[siderail] using explicitly configured SideRail backend URL"
+fi
+
 # Never use documentation placeholders such as panel.example.com in generated subscriptions.
 # Resolve the public hostname automatically. Explicit PANEL_DOMAIN wins; then
 # platform-provided hostnames are checked. Never invent a hostname or use an example domain.
