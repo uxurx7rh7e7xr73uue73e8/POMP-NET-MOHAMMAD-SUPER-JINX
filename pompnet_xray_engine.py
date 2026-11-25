@@ -164,7 +164,7 @@ class Handler(BaseHTTPRequestHandler):
             return self.send(200,raw,"text/plain; charset=utf-8")
         if not admin_ok(self.token()): return self.send(401,{"detail":"مالک پنل لازم است"})
         if p == "/api/users":
-            c=db(); rows=c.execute("SELECT username,MIN(id) AS id,MAX(expire) AS expire,MAX(data_limit_gb) AS data_limit_gb,MAX(enabled) AS enabled,MIN(created) AS created,MIN(sub_token) AS sub_token,GROUP_CONCAT(protocol) AS protocols FROM users GROUP BY username ORDER BY created DESC").fetchall(); c.close()
+            c=db(); rows=c.execute("SELECT username,MIN(id) AS id,MIN(expire) AS expire,MIN(data_limit_gb) AS data_limit_gb,MAX(enabled) AS enabled,MIN(created) AS created,MIN(sub_token) AS sub_token,GROUP_CONCAT(protocol) AS protocols FROM users GROUP BY username ORDER BY created DESC").fetchall(); c.close()
             host=host_for(self); result=[]
             for r in rows:
                 d=dict(r); d["protocols"]=d["protocols"].split(",") if d["protocols"] else []
@@ -209,6 +209,11 @@ class Handler(BaseHTTPRequestHandler):
                   "subscription_url":("https://"+host_for(self)+"/pompnet-sub/"+sub) if host_for(self) else None,
                   "note":"data_limit_gb is stored as metadata only; live traffic accounting/quota enforcement is not enabled"})
             except Exception as e: return self.send(500,{"detail":str(e)[:800]})
+        if p == "/api/inbounds":
+            b=self.body(); proto=str(b.get("protocol","")).lower()
+            if proto not in INBOUNDS: return self.send(400,{"detail":"unsupported protocol"})
+            v=INBOUNDS[proto]
+            return self.send(200,{"ok":True,"protocol":proto,"remark":"POMP NET "+proto.upper()+" WS","port":443,"path":v["path"],"message":"این Listener از قبل در هسته مستقل فعال است."})
         if p.startswith("/api/users/") and p.endswith("/toggle"):
             uid=p.split("/")[-2]; c=db(); r=c.execute("SELECT enabled FROM users WHERE id=?",(uid,)).fetchone()
             if not r: c.close(); return self.send(404,{"detail":"user not found"})
@@ -222,7 +227,7 @@ class Handler(BaseHTTPRequestHandler):
         if not admin_ok(self.token()): return self.send(401,{"detail":"مالک پنل لازم است"})
         if p.startswith("/api/users/"):
             uid=unquote(p.rsplit("/",1)[-1]); c=db()
-            cur=c.execute("DELETE FROM users WHERE id=?",(uid,)); c.commit(); c.close()
+            cur=c.execute("DELETE FROM users WHERE id=? OR username=?",(uid,uid)); c.commit(); c.close()
             if not cur.rowcount: return self.send(404,{"detail":"user not found"})
             try: restart_engine()
             except Exception as e: return self.send(500,{"detail":str(e)[:800]})
