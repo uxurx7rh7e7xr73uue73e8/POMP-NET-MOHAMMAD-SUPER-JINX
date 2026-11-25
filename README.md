@@ -1,3 +1,7 @@
+> **وضعیت این شاخه:** شاخه `pompnet-pasarguard-core-v1` برای استقرار پنل رسمی PasarGuard روی Railway تنظیم شده است. Dockerfile ریشه در این شاخه از `pasarguard/panel` استفاده می‌کند؛ فایل‌های Marzban قدیمی برای مرجع/مهاجرت نگه داشته شده‌اند و توسط Dockerfile جدید اجرا نمی‌شوند. برای اتصال واقعی ترافیک VPN، یک PasarGuard Node روی VPS عمومی لازم است. راهنمای کامل: [RAILWAY-PASARGUARD.fa.md](RAILWAY-PASARGUARD.fa.md). این تغییر هنوز به معنی Deploy زنده یا تست موفق v2rayNG نیست.
+
+---
+
 <div align="center">
 
 <img src="assets/pompnet-super-jinx-hero.svg" alt="POMP NET MOHAMMAD" width="100%"/>
