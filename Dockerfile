@@ -40,6 +40,8 @@ RUN mkdir -p /opt/jinx/fonts \
 COPY pompnet_telegram_bot.py /opt/pompnet_telegram_bot.py
 COPY doctor.html /opt/jinx/doctor.html
 COPY xray_preflight.py /opt/xray_preflight.py
+# Package the independent manager without activating a second Xray process.
+COPY native_core/pompnet_core.py /opt/pompnet_core.py
 COPY start.sh /start.sh
 
 # fix Windows line endings, just in case
