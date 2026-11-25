@@ -2,8 +2,6 @@ from pathlib import Path
 
 # Apply the owner's English brand to generated client/profile names only.
 # Upstream source headers, license, authorship and About attribution are untouched.
-BRAND = "Mohammad Pomp Net | SUPER JINX"
-
 links = Path("apps/server/src/links.ts")
 s = links.read_text(encoding="utf-8")
 old = '''/** Config / subscription name: 𝗦𝗶𝗱𝗲𝗥𝗮𝗶𝗹 <flag> - <client name> */
@@ -44,7 +42,6 @@ new_singbox = 'tag: "Mohammad Pomp Net | SUPER JINX",'
 if s.count(old_clash) != 1 or s.count(old_singbox) != 1:
     raise SystemExit("Expected Clash and sing-box group labels were not found exactly once.")
 s = s.replace(old_clash, new_clash, 1).replace(old_singbox, new_singbox, 1)
-s = s.replace('yaml.push(`  - name: Mohammad Pomp Net | SUPER JINX`);', 'yaml.push(`  - name: Mohammad Pomp Net | SUPER JINX`);')
 formats.write_text(s, encoding="utf-8")
 
 print("POMP NET generated-config branding patch applied.")
