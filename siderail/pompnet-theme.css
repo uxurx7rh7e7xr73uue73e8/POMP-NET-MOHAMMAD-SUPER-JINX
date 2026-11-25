@@ -52,3 +52,72 @@ input:focus, select:focus, textarea:focus { outline: 2px solid #8b35ff !importan
   font-weight: 700;
   letter-spacing: .08em;
 }
+
+
+/* Marzban-inspired POMP NET shell: presentation only; SideRail routes and
+   React components remain the real implementation underneath. */
+html[lang="fa"], html[lang="fa"] body, html[lang="fa"] #root {
+  direction: rtl;
+  text-align: right;
+}
+html[lang="fa"] body {
+  font-family: Vazirmatn, IRANSans, Tahoma, sans-serif;
+}
+#root .bg-bw\/60, #root .bg-bw\/70, #root .bg-bw\/85 {
+  background-color: rgba(13, 12, 23, .94) !important;
+}
+#root .border-r-2, #root .border-l-2 {
+  border-color: #30204b !important;
+}
+#root .rounded-base {
+  border-radius: 16px !important;
+}
+#root .card-lift, #root [class*="rounded-base"][class*="border"] {
+  border-color: #30204b !important;
+  box-shadow: 0 10px 32px rgba(0,0,0,.22), 0 0 0 1px rgba(139,53,255,.08);
+}
+#root input, #root select, #root textarea {
+  color: #f3edff !important;
+  background: #090914 !important;
+  border-color: #39304f !important;
+  border-radius: 12px !important;
+}
+#root input:focus, #root select:focus, #root textarea:focus {
+  border-color: #8b35ff !important;
+  box-shadow: 0 0 0 3px rgba(139,53,255,.18) !important;
+}
+#root button:not([aria-label]) {
+  border-radius: 12px;
+}
+#root .bg-main {
+  background: linear-gradient(115deg, #8b35ff, #168cff) !important;
+}
+#root .text-main { color: #b98aff !important; }
+#root .text-text\/60, #root .text-text\/70 { color: #a7a0ba !important; }
+#root .bg-bg { background-color: #080711 !important; }
+#root .bg-bw { background-color: #11101a !important; }
+#root .border-border { border-color: #30204b !important; }
+#root table { border-collapse: separate; border-spacing: 0; }
+#root th, #root td { border-color: #29243a !important; }
+#root aside { background: rgba(10,9,19,.97) !important; }
+#root nav a[aria-current="page"] {
+  background: linear-gradient(100deg, rgba(139,53,255,.22), rgba(22,140,255,.10)) !important;
+  border-color: rgba(139,53,255,.5) !important;
+  color: #fff !important;
+}
+#root .max-w-6xl > .grid {
+  border: 1px solid #7543a9 !important;
+  border-radius: 26px !important;
+  background: linear-gradient(145deg, rgba(23,19,38,.98), rgba(9,9,19,.98)) !important;
+  box-shadow: 0 30px 100px rgba(0,0,0,.65), 0 0 65px rgba(139,53,255,.14) !important;
+}
+#root .max-w-6xl > .grid > :first-child {
+  background: linear-gradient(145deg, #21113c, #111a35) !important;
+}
+#root .max-w-6xl > .grid > :last-child {
+  background: rgba(13,12,23,.97) !important;
+}
+@media (max-width: 1023px) {
+  #root aside { border-color: #30204b !important; }
+  #root .max-w-6xl > .grid { border-radius: 20px !important; }
+}
