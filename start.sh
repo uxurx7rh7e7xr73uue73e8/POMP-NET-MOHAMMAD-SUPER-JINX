@@ -254,6 +254,20 @@ mkdir -p "$POMPNET_ENGINE_DATA"
   done ) &
 ENGINE_WORKER=$!
 echo "$ENGINE_WORKER" > /run/jinx/pompnet-engine-worker.pid
+# Do not let the panel report ready while the independent Xray engine is still booting.
+ENGINE_READY=0
+for attempt in $(seq 1 30); do
+  if curl -fsS http://127.0.0.1:8092/health >/dev/null 2>&1; then
+    ENGINE_READY=1
+    break
+  fi
+  sleep 2
+done
+if [ "$ENGINE_READY" != "1" ]; then
+  echo "[pompnet-engine] FATAL: independent Xray did not become healthy within 60 seconds."
+  exit 1
+fi
+echo "[pompnet-engine] independent Xray health check passed"
 trap 'kill -TERM $MAIN 2>/dev/null; wait $MAIN; exit 0' TERM INT
 
 # helpers restart themselves if they ever stop; the panel keeps running no matter what
