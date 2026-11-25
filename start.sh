@@ -241,6 +241,19 @@ PY
 python main.py &
 MAIN=$!
 echo "$MAIN" > /run/jinx/marzban.pid
+
+# Independent POMP NET Xray engine. It has its own SQLite registry/config and
+# separate loopback listeners (21001-21003); Marzban's existing core remains
+# untouched during this staged migration.
+export POMPNET_ENGINE_DATA=/var/lib/marzban/pompnet-engine
+mkdir -p "$POMPNET_ENGINE_DATA"
+( set +e; while true; do
+    python /opt/pompnet_xray_engine.py
+    echo "[pompnet-engine] worker stopped; retrying in 5s"
+    sleep 5
+  done ) &
+ENGINE_WORKER=$!
+echo "$ENGINE_WORKER" > /run/jinx/pompnet-engine-worker.pid
 trap 'kill -TERM $MAIN 2>/dev/null; wait $MAIN; exit 0' TERM INT
 
 # helpers restart themselves if they ever stop; the panel keeps running no matter what
