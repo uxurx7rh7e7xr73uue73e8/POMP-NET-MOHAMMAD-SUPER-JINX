@@ -511,3 +511,8 @@ curl -fsS https://YOUR-DOMAIN/health
 طرح اجرایی مستقل برای انتقال امن از Marzban به هسته رسمی PasarGuard، شامل پشتیبان‌گیری، نگاشت داده‌ها، inboundهای واقعی Xray، اشتراک TLS روی 2096، Cloudflare و آزمون v2rayNG در [راهنمای مهاجرت PasarGuard](docs/PASARGUARD-MIGRATION.md) ثبت شده است. **وضعیت فعلی: برنامه مهاجرت مستند شده؛ هسته و دیتابیس این شاخه هنوز Marzban هستند و مهاجرت واقعی تکمیل نشده است.**
 
 همچنین راه‌اندازی مدیر دیگر رمز تصادفی تولید یا در log چاپ نمی‌کند؛ برای نصب اولیه باید Secret ثابت `ADMIN_PASSWORD` در محیط اجرا تنظیم شود. رمز موجود در دیتابیس پایدار، بدون reset صریح دست‌نخورده می‌ماند.
+
+
+## 🚄 استقرار روی Railway
+
+راهنمای دقیق Volume، پورت دامنه، رمز ثابت مدیر، اشتراک و آزمون واقعی پس از Deploy در [راهنمای استقرار Railway](docs/RAILWAY-DEPLOYMENT.md) قرار دارد. توجه: هسته فعلی این شاخه Marzban است؛ مسیر Volume درست آن `/var/lib/marzban` است، نه `/var/lib/pasarguard`.
