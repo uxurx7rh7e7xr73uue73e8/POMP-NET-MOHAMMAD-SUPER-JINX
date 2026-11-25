@@ -23,7 +23,7 @@ class ConvertTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"unsupported_inbound_mapping"):
             m.convert(self.src,bad)
     def test_rejects_missing_inbound_mapping(self):
-        with self.assertRaisesRegex(ValueError,"inbound_mapping_missing"):
+        with self.assertRaisesRegex(ValueError,"inbound_map_required"):
             m.convert(self.src,{})
     def test_rejects_ambiguous_protocol_credentials(self):
         self.src["users"][0]["proxies"]["vmess"]={"id":"different"}
