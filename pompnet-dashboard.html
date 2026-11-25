@@ -150,7 +150,7 @@ td,th{border-bottom:1px solid #ffffff0b}
   </div>
  </div>
  <div class="card section">
-  <div class="section-head"><h2>ساخت کاربر در هسته SideRail</h2><div class="toolbar"><span class="tag">API واقعی</span><button class="btn secondary" id="srOpenFull">بازکردن پنل کامل SideRail ↗</button></div></div>
+  <div class="section-head"><h2>ساخت کاربر در هسته SideRail</h2><div class="toolbar"><span class="tag">API واقعی</span></div></div>
   <form id="srCreateForm"><div class="form-grid">
    <div class="field"><label>نام کاربری / ایمیل</label><input id="srEmail" required maxlength="100"></div>
    <div class="field"><label>حجم (GB) · صفر نامحدود</label><input id="srLimit" type="number" min="0" value="30"></div>
@@ -261,7 +261,7 @@ $("srCreateForm").onsubmit=async e=>{
  }catch(e){$("srCreateMsg").style.color="var(--red)";$("srCreateMsg").textContent="خطا: "+e.message}finally{$("srCreateBtn").disabled=false}
 };
 $("srSearch").oninput=renderSrUsers;$("srRefresh").onclick=()=>loadSideRail().catch(showSrError);
-$("srOpenFull").onclick=async()=>{try{const info=await sr("/public-url");if(!info.url){srNotice("SIDERAIL_PUBLIC_URL هنوز در متغیرهای سرور تنظیم نشده است.",false);return}window.open(info.url,"_blank","noopener")}catch(e){showSrError(e)}};
+
 $("srRestartXray").onclick=async()=>{if(!confirm("هسته Xray واقعی SideRail راه‌اندازی مجدد شود؟"))return;try{await sr("/system/restart-xray",{method:"POST",body:{}});srNotice("درخواست راه‌اندازی مجدد Xray به SideRail ارسال شد.");}catch(e){showSrError(e)}};
 $("srClearActivity").onclick=async()=>{if(!confirm("گزارش فعالیت SideRail پاک شود؟"))return;try{await sr("/activity",{method:"DELETE",body:{}});$("srExtra").textContent="گزارش فعالیت پاک شد.";srNotice("گزارش فعالیت SideRail پاک شد.");}catch(e){showSrError(e)}};
 $("srRoutingBtn").onclick=async()=>{try{$("srExtra").textContent=JSON.stringify(await sr("/routing"),null,2)}catch(e){showSrError(e)}};
