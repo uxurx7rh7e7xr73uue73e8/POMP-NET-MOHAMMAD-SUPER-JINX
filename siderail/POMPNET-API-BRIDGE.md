@@ -19,7 +19,7 @@ The allow-list covers SideRail status, system metrics/restart, users and per-use
 
 ## Existing subscription URL compatibility
 
-Nginx now routes public `GET /sub/*` requests through the helper:
+When `SIDERAIL_INTERNAL_URL` (or the `SIDERAIL_URL` fallback) is configured, Nginx routes public `GET /sub/*` requests through the helper. When SideRail is not configured, startup rewrites only the dedicated subscription upstream to the original Marzban/3X-UI backend so existing subscriptions keep their original behavior:
 1. If `SIDERAIL_INTERNAL_URL` is configured and the path is a supported SideRail token route, the helper tries SideRail's public `/sub/{token}` (or `/json`, `/clash`, `/singbox`) endpoint first.
 2. A SideRail HTTP 404 means the token is not imported there; the request falls back to the exact existing Marzban/optional 3X-UI subscription backend.
 3. A SideRail HTTP 410 (expired) is returned as-is. Network failure returns 503 rather than silently sending an imported user's token to the wrong database.
