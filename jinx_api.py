@@ -1106,6 +1106,11 @@ class H(BaseHTTPRequestHandler):
         caller = self.caller(True)
         if not caller:
             return
+        if path == "/siderail/public-url" and method == "GET":
+            public_url = (os.environ.get("SIDERAIL_PUBLIC_URL") or "").strip()
+            if public_url and not re.match(r"^https://[^/]+(?:/)?$", public_url):
+                return self.send(500, {"error": "invalid_siderail_public_url"})
+            return self.send(200, {"url": public_url})
         if path == "/siderail/health" and method == "GET":
             target = "/healthz"
             raw = b""
