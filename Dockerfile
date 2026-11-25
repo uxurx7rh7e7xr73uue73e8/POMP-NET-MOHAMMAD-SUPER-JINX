@@ -1,8 +1,46 @@
+# Build the pinned SideRail backend as an internal engine for the POMP NET single-service panel.
+# Its SPA is not exposed; operators use the POMP NET login, dashboard and subscription skin.
+FROM node:24-bookworm-slim AS siderail-build
+ARG SIDERAIL_COMMIT=6d794ce2303a01ecc412941a4f38fd00a3bda65b
+RUN apt-get update && apt-get install -y --no-install-recommends git python3 ca-certificates \
+ && rm -rf /var/lib/apt/lists/*
+WORKDIR /build
+RUN git clone https://github.com/icubaby/SideRail.git upstream \
+ && cd upstream \
+ && git checkout --detach "$SIDERAIL_COMMIT" \
+ && test "$(git rev-parse HEAD)" = "$SIDERAIL_COMMIT"
+WORKDIR /build/upstream
+ENV npm_config_audit=false npm_config_fund=false
+COPY siderail/pompnet-theme.css /tmp/pompnet-theme.css
+COPY siderail/patch_i18n.py /tmp/patch_i18n.py
+COPY siderail/patch_tunnel.py /tmp/patch_tunnel.py
+COPY siderail/patch_brand.py /tmp/patch_brand.py
+RUN cat /tmp/pompnet-theme.css >> apps/web/src/index.css \
+ && python3 /tmp/patch_i18n.py \
+ && python3 /tmp/patch_tunnel.py \
+ && python3 /tmp/patch_brand.py
+RUN npm ci --prefer-offline --no-audit --no-fund \
+ && npm run build \
+ && npm prune --omit=dev
+
 FROM gozargah/marzban:latest
 
-RUN apt-get update \
- && apt-get install -y --no-install-recommends nginx curl ca-certificates procps \
+RUN apt-get update \\
+ && apt-get install -y --no-install-recommends nginx curl ca-certificates procps libstdc++6 \\
  && rm -rf /var/lib/apt/lists/* /etc/nginx/sites-enabled/default
+# Node 24 runs SideRail privately; only Nginx port 8080 is public.
+COPY --from=siderail-build /usr/local/bin/node /usr/local/bin/node
+RUN chmod 0755 /usr/local/bin/node && node --version
+RUN mkdir -p /opt/siderail/apps/server /opt/siderail/apps/web
+COPY --from=siderail-build /build/upstream/package.json /opt/siderail/package.json
+COPY --from=siderail-build /build/upstream/package-lock.json /opt/siderail/package-lock.json
+COPY --from=siderail-build /build/upstream/LICENSE /opt/siderail/LICENSE
+COPY --from=siderail-build /build/upstream/NOTICE /opt/siderail/NOTICE
+COPY --from=siderail-build /build/upstream/README.md /opt/siderail/UPSTREAM-README.md
+COPY --from=siderail-build /build/upstream/apps/server/package.json /opt/siderail/apps/server/package.json
+COPY --from=siderail-build /build/upstream/node_modules /opt/siderail/node_modules
+COPY --from=siderail-build /build/upstream/apps/server/dist /opt/siderail/apps/server/dist
+COPY --from=siderail-build /build/upstream/apps/web/dist /opt/siderail/apps/web/dist
 # ⚡ nginx defaults allow only 768 connections per worker: every config uses 2 (phone + core), so busy panels got slow.
 #    Raised to 16384 per worker with a matching file limit (never fails the build)
 RUN ( sed -i 's/worker_connections [0-9]*;/worker_connections 16384;/; s/# *multi_accept on;/multi_accept on;/' /etc/nginx/nginx.conf \
