@@ -55,12 +55,11 @@ Do not treat the stored quota field as an enforced quota.
 - The existing Marzban-managed Xray remains active during this staged phase.
   The new engine uses separate ports and data. No existing users are migrated
   automatically; no current subscription links are rewritten.
-- The current POMP NET dashboard and subscription page remain unchanged.
+- The POMP NET dashboard keeps its existing visual design and login flow; its user, inbound, system and diagnostics API calls now route to the independent engine. The existing Marzban subscription template and `/sub/` route remain unchanged; new engine subscriptions use `/pompnet-sub/`.
 
 ## Verification status
 
-The code is committed to the feature branch. GitHub Actions must pass the Python
-syntax check and Docker build before considering the image buildable. A passing
+The code is committed to the feature branch. GitHub Actions run 308 passed Python syntax validation, JSON validation, Docker image build, and the existing Marzban runtime smoke test at the earlier engine commit. The later multi-protocol/dashboard adapter changes still require a fresh CI run and runtime validation. A passing
 build is not proof of a live Railway deployment or an Android v2rayNG tunnel.
 Railway remains Viewer-only in the connected account, so no Railway variables,
 Volume, deployment, or public client test are claimed here.
