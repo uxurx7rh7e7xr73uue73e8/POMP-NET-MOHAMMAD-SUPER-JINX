@@ -827,13 +827,13 @@ def siderail_allowed(method, path):
     if (method, path) in exact:
         return True
     patterns = [
-        (r"^/users/\\d+$", {"GET", "PUT", "DELETE"}),
-        (r"^/users/\\d+/ips$", {"GET"}),
-        (r"^/users/\\d+/(toggle|reset-traffic|rotate-token)$", {"POST"}),
-        (r"^/inbounds/\\d+$", {"PATCH"}),
-        (r"^/admins/\\d+$", {"PUT", "DELETE"}),
+        (r"^/users/\d+$", {"GET", "PUT", "DELETE"}),
+        (r"^/users/\d+/ips$", {"GET"}),
+        (r"^/users/\d+/(toggle|reset-traffic|rotate-token)$", {"POST"}),
+        (r"^/inbounds/\d+$", {"PATCH"}),
+        (r"^/admins/\d+$", {"PUT", "DELETE"}),
         (r"^/settings/credentials$", {"POST"}),
-        (r"^/routing/\\d+$", {"PUT", "DELETE"}),
+        (r"^/routing/\d+$", {"PUT", "DELETE"}),
         (r"^/routing$", {"POST"}),
     ]
     return any(method in methods and re.match(pattern, path) for pattern, methods in patterns)
