@@ -195,8 +195,7 @@ td,th{border-bottom:1px solid #ffffff0b}
     <div class="field"><label>کد کشور سرور (دو حرف انگلیسی)</label><input id="srLocation" maxlength="2" placeholder="FI"></div>
     <button class="btn" type="submit">ذخیره تنظیمات</button><div id="srSettingsMsg" class="msg"></div>
    </form>
-   <div class="section-head"><h3>تغییر رمز مدیر هسته</h3></div>
-   <form id="srCredentialsForm"><div class="field"><label>رمز فعلی</label><input id="srCurrentPassword" type="password" required></div><div class="field"><label>نام کاربری جدید (اختیاری)</label><input id="srNewUsername"></div><div class="field"><label>رمز جدید (اختیاری)</label><input id="srNewPassword" type="password"></div><button class="btn secondary" type="submit">تغییر اطلاعات مدیر</button><div id="srCredentialsMsg" class="msg"></div></form>
+   <div class="notice">ورود مدیر از حساب POMP NET انجام می‌شود؛ اعتبارنامه داخلی سرویس در تنظیمات امن سرور نگهداری می‌شود.</div>
   </div>
  </div>
  <div class="card section" id="srAdminsPanel">
@@ -323,7 +322,7 @@ $("srBotRefresh").onclick=()=>loadSrBot().catch(showSrError);
 async function loadSrSettings(){const s=await sr("/settings");$("srSubTitle").value=s.subTitle||"";$("srLocation").value=s.location||""}
 $("srSettingsForm").onsubmit=async e=>{e.preventDefault();try{await sr("/settings",{method:"PUT",body:{subTitle:$("srSubTitle").value,location:$("srLocation").value.trim().toUpperCase()}});$("srSettingsMsg").textContent="تنظیمات ذخیره شد."}catch(err){$("srSettingsMsg").textContent="خطا: "+err.message}};
 $("srSettingsRefresh").onclick=()=>loadSrSettings().catch(showSrError);
-$("srCredentialsForm").onsubmit=async e=>{e.preventDefault();const body={currentPassword:$("srCurrentPassword").value};if($("srNewUsername").value.trim())body.newUsername=$("srNewUsername").value.trim();if($("srNewPassword").value)body.newPassword=$("srNewPassword").value;try{await sr("/settings/credentials",{method:"POST",body});$("srCredentialsMsg").textContent="اطلاعات مدیر تغییر کرد؛ ممکن است نشست فعلی نیاز به ورود مجدد داشته باشد.";e.target.reset()}catch(err){$("srCredentialsMsg").textContent="خطا: "+err.message}};
+
 async function loadSrAdmins(){const data=await sr("/admins");const list=data.admins||[];$("srAdminRows").innerHTML=list.map(a=>'<tr><td>'+esc(a.username)+'</td><td>'+esc(a.role||"admin")+'</td><td>'+esc(a.userCount??"—")+'</td><td>'+srBytes(a.used||0)+'</td><td>'+esc((a.permissions||[]).join(", "))+'</td><td><button class="btn secondary" data-sr-admin-edit="'+a.id+'">ویرایش</button> <button class="btn danger" data-sr-admin-delete="'+a.id+'">حذف</button></td></tr>').join("")||'<tr><td colspan="6" class="empty">مدیری ثبت نشده است.</td></tr>';
  document.querySelectorAll("[data-sr-admin-delete]").forEach(b=>b.onclick=async()=>{if(!confirm("این مدیر حذف شود؟"))return;try{await sr("/admins/"+b.dataset.srAdminDelete,{method:"DELETE"});await loadSrAdmins()}catch(e){$("srAdminMsg").textContent=e.message}});
  document.querySelectorAll("[data-sr-admin-edit]").forEach(b=>b.onclick=async()=>{const id=b.dataset.srAdminEdit;const limit=prompt("سقف حجم جدید GB (0 نامحدود):","0");if(limit===null)return;const days=prompt("اعتبار روز جدید (0 نامحدود):","0");if(days===null)return;const pass=prompt("رمز جدید (خالی = بدون تغییر):","");const body={dataLimit:Number(limit),expireDays:Number(days)};if(pass)body.password=pass;try{await sr("/admins/"+id,{method:"PUT",body});await loadSrAdmins()}catch(e){$("srAdminMsg").textContent=e.message}});
