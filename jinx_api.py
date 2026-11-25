@@ -1114,7 +1114,7 @@ class H(BaseHTTPRequestHandler):
             if not siderail_allowed(method, target):
                 return self.send(404, "siderail_route_not_allowed")
             try:
-                raw = self.body(1048576) if method in ("POST", "PUT", "PATCH") else b""
+                raw = self.body(25 * 1024 * 1024) if method in ("POST", "PUT", "PATCH") else b""
                 if raw:
                     parsed = json.loads(raw.decode("utf-8"))
                     if not isinstance(parsed, dict):
