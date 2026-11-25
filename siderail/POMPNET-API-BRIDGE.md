@@ -12,7 +12,7 @@ Configure these secrets on the POMP NET service:
 - `SIDERAIL_INTERNAL_URL` — SideRail internal URL, e.g. the private Railway service URL.
 - `SIDERAIL_OWNER_USERNAME` — SideRail owner username.
 - `SIDERAIL_OWNER_PASSWORD` — SideRail owner password.
-- `SIDERAIL_PUBLIC_URL` — optional HTTPS public URL of the SideRail web app; shown only to authenticated POMP NET owners as a shortcut to the complete upstream UI.
+- `SIDERAIL_PUBLIC_URL` — HTTPS public URL of the SideRail web app; returned only by the owner-authenticated `/jinx-api/siderail/open` endpoint and used for the full UI launch button.
 
 Do not commit credentials to Git. The helper caches the SideRail JWT in process memory and renews it after an upstream 401.
 
@@ -28,6 +28,10 @@ When `SIDERAIL_INTERNAL_URL` (or the `SIDERAIL_URL` fallback) is configured, Ngi
 5. Original token text, path, query string, User-Agent, host, content type, `Subscription-Userinfo`, `Profile-Update-Interval` and `Profile-Title` are preserved.
 
 The SideRail backup converter preserves the old Marzban token values where SideRail can represent the user. After a successful import, those old `/sub/{token}` URLs resolve against SideRail without changing the URL printed on the user's device. Unsupported or rejected users remain on Marzban.
+
+## Complete native SideRail web application
+
+The SideRail Docker image builds and copies `apps/web/dist` alongside `apps/server/dist`. The upstream Express server serves the full React SPA, static assets and client-side routes from the SideRail service root. The isolated runtime workflow verifies `/`, `/login`, the built JavaScript asset and `/healthz`. Configure `SIDERAIL_PUBLIC_URL` on the POMP NET service to expose the authenticated launch button in its SideRail section. The native SideRail UI uses its own SideRail owner login; the POMP NET API bridge remains authenticated with the existing POMP NET super-admin session.
 
 ## Dashboard
 
