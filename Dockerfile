@@ -38,6 +38,7 @@ RUN mkdir -p /opt/jinx/fonts \
       ; rm -rf /tmp/vz /tmp/vz.zip ) || echo "font download skipped, using system font" \
  && ls /opt/jinx/fonts
 COPY pompnet_telegram_bot.py /opt/pompnet_telegram_bot.py
+COPY pompnet_xray_engine.py /opt/pompnet_xray_engine.py
 COPY doctor.html /opt/jinx/doctor.html
 COPY start.sh /start.sh
 

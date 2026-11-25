@@ -121,6 +121,29 @@ echo "[smoke] animated dashboard assets + 24 scenes: OK"
 
 TOKEN="$(login)"
 echo "[smoke] admin login: OK"
+curl --fail --silent --show-error "$BASE/pompnet-engine/health" | python -c 'import json,sys; d=json.load(sys.stdin); assert d.get("ok") is True and d.get("engine")=="xray-independent" and d.get("pid"); print("[smoke] independent Xray process is running: OK")'
+curl --fail --silent --show-error "$BASE/pompnet-engine/api/inbounds" -H "Authorization: Bearer $TOKEN" | python -c 'import json,sys; a=json.load(sys.stdin); assert {x["protocol"] for x in a}=={"vless","vmess","trojan"}; assert all(x["port"]==443 and x["transport"]=="ws" for x in a); print("[smoke] three independent Railway WebSocket inbounds: OK")'
+ENGINE_CREATE="$(curl --fail --silent --show-error -X POST "$BASE/pompnet-engine/api/users" \
+  -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+  --data '{"username":"pompnet_engine_ci","protocols":["vless","vmess","trojan"],"expire":0,"data_limit_gb":0}')"
+echo "$ENGINE_CREATE" | python -c 'import json,sys; d=json.load(sys.stdin); assert d["ok"] and len(d["links"])==3 and d["subscription_url"]; print("[smoke] independent Xray created three real protocol credentials: OK")'
+ENGINE_SUB_PATH="$(printf '%s' "$ENGINE_CREATE" | python -c 'import json,sys,urllib.parse; print(urllib.parse.urlsplit(json.load(sys.stdin)["subscription_url"]).path)')"
+curl --fail --silent --show-error "$BASE$ENGINE_SUB_PATH" | python -c 'import base64,sys; s=base64.b64decode(sys.stdin.buffer.read()).decode(); assert all(x in s for x in ("vless://","vmess://","trojan://")); print("[smoke] independent Xray subscription serves all three links: OK")'
+python - "$BASE" <<'PYWS'
+import http.client, sys
+from urllib.parse import urlsplit
+u = urlsplit(sys.argv[1])
+for path in ("/pompnet/vless", "/pompnet/vmess", "/pompnet/trojan"):
+    c = http.client.HTTPConnection(u.hostname, u.port, timeout=12)
+    c.request("GET", path, headers={
+        "Host": u.netloc, "Upgrade": "websocket", "Connection": "Upgrade",
+        "Sec-WebSocket-Key": "dGhlIHNhbXBsZSBub25jZQ==", "Sec-WebSocket-Version": "13"
+    })
+    r = c.getresponse()
+    assert r.status == 101, f"{path}: expected WebSocket 101, got {r.status}"
+    c.close()
+print("[smoke] all three Nginx -> independent Xray WebSocket handshakes: OK")
+PYWS
 
 USER_JSON="$(curl --fail --silent --show-error --retry 10 --retry-all-errors --retry-delay 2 \
   -X POST "$BASE/api/user" \

@@ -25,7 +25,7 @@ jobs:
 
       - name: Validate Python syntax
         run: |
-          python -m py_compile doctor.py enforce_hosts.py ensure_admin.py jinx_api.py lock.py pompnet_telegram_bot.py
+          python -m py_compile doctor.py enforce_hosts.py ensure_admin.py jinx_api.py lock.py pompnet_telegram_bot.py pompnet_xray_engine.py
 
       - name: Validate JSON files
         run: |
