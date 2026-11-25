@@ -777,12 +777,26 @@ def siderail_login(force=False):
         password = os.environ.get("SIDERAIL_OWNER_PASSWORD", "")
         if not base or not username or not password:
             raise RuntimeError("siderail_not_configured")
-        body = json.dumps({"username": username, "password": password}).encode()
-        req = urllib.request.Request(base + "/api/login", data=body,
-            headers={"Content-Type": "application/json", "Accept": "application/json"}, method="POST")
+        headers = {"Content-Type": "application/json", "Accept": "application/json"}
+        def post_json(route):
+            data = json.dumps({"username": username, "password": password}).encode()
+            req = urllib.request.Request(base + route, data=data, headers=headers, method="POST")
+            with urllib.request.urlopen(req, timeout=15) as response:
+                return json.loads(response.read().decode("utf-8"))
+        # One-time first-run setup on an empty SideRail volume; never resets an existing database.
         try:
-            with urllib.request.urlopen(req, timeout=12) as response:
-                payload = json.loads(response.read().decode("utf-8"))
+            status_req = urllib.request.Request(base + "/api/status", headers={"Accept": "application/json"})
+            with urllib.request.urlopen(status_req, timeout=12) as response:
+                status_payload = json.loads(response.read().decode("utf-8"))
+            if isinstance(status_payload, dict) and status_payload.get("setup") is False:
+                try:
+                    payload = post_json("/api/setup")
+                except urllib.error.HTTPError as setup_error:
+                    if setup_error.code not in (400, 409):
+                        raise
+                    payload = post_json("/api/login")
+            else:
+                payload = post_json("/api/login")
         except urllib.error.HTTPError as e:
             raise RuntimeError("siderail_auth_failed_" + str(e.code))
         token = payload.get("token") if isinstance(payload, dict) else None
