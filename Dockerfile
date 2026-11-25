@@ -7,8 +7,6 @@ COPY start-railway.sh /usr/local/bin/start-railway.sh
 RUN chmod 0755 /usr/local/bin/start-railway.sh
 
 ENV UVICORN_HOST=0.0.0.0 \
-    UVICORN_PROXY_HEADERS=true \
-    UVICORN_FORWARDED_ALLOW_IPS=* \
     SQLALCHEMY_DATABASE_URL=sqlite+aiosqlite:////var/lib/pasarguard/db.sqlite3 \
     DEBUG=false
 
