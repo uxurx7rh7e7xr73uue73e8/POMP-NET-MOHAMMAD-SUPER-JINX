@@ -27,6 +27,21 @@ jobs:
         run: |
           python -m py_compile doctor.py enforce_hosts.py ensure_admin.py jinx_api.py lock.py pompnet_telegram_bot.py
 
+      - name: Validate inline dashboard JavaScript
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          html = Path("pompnet-dashboard.html").read_text(encoding="utf-8")
+          scripts = re.findall(r'<script(?![^>]*\\bsrc=)(?![^>]*type="application/json")[^>]*>(.*?)</script>', html, re.S | re.I)
+          if not scripts:
+              raise SystemExit("No inline dashboard scripts found")
+          for i, script in enumerate(scripts):
+              Path(f"/tmp/pompnet-dashboard-{i}.js").write_text(script, encoding="utf-8")
+          print(f"Extracted {len(scripts)} inline scripts")
+          PY
+          for f in /tmp/pompnet-dashboard-*.js; do node --check "$f"; done
+
       - name: Validate JSON files
         run: |
           python -m json.tool xray_config.json >/dev/null
