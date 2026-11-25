@@ -5,6 +5,8 @@ on:
     paths:
       - "siderail/**"
       - "vendor/SideRail"
+      - "migration/marzban_to_siderail_backup.py"
+      - "migration/test_marzban_to_siderail_backup.py"
       - ".github/workflows/siderail-staging-build.yml"
   push:
     branches:
@@ -23,6 +25,8 @@ jobs:
     steps:
       - name: Checkout POMP NET source
         uses: actions/checkout@v4
+      - name: Run migration converter safety tests
+        run: python3 -m unittest migration/test_marzban_to_siderail_backup.py -v
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Build isolated SideRail image
