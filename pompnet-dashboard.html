@@ -140,40 +140,40 @@ td,th{border-bottom:1px solid #ffffff0b}
 <section id="page-siderail" class="hidden">
  <div class="card">
   <div class="section-head"><h2>مدیریت یکپارچه هسته POMP NET</h2><div class="toolbar"><span id="srState" class="tag off">در حال بررسی</span><button class="btn secondary" id="srRefresh">↻ بروزرسانی</button></div></div>
-  <p class="sub">این بخش با نشست مدیر فعلی POMP NET به API واقعی SideRail متصل می‌شود؛ حساب و رمز SideRail در مرورگر ذخیره نمی‌شود.</p>
-  <div id="srMessage" class="notice">در انتظار اتصال امن به SideRail…</div>
+  <p class="sub">این بخش با نشست امن مدیر POMP NET به هسته عملیاتی متصل می‌شود؛ اطلاعات ورود داخلی هرگز در مرورگر ذخیره نمی‌شود.</p>
+  <div id="srMessage" class="notice">در انتظار اتصال امن به هسته POMP NET…</div>
   <div class="grid section">
-   <article class="card"><div class="stat">کاربران SideRail</div><div class="number" id="srUsersCount">—</div></article>
+   <article class="card"><div class="stat">کاربران POMP NET</div><div class="number" id="srUsersCount">—</div></article>
    <article class="card"><div class="stat">کاربران آنلاین</div><div class="number" id="srOnlineCount">—</div></article>
    <article class="card"><div class="stat">اینباندها</div><div class="number" id="srInboundCount">—</div></article>
    <article class="card"><div class="stat">نسخه Xray</div><div class="number" id="srCoreVersion" style="font-size:17px">—</div></article>
   </div>
  </div>
  <div class="card section">
-  <div class="section-head"><h2>ساخت کاربر در هسته SideRail</h2><div class="toolbar"><span class="tag">API واقعی</span></div></div>
+  <div class="section-head"><h2>ساخت کاربر در هسته POMP NET</h2><div class="toolbar"><span class="tag">API واقعی</span></div></div>
   <form id="srCreateForm"><div class="form-grid">
    <div class="field"><label>نام کاربری / ایمیل</label><input id="srEmail" required maxlength="100"></div>
    <div class="field"><label>حجم (GB) · صفر نامحدود</label><input id="srLimit" type="number" min="0" value="30"></div>
    <div class="field"><label>اعتبار (روز) · صفر بدون انقضا</label><input id="srDays" type="number" min="0" value="30"></div>
    <div class="field"><label>توضیحات</label><input id="srComment" maxlength="200"></div>
-   <div class="field wide"><label>اینباندهای فعال SideRail</label><div id="srInboundPicks" class="protocol-picks">ابتدا اینباندها را بارگذاری کنید.</div></div>
-  </div><button class="btn" id="srCreateBtn">＋ ساخت کاربر واقعی SideRail</button><div id="srCreateMsg" class="msg"></div></form>
+   <div class="field wide"><label>اینباندهای فعال</label><div id="srInboundPicks" class="protocol-picks">ابتدا اینباندها را بارگذاری کنید.</div></div>
+  </div><button class="btn" id="srCreateBtn">＋ ساخت کاربر واقعی</button><div id="srCreateMsg" class="msg"></div></form>
  </div>
  <div class="card section">
-  <div class="section-head"><h2>کاربران و اشتراک‌های SideRail</h2><input id="srSearch" placeholder="جستجوی کاربر…"></div>
+  <div class="section-head"><h2>کاربران و اشتراک‌ها</h2><input id="srSearch" placeholder="جستجوی کاربر…"></div>
   <div class="table-wrap"><table><thead><tr><th>کاربر</th><th>وضعیت</th><th>مصرف</th><th>حجم</th><th>انقضا</th><th>اشتراک</th><th>عملیات</th></tr></thead><tbody id="srUserRows"><tr><td colspan="7" class="empty">در حال دریافت…</td></tr></tbody></table></div>
  </div>
  <div class="card section">
-  <div class="section-head"><h2>اینباندهای واقعی SideRail</h2></div>
+  <div class="section-head"><h2>اینباندهای هسته</h2></div>
   <div class="table-wrap"><table><thead><tr><th>تگ</th><th>پروتکل</th><th>انتقال</th><th>پورت</th><th>وضعیت</th><th>عملیات</th></tr></thead><tbody id="srInboundRows"><tr><td colspan="6" class="empty">در حال دریافت…</td></tr></tbody></table></div>
  </div>
  <div class="card section">
-  <div class="section-head"><h2>ابزارهای مدیریتی SideRail</h2><div class="toolbar"><button class="btn secondary" id="srRestartXray">راه‌اندازی مجدد Xray</button><button class="btn secondary" id="srRoutingBtn">مسیریابی</button><button class="btn secondary" id="srActivityBtn">گزارش فعالیت</button><button class="btn secondary" id="srClearActivity">پاک‌کردن گزارش</button><button class="btn secondary" id="srBotBtn">ربات تلگرام</button><button class="btn secondary" id="srSettingsBtn">تنظیمات</button><button class="btn secondary" id="srAdminsBtn">مدیران</button></div></div>
+  <div class="section-head"><h2>ابزارهای پیشرفته مدیریت</h2><div class="toolbar"><button class="btn secondary" id="srRestartXray">راه‌اندازی مجدد Xray</button><button class="btn secondary" id="srRoutingBtn">مسیریابی</button><button class="btn secondary" id="srActivityBtn">گزارش فعالیت</button><button class="btn secondary" id="srClearActivity">پاک‌کردن گزارش</button><button class="btn secondary" id="srBotBtn">ربات تلگرام</button><button class="btn secondary" id="srSettingsBtn">تنظیمات</button><button class="btn secondary" id="srAdminsBtn">مدیران</button></div></div>
   <pre id="srExtra" style="white-space:pre-wrap;direction:ltr;text-align:left;color:#d8c8f3;font-size:12px;line-height:2">داده‌های مدیریتی پس از انتخاب ابزار نمایش داده می‌شوند.</pre>
  </div>
  <div class="card section">
-  <div class="section-head"><h2>پشتیبان SideRail</h2><div class="toolbar"><button class="btn secondary" id="srExport">خروجی پشتیبان</button><label class="btn secondary" for="srImportFile">ورود پشتیبان</label><input id="srImportFile" type="file" accept="application/json" hidden></div></div>
-  <div class="notice">ورود پشتیبان، اطلاعات کاربران و اینباندهای دیتابیس SideRail را جایگزین می‌کند؛ دیتابیس Marzban دست‌نخورده می‌ماند. فقط روی سرویس آزمایشی و پس از تهیه پشتیبان اجرا کنید.</div>
+  <div class="section-head"><h2>پشتیبان هسته POMP NET</h2><div class="toolbar"><button class="btn secondary" id="srExport">خروجی پشتیبان</button><label class="btn secondary" for="srImportFile">ورود پشتیبان</label><input id="srImportFile" type="file" accept="application/json" hidden></div></div>
+  <div class="notice">هشدار: بازیابی پشتیبان، اطلاعات کاربران و اینباندهای هسته را جایگزین می‌کند. پیش از اجرا از اطلاعات فعلی نسخه پشتیبان تهیه کنید.</div>
  </div>
 </section>
 </main></div>
@@ -222,17 +222,15 @@ const sr=(path,opts={})=>api("/jinx-api/siderail"+path,opts);
 const srBytes=n=>{n=Number(n||0);if(n<1024**3)return(n/1024**2).toFixed(1)+" MB";return(n/1024**3).toFixed(2)+" GB"};
 const srDate=n=>n?new Date(Number(n)).toLocaleDateString("fa-IR"):"بدون انقضا";
 function srNotice(msg,ok=true){$("srMessage").textContent=msg;$("srState").textContent=ok?"متصل":"خطا";$("srState").className="tag"+(ok?"":" off")}
-function showSrError(e){srNotice("اتصال SideRail برقرار نشد: "+e.message,false)}
+function showSrError(e){srNotice("اتصال هسته برقرار نشد: "+e.message,false)}
 async function loadSideRail(){
- const fullLink=$("srOpenFull");fullLink.classList.add("hidden");fullLink.removeAttribute("href");
- try{const launch=await sr("/open");if(launch&&launch.url){fullLink.href=launch.url;fullLink.classList.remove("hidden")}}catch(_e){}
- srNotice("در حال بررسی API و ورود امن به SideRail…");
+ srNotice("در حال بررسی API و ورود امن به هسته POMP NET…");
  const [status,system,userData,inbounds]=await Promise.all([sr("/status"),sr("/system"),sr("/users"),sr("/inbounds")]);
- if(status.setup===false)throw Error("راه‌اندازی مالک SideRail انجام نشد؛ متغیرهای مالک سرویس را بررسی کنید.");
+ if(status.setup===false)throw Error("راه‌اندازی اولیه هسته انجام نشده است؛ تنظیمات مالک سرویس را بررسی کنید.");
  srUsers=userData.users||[];srInbounds=Array.isArray(inbounds)?inbounds:[];
  $("srUsersCount").textContent=srUsers.length;$("srOnlineCount").textContent=srUsers.filter(x=>x.online).length;$("srInboundCount").textContent=srInbounds.length;
  $("srCoreVersion").textContent=system.coreVersion||system.xrayVersion||"فعال";
- srNotice("اتصال API واقعی SideRail برقرار است. عملیات این صفحه روی دیتابیس مستقل SideRail انجام می‌شود.");
+ srNotice("اتصال API هسته برقرار است. عملیات این صفحه روی دیتابیس هسته انجام می‌شود.");
  renderSrUsers();renderSrInbounds();renderSrInboundPicks();
 }
 function renderSrUsers(){
@@ -244,34 +242,34 @@ function renderSrUsers(){
  document.querySelectorAll("[data-sr-toggle]").forEach(b=>b.onclick=async()=>{try{await sr("/users/"+b.dataset.srToggle+"/toggle",{method:"POST",body:{enabled:b.dataset.enabled==="true"}});await loadSideRail()}catch(e){showSrError(e)}});
  document.querySelectorAll("[data-sr-reset]").forEach(b=>b.onclick=async()=>{if(!confirm("مصرف این کاربر صفر شود؟"))return;try{await sr("/users/"+b.dataset.srReset+"/reset-traffic",{method:"POST",body:{}});await loadSideRail()}catch(e){showSrError(e)}});
  document.querySelectorAll("[data-sr-rotate]").forEach(b=>b.onclick=async()=>{if(!confirm("توکن اشتراک قبلی باطل و توکن جدید ساخته شود؟"))return;try{await sr("/users/"+b.dataset.srRotate+"/rotate-token",{method:"POST",body:{}});await loadSideRail()}catch(e){showSrError(e)}});
- document.querySelectorAll("[data-sr-delete]").forEach(b=>b.onclick=async()=>{if(!confirm("کاربر از دیتابیس SideRail حذف شود؟"))return;try{await sr("/users/"+b.dataset.srDelete,{method:"DELETE"});await loadSideRail()}catch(e){showSrError(e)}});
+ document.querySelectorAll("[data-sr-delete]").forEach(b=>b.onclick=async()=>{if(!confirm("این کاربر از دیتابیس هسته حذف شود؟"))return;try{await sr("/users/"+b.dataset.srDelete,{method:"DELETE"});await loadSideRail()}catch(e){showSrError(e)}});
 }
 function renderSrInbounds(){
  $("srInboundRows").innerHTML=srInbounds.map(i=>"<tr><td>"+esc(i.tag)+"</td><td>"+esc(i.protocol)+"</td><td>"+esc(i.transport)+"</td><td>"+esc(i.port)+"</td><td><span class='tag "+(i.enabled?"":"off")+"'>"+(i.enabled?"فعال":"غیرفعال")+"</span></td><td><button class='btn secondary' data-sr-ib='"+i.id+"' data-sr-ib-enabled='"+(!i.enabled)+"'>"+(i.enabled?"خاموش":"روشن")+"</button></td></tr>").join("")||"<tr><td colspan='6' class='empty'>اینباندی وجود ندارد.</td></tr>";
  document.querySelectorAll("[data-sr-ib]").forEach(b=>b.onclick=async()=>{try{await sr("/inbounds/"+b.dataset.srIb,{method:"PATCH",body:{enabled:b.dataset.srIbEnabled==="true"}});await loadSideRail()}catch(e){showSrError(e)}});
 }
 function renderSrInboundPicks(){
- $("srInboundPicks").innerHTML=srInbounds.filter(x=>x.enabled).map(i=>"<label><input type='checkbox' name='srInbound' value='"+i.id+"'> "+esc(i.tag)+" · "+esc(i.protocol)+"</label>").join("")||"اینباند فعال وجود ندارد؛ ابتدا در SideRail اینباند بسازید.";
+ $("srInboundPicks").innerHTML=srInbounds.filter(x=>x.enabled).map(i=>"<label><input type='checkbox' name='srInbound' value='"+i.id+"'> "+esc(i.tag)+" · "+esc(i.protocol)+"</label>").join("")||"اینباند فعال وجود ندارد؛ ابتدا یک اینباند فعال بسازید.";
 }
 $("srCreateForm").onsubmit=async e=>{
- e.preventDefault();$("srCreateBtn").disabled=true;$("srCreateMsg").textContent="در حال ساخت در SideRail…";
+ e.preventDefault();$("srCreateBtn").disabled=true;$("srCreateMsg").textContent="در حال ساخت کاربر در هسته POMP NET…";
  try{
  const inboundIds=[...document.querySelectorAll('input[name="srInbound"]:checked')].map(x=>Number(x.value));
  if(!inboundIds.length)throw Error("حداقل یک inbound فعال انتخاب کنید.");
  await sr("/users",{method:"POST",body:{email:$("srEmail").value.trim(),dataLimit:Number($("srLimit").value||0),expireDays:Number($("srDays").value||0),comment:$("srComment").value.trim(),inboundIds}});
- $("srCreateMsg").style.color="var(--green)";$("srCreateMsg").textContent="کاربر در SideRail ساخته شد.";e.target.reset();$("srLimit").value=30;$("srDays").value=30;await loadSideRail();
+ $("srCreateMsg").style.color="var(--green)";$("srCreateMsg").textContent="کاربر با موفقیت ساخته شد.";e.target.reset();$("srLimit").value=30;$("srDays").value=30;await loadSideRail();
  }catch(e){$("srCreateMsg").style.color="var(--red)";$("srCreateMsg").textContent="خطا: "+e.message}finally{$("srCreateBtn").disabled=false}
 };
 $("srSearch").oninput=renderSrUsers;$("srRefresh").onclick=()=>loadSideRail().catch(showSrError);
 
-$("srRestartXray").onclick=async()=>{if(!confirm("هسته Xray واقعی SideRail راه‌اندازی مجدد شود؟"))return;try{await sr("/system/restart-xray",{method:"POST",body:{}});srNotice("درخواست راه‌اندازی مجدد Xray به SideRail ارسال شد.");}catch(e){showSrError(e)}};
-$("srClearActivity").onclick=async()=>{if(!confirm("گزارش فعالیت SideRail پاک شود؟"))return;try{await sr("/activity",{method:"DELETE",body:{}});$("srExtra").textContent="گزارش فعالیت پاک شد.";srNotice("گزارش فعالیت SideRail پاک شد.");}catch(e){showSrError(e)}};
+$("srRestartXray").onclick=async()=>{if(!confirm("هسته Xray راه‌اندازی مجدد شود؟"))return;try{await sr("/system/restart-xray",{method:"POST",body:{}});srNotice("درخواست راه‌اندازی مجدد Xray ارسال شد.");}catch(e){showSrError(e)}};
+$("srClearActivity").onclick=async()=>{if(!confirm("گزارش فعالیت هسته پاک شود؟"))return;try{await sr("/activity",{method:"DELETE",body:{}});$("srExtra").textContent="گزارش فعالیت پاک شد.";srNotice("گزارش فعالیت هسته پاک شد.");}catch(e){showSrError(e)}};
 $("srRoutingBtn").onclick=async()=>{try{$("srExtra").textContent=JSON.stringify(await sr("/routing"),null,2)}catch(e){showSrError(e)}};
 $("srActivityBtn").onclick=async()=>{try{$("srExtra").textContent=JSON.stringify(await sr("/activity"),null,2)}catch(e){showSrError(e)}};
 $("srBotBtn").onclick=async()=>{try{$("srExtra").textContent=JSON.stringify(await sr("/bot"),null,2)}catch(e){showSrError(e)}};
 $("srSettingsBtn").onclick=async()=>{try{$("srExtra").textContent=JSON.stringify(await sr("/settings"),null,2)}catch(e){showSrError(e)}};
 $("srAdminsBtn").onclick=async()=>{try{$("srExtra").textContent=JSON.stringify(await sr("/admins"),null,2)}catch(e){showSrError(e)}};
 $("srExport").onclick=async()=>{try{const data=await sr("/backup/export");const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="pompnet-siderail-backup.json";a.click();URL.revokeObjectURL(a.href)}catch(e){showSrError(e)}};
-$("srImportFile").onchange=async e=>{const file=e.target.files?.[0];if(!file)return;if(!confirm("هشدار: این عملیات کاربران و اینباندهای دیتابیس SideRail را جایگزین می‌کند. ادامه می‌دهید؟")){e.target.value="";return}try{const data=JSON.parse(await file.text());await sr("/backup/import",{method:"POST",body:data});await loadSideRail();alert("پشتیبان SideRail وارد شد.")}catch(err){showSrError(err)}finally{e.target.value=""}};
+$("srImportFile").onchange=async e=>{const file=e.target.files?.[0];if(!file)return;if(!confirm("هشدار: این عملیات کاربران و اینباندهای دیتابیس SideRail را جایگزین می‌کند. ادامه می‌دهید؟")){e.target.value="";return}try{const data=JSON.parse(await file.text());await sr("/backup/import",{method:"POST",body:data});await loadSideRail();alert("پشتیبان هسته POMP NET وارد شد.")}catch(err){showSrError(err)}finally{e.target.value=""}};
 
 </script><script src="/pompnet-motion.js" defer></script></body></html>
