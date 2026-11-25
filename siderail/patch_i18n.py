@@ -346,3 +346,24 @@ if marker in s and "const fa: Dict = {" not in s:
 s = s.replace('{ code: "zh", label: "中文" },', '{ code: "zh", label: "中文" },\n  { code: "fa", label: "فارسی" },')
 s = s.replace('  const setLang = React.useCallback((l: Lang) => {', '  React.useEffect(() => {\n    document.documentElement.lang = lang;\n    document.documentElement.dir = lang === "fa" ? "rtl" : "ltr";\n    document.body.dir = lang === "fa" ? "rtl" : "ltr";\n  }, [lang]);\n\n  const setLang = React.useCallback((l: Lang) => {')
 p.write_text(s, encoding="utf-8")
+
+# Rebrand only visible product labels. Keep upstream source URLs, author credits,
+# license text, and required SideRail attribution intact.
+brand_files = [
+    Path("apps/web/src/components/layout/app-layout.tsx"),
+    Path("apps/web/src/components/layout/auth-layout.tsx"),
+    Path("apps/web/src/pages/subscription.tsx"),
+]
+for brand_file in brand_files:
+    if brand_file.exists():
+        source = brand_file.read_text(encoding="utf-8")
+        source = source.replace(">SideRail<", ">POMP NET MOHAMMAD<")
+        source = source.replace('>SideRail</div>', '>POMP NET MOHAMMAD</div>')
+        brand_file.write_text(source, encoding="utf-8")
+
+# Exact Persian owner-facing welcome and sign-in copy.
+i18n_file = Path("apps/web/src/lib/i18n.tsx")
+i18n_source = i18n_file.read_text(encoding="utf-8")
+i18n_source = i18n_source.replace('signInPanel: "وارد پنل SideRail شوید"', 'signInPanel: "وارد پنل پمپ نت محمد شوید"')
+i18n_source = i18n_source.replace('welcomeTitle: "به SideRail خوش آمدید"', 'welcomeTitle: "به پنل پمپ نت محمد خوش آمدید"')
+i18n_file.write_text(i18n_source, encoding="utf-8")
