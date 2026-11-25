@@ -1152,8 +1152,10 @@ class H(BaseHTTPRequestHandler):
             p = path.rstrip("/")
             if p.startswith("/sub/") and method == "GET":
                 return self.subscription(p, query)
-            if p == "/siderail" or p.startswith("/siderail/"):
-                return self.siderail(method, p, query)
+            # Nginx preserves the public /jinx-api prefix when proxying to this helper.
+            sr_path = p[len("/jinx-api"):] if p.startswith("/jinx-api/siderail") else p
+            if sr_path == "/siderail" or sr_path.startswith("/siderail/"):
+                return self.siderail(method, sr_path, query)
             if method == "GET" and p.endswith("/donate-page"):
                 return self.static_page(DON_FILES, "text/html; charset=utf-8", DON_FALLBACK)
             if method == "GET" and p.endswith("/donate-config.js"):
