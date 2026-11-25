@@ -1771,6 +1771,14 @@
     b.innerHTML='<span aria-hidden="true" style="font-size:18px">🤖</span><span>ربات تلگرام POMP NET</span>';
     b.addEventListener("click",function(){location.href="/bot/";});
     menu.appendChild(b);
+    // SideRail owner console is attached to the native Marzban menu, not used as the login/dashboard replacement.
+    var sr=document.createElement("button"); sr.type="button";
+    sr.className="chakra-menu__menuitem pompnet-siderail-menu";
+    sr.setAttribute("role","menuitem"); sr.setAttribute("tabindex","-1");
+    sr.style.cssText="display:flex;align-items:center;width:100%;gap:12px;padding:9px 14px;border:0;background:transparent;color:inherit;text-align:right;cursor:pointer;font:inherit";
+    sr.innerHTML='<span aria-hidden="true" style="font-size:18px">◈</span><span>مدیریت SideRail · POMP NET</span>';
+    sr.addEventListener("click",function(){location.href="/pompnet/";});
+    menu.appendChild(sr);
     var items=[
       ["👥","گپ و گروه پمپ‌نت","https://t.me/PompNett"],
       ["📢","کانال رسمی پمپ‌نت","https://t.me/pompnet"],
