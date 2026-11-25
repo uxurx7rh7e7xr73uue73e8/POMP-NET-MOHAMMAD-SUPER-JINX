@@ -26,7 +26,7 @@
 روی Ubuntu/Debian VPS با دسترسی root:
 
 ```bash
-sudo bash -c "$(curl -fsSL https://github.com/PasarGuard/scripts/raw/main/pg-node.sh)" @ install
+curl -fsSL https://raw.githubusercontent.com/PasarGuard/scripts/main/pg-node.sh -o pg-node.sh\nsudo bash pg-node.sh install
 ```
 
 اسکریپت رسمی وابستگی‌ها و سرویس Node را نصب می‌کند. سپس تنظیمات Node را با دستور زیر باز کن:
@@ -59,7 +59,7 @@ sudo pasarguard-node status
 sudo pasarguard-node logs
 ```
 
-اگر نصب‌کننده نام دیگری برای فرمان Node نمایش داد، همان فرمانی را که نصب‌کننده چاپ کرده استفاده کن. نام فرمان ممکن است با نصب چند Node سفارشی شود.
+برای نصب چند Node با نام سفارشی، از گزینه `--name` طبق راهنمای رسمی استفاده کن و مسیر داده/پورت هر Node را جدا نگه دار.
 
 ## فایروال VPS
 
