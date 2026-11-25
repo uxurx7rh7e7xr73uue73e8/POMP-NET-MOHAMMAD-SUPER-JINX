@@ -25,8 +25,8 @@ RUN npm ci --prefer-offline --no-audit --no-fund \
 
 FROM gozargah/marzban:latest
 
-RUN apt-get update \\
- && apt-get install -y --no-install-recommends nginx curl ca-certificates procps libstdc++6 \\
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends nginx curl ca-certificates procps libstdc++6 \
  && rm -rf /var/lib/apt/lists/* /etc/nginx/sites-enabled/default
 # Node 24 runs SideRail privately; only Nginx port 8080 is public.
 COPY --from=siderail-build /usr/local/bin/node /usr/local/bin/node
