@@ -60,6 +60,7 @@ COPY migration/audit_marzban_db.py /opt/audit_marzban_db.py
 COPY migration/import_marzban_to_3xui.py /opt/import_marzban_to_3xui.py
 COPY jinx.css jinx.js donate.html donate-config.js bot.html /opt/jinx/
 COPY pompnet-dashboard.html /opt/jinx/pompnet-dashboard.html
+COPY pompnet-siderail.js /opt/jinx/pompnet-siderail.js
 COPY pompnet-motion.css pompnet-motion.js /opt/jinx/
 COPY sub.html /opt/jinx/templates/subscription/index.html
 COPY sub.html /opt/jinx/sub.golden.html
