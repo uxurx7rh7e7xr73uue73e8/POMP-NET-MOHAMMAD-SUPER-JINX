@@ -831,7 +831,7 @@ function isDesk() { try { return window.matchMedia("(min-width:900px)").matches;
   var root = document.documentElement;
 
   /* ---------- data ---------- */
-  var raw = $("jinx-data").textContent, D = null, DEMO = false;
+  var raw = $("jinx-data").textContent, D = null;
   try { D = JSON.parse(raw); } catch (e) { D = null; }
   /* Fail closed: never invent sample users, fake VPN links, or a fake 74 ms ping. */
   if (!D || typeof D !== "object" || raw.indexOf("{" + "{") >= 0 || !Array.isArray(D.links)) {
@@ -851,7 +851,7 @@ function isDesk() { try { return window.matchMedia("(min-width:900px)").matches;
   var M = null;   /* current model (exact values used by every button) */
   function opts(animate) {
     return { now: Date.now(), loadedAt: st.loadedAt, origin: location.origin, here: location.href.split("#")[0].split("?")[0],
-      lang: st.lang, theme: st.theme, tab: st.tab, op: st.op, demo: DEMO, cfg: JINX_CONFIG, ping: st.ping, animate: animate };
+      lang: st.lang, theme: st.theme, tab: st.tab, op: st.op, demo: false, cfg: JINX_CONFIG, ping: st.ping, animate: animate };
   }
   var fa = function () { return st.lang === "fa"; };
   var tr = function (f, e) { return fa() ? f : e; };
@@ -987,7 +987,6 @@ function isDesk() { try { return window.matchMedia("(min-width:900px)").matches;
   }
   var pingTry = 0, lastHealth = null;
   function measure(cb) {
-    if (DEMO) { st.ping = 74; st.pings = [82, 77, 79, 74, 76, 73, 75, 74]; setPing(); drawSpark(); if (cb) cb(); return; }
     var best = Infinity, n = 0;
     var once = function () {
       probe("/jinx-api/health", 4000).then(function (r) {
@@ -1234,7 +1233,7 @@ function isDesk() { try { return window.matchMedia("(min-width:900px)").matches;
       if (!appOk() && !CARE.safe) { if (boot(false)) CARE.healed++; }
       add(CARE.safe ? "warn" : "ok", tr("نمایش صفحه", "Page rendering"), CARE.safe ? tr("حالت ایمن فعال است", "Safe mode is on") : CARE.healed ? tr("خطا پیدا و خودکار رفع شد", "An error was found and fixed") : tr("سالم", "Healthy"));
       /* 2. data */
-      add(DEMO ? "warn" : "ok", tr("اطلاعات اشتراک", "Subscription data"), DEMO ? tr("پیش‌نمایش با داده‌ی نمونه", "Preview with sample data") : tr("از پنل دریافت شد", "Received from the panel"));
+      add("ok", tr("اطلاعات اشتراک", "Subscription data"), tr("از پنل دریافت شد", "Received from the panel"));
       /* 3. status */
       var stt = M ? M.status : "active", bad = stt === "expired" || stt === "limited" || stt === "disabled";
       add(bad ? "bad" : M && M.near ? "warn" : "ok", tr("وضعیت اشتراک", "Subscription status"),
@@ -1275,9 +1274,8 @@ function isDesk() { try { return window.matchMedia("(min-width:900px)").matches;
         add(p == null || p < 0 ? "bad" : p <= 150 ? "ok" : p <= 400 ? "warn" : "bad", tr("سرور و پینگ", "Server and ping"),
           p == null || p < 0 ? tr("پاسخ نداد؛ تلاش دوباره خودکار است", "No answer; auto-retrying") : p + " ms" + (p > 400 ? tr(" · کانفیگ دیگری را امتحان کن", " · try another config") : ""));
         var skew = 0;
-        if (!DEMO && lastHealth && lastHealth.date) { var sd = Date.parse(lastHealth.date); if (isFinite(sd)) skew = Math.abs(Date.now() - sd) / 1000; }
+        if (lastHealth && lastHealth.date) { var sd = Date.parse(lastHealth.date); if (isFinite(sd)) skew = Math.abs(Date.now() - sd) / 1000; }
         add(skew > 90 ? "bad" : "ok", tr("ساعت دستگاه", "Device clock"), skew > 90 ? tr("ساعت گوشی دقیق نیست؛ روی خودکار بگذار", "Clock is off; set it to automatic") : tr("دقیق", "Accurate"));
-        if (DEMO) { add("ok", tr("سرویس QR", "QR service"), tr("پیش‌نمایش", "Preview")); finish(out); return; }
         probe("/jinx-api/qr?d=jinx", 4000).then(function (r) {
           add(r.ok ? "ok" : "warn", tr("سرویس QR", "QR service"), r.ok ? tr("سالم", "Healthy") : tr("در دسترس نیست؛ از کپی استفاده کن", "Unavailable; use copy"));
           finish(out);
