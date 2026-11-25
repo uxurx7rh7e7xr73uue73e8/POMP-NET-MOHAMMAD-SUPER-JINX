@@ -136,11 +136,10 @@ if [ -z "${SIDERAIL_INTERNAL_URL:-${SIDERAIL_URL:-}}" ]; then
     fi
     export SIDERAIL_OWNER_PASSWORD="$(cat "$SR_SECRET_FILE")"
   fi
-  export NODE_ENV=production PORT=8092
   export SIDERAIL_DATA_DIR=/var/lib/marzban/siderail
   export CORE_DIR=/var/lib/marzban/siderail/core
   export CORE_VERSION="${CORE_VERSION:-v26.9.9}"
-  ( set +e; while true; do node /opt/siderail/apps/server/dist/index.js; echo "[siderail] internal engine restarting in 3s"; sleep 3; done ) &
+  ( set +e; while true; do cd /opt/siderail && NODE_ENV=production PORT=8092 SIDERAIL_DATA_DIR=/var/lib/marzban/siderail CORE_DIR=/var/lib/marzban/siderail/core CORE_VERSION="$CORE_VERSION" node apps/server/dist/index.js; echo "[siderail] internal engine restarting in 3s"; sleep 3; done ) &
   echo "[siderail] private SideRail engine enabled; POMP NET remains the only public UI"
 else
   echo "[siderail] using explicitly configured SideRail backend URL"
