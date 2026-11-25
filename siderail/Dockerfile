@@ -10,6 +10,8 @@ RUN git clone https://github.com/icubaby/SideRail.git upstream \
  && test "$(git rev-parse HEAD)" = "$SIDERAIL_COMMIT"
 WORKDIR /build/upstream
 ENV npm_config_audit=false npm_config_fund=false
+COPY siderail/pompnet-theme.css /tmp/pompnet-theme.css
+RUN cat /tmp/pompnet-theme.css >> apps/web/src/index.css
 RUN npm ci --prefer-offline --no-audit --no-fund
 RUN npm run build
 RUN npm prune --omit=dev
