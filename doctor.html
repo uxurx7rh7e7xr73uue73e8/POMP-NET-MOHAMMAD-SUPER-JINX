@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080711">
+<title>وضعیت زنده | POMP NET SUPER JINX</title>
+<style>
+:root{color-scheme:dark;--bg:#080711;--card:#12101e;--line:#302348;--purple:#9b5cff;--blue:#168cff;--muted:#aaa4bb;--green:#34d399;--red:#fb7185}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% 0,#32135a66,transparent 38rem),radial-gradient(ellipse at 90% 15%,#073a6655,transparent 32rem),var(--bg);color:#f7f4ff;font-family:Vazirmatn,Tahoma,sans-serif;min-height:100vh;padding:22px}
+main{max-width:900px;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:8px 0 22px}.brand{font-size:13px;color:#c5b4e8}.brand b{display:block;font-size:22px;color:white}.pill{border:1px solid var(--line);background:#171225;padding:8px 13px;border-radius:30px;font-size:12px;color:var(--muted)}
+h1{font-size:clamp(22px,5vw,32px);margin:0 0 6px}.sub{color:var(--muted);margin:0 0 22px;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.card{background:linear-gradient(145deg,#171326ee,#0e0d18ee);border:1px solid var(--line);border-radius:17px;padding:16px;box-shadow:0 12px 35px #0005}
+.card h2{font-size:14px;margin:0 0 12px;color:#d8c8f6}.big{font-size:27px;font-weight:800;direction:ltr;text-align:right}.muted{font-size:12px;color:var(--muted)}
+.bar{height:9px;background:#292338;border-radius:20px;overflow:hidden;margin-top:12px}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--purple),var(--blue));border-radius:20px}
+.parts{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:9px;margin-top:12px}.part{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 12px;border-radius:12px;background:#0b0a13;border:1px solid #292039;font-size:13px}.dot{width:9px;height:9px;border-radius:50%;background:var(--red);display:inline-block;margin-left:7px}.ok .dot{background:var(--green);box-shadow:0 0 12px #34d39999}.state{font-weight:700;color:var(--red)}.ok .state{color:var(--green)}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}button,a.btn{border:1px solid #6744a1;background:#211536;color:#fff;border-radius:11px;padding:10px 15px;text-decoration:none;font:inherit;font-size:13px;cursor:pointer}button:hover,a.btn:hover{border-color:var(--blue)}footer{margin:24px 0 8px;text-align:center;color:#8f879f;font-size:11px}
+@media(max-width:480px){body{padding:14px}.big{font-size:23px}}
+</style></head>
+<body><main>
+<div class="top"><div class="brand"><b>POMP NET MOHAMMAD</b>SUPER JINX · مرکز پایش سرویس</div><span class="pill" id="connection">در حال اتصال…</span></div>
+<h1>وضعیت زندهٔ زیرساخت</h1><p class="sub">اطلاعات از مانیتور داخلی Doctor خوانده می‌شود؛ این صفحه وضعیت را جعل یا حدس نمی‌زند.</p>
+<section class="grid">
+<div class="card"><h2>وضعیت کلی</h2><div class="big" id="overall">—</div><div class="muted" id="updated">هنوز داده‌ای دریافت نشده</div></div>
+<div class="card"><h2>مصرف RAM کانتینر</h2><div class="big" id="ram">—</div><div class="bar"><i id="rambar"></i></div><div class="muted" id="ramdetail">—</div></div>
+<div class="card"><h2>ترمیم خودکار</h2><div class="big" id="fixes">—</div><div class="muted" id="lastfix">آخرین ترمیم: —</div></div>
+</section>
+<section class="card" style="margin-top:13px"><h2>اجزای سرویس</h2><div class="parts" id="parts"><div class="muted">در انتظار پاسخ Doctor…</div></div></section>
+<div class="actions"><button id="refresh">به‌روزرسانی اکنون</button><a class="btn" href="/dashboard/">بازگشت به پنل</a></div>
+<footer>کدنویسی و توسعه توسط تیم POMP NET MOHAMMAD · با همراهی SUPER JINX</footer>
+</main>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const names={"nginx":"وب‌سرور Nginx","panel":"هسته پنل","subscription page":"صفحه اشتراک","VLESS WS":"VLESS WebSocket","VMESS WS":"VMess WebSocket","TROJAN WS":"Trojan WebSocket","VLESS HTTPUPGRADE":"VLESS HTTPUpgrade","VLESS XHTTP":"VLESS XHTTP"};
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+async function load(){
+ $("connection").textContent="در حال دریافت…";
+ try{
+  const r=await fetch("/jx-status?_="+Date.now(),{cache:"no-store",headers:{"Accept":"application/json"}});
+  if(!r.ok)throw new Error("HTTP "+r.status);
+  const d=await r.json();
+  if(!d||typeof d.parts!=="object")throw new Error("پاسخ نامعتبر");
+  $("overall").textContent=d.ok?"همه‌چیز سالم":"نیازمند بررسی";
+  $("overall").style.color=d.ok?"#34d399":"#fb7185";
+  $("updated").textContent="آخرین بررسی: "+(d.time||"نامشخص");
+  const ram=d.ram||{},p=Math.max(0,Math.min(100,Number(ram.percent)||0));
+  $("ram").textContent=p.toFixed(1)+"٪";
+  $("rambar").style.width=p+"%";
+  $("ramdetail").textContent=(ram.used_mb??"—")+" MB از "+(ram.limit_mb??"—")+" MB";
+  $("fixes").textContent=Number(d.auto_fixes)||0;
+  $("lastfix").textContent="آخرین ترمیم: "+(d.last_fix||"ثبت نشده");
+  const entries=Object.entries(d.parts);
+  $("parts").innerHTML=entries.length?entries.map(([k,v])=>'<div class="part '+(v?"ok":"bad")+'"><span><i class="dot"></i>'+esc(names[k]||k)+'</span><b class="state">'+(v?"سالم":"قطع / خطا")+'</b></div>').join(""):'<div class="muted">هنوز اجزایی گزارش نشده‌اند.</div>';
+  $("connection").textContent="اتصال برقرار · بروزرسانی هر ۱۵ ثانیه";
+ }catch(e){
+  $("connection").textContent="عدم دریافت وضعیت";
+  $("overall").textContent="نامشخص";
+  $("updated").textContent="خطا: "+e.message+" · ممکن است Doctor هنوز شروع نشده باشد.";
+  $("parts").innerHTML='<div class="muted">امکان خواندن /jx-status وجود ندارد. پس از راه‌اندازی Doctor دوباره تلاش کنید.</div>';
+ }
+}
+$("refresh").addEventListener("click",load);load();setInterval(load,15000);
+})();
+</script></body></html>
