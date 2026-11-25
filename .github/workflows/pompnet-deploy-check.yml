@@ -151,7 +151,7 @@ jobs:
           owner_bridge_code=$(curl -sS -o /tmp/siderail-bridge.json -w '%{http_code}' -H "Authorization: Bearer $admin_token" http://127.0.0.1:18080/jinx-api/siderail/status)
           [ "$owner_bridge_code" = "200" ] || { cat /tmp/siderail-bridge.json; echo "Authenticated SideRail bridge returned HTTP $owner_bridge_code"; exit 1; }
           grep -q '"setup":true' /tmp/siderail-bridge.json
-          legacy_user_json=$(curl -fsS -X POST http://127.0.0.1:18080/api/user -H "Authorization: Bearer $admin_token" -H 'Content-Type: application/json' -d '{"username":"ci-legacy-marzban","proxies":{"vless":{},"vmess":{},"trojan":{}},"inbounds":{"vless":["VLESS WS"],"vmess":["VMESS WS"],"trojan":["TROJAN WS"]},"expire":0,"data_limit":0,"data_limit_reset_strategy":"no_reset","status":"active"}')
+          legacy_user_json=$(curl -fsS -X POST http://127.0.0.1:18080/api/user -H "Authorization: Bearer $admin_token" -H 'Content-Type: application/json' -d '{"username":"ci_legacy_marzban","proxies":{"vless":{},"vmess":{},"trojan":{}},"inbounds":{"vless":["VLESS WS"],"vmess":["VMESS WS"],"trojan":["TROJAN WS"]},"expire":0,"data_limit":0,"data_limit_reset_strategy":"no_reset","status":"active"}')
           legacy_sub_path=$(printf '%s' "$legacy_user_json" | python3 -c 'import json,sys,urllib.parse; print(urllib.parse.urlsplit(json.load(sys.stdin)["subscription_url"]).path)')
           curl -fsS "http://127.0.0.1:18080$legacy_sub_path" -o /tmp/legacy-sub-body
           python3 - <<'PY'
