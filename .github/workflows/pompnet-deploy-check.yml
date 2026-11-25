@@ -2,7 +2,7 @@ name: POMP NET deployment validation
 
 on:
   push:
-    branches: [main, pompnet-xray-core-native, siderail-pompnet-staging]
+    branches: [main, pompnet-xray-core-native]
   pull_request:
     branches: [main, pompnet-xray-core-native, siderail-pompnet-staging]
   workflow_dispatch:
