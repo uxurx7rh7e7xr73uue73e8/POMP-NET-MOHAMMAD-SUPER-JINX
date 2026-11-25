@@ -762,8 +762,13 @@ _sr_token_until = 0
 _sr_lock = threading.RLock()
 
 def siderail_base():
-    base = (os.environ.get("SIDERAIL_INTERNAL_URL") or os.environ.get("SIDERAIL_URL") or "").strip().rstrip("/")
-    if not base or not re.match(r"^https?://[^/]+$", base):
+    # The production image starts the pinned SideRail server in this same container.
+    # Prefer an explicitly configured backend, otherwise use that private local service.
+    # Never send SideRail owner credentials or management traffic to a public hostname
+    # unless the operator deliberately configured SIDERAIL_URL/INTERNAL_URL.
+    configured = (os.environ.get("SIDERAIL_INTERNAL_URL") or os.environ.get("SIDERAIL_URL") or "").strip().rstrip("/")
+    base = configured or "http://127.0.0.1:8092"
+    if not re.match(r"^https?://[^/]+$", base):
         return ""
     return base
 
