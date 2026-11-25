@@ -168,7 +168,7 @@ td,th{border-bottom:1px solid #ffffff0b}
   <div class="table-wrap"><table><thead><tr><th>تگ</th><th>پروتکل</th><th>انتقال</th><th>پورت</th><th>وضعیت</th><th>عملیات</th></tr></thead><tbody id="srInboundRows"><tr><td colspan="6" class="empty">در حال دریافت…</td></tr></tbody></table></div>
  </div>
  <div class="card section">
-  <div class="section-head"><h2>ابزارهای مدیریتی SideRail</h2><div class="toolbar"><button class="btn secondary" id="srRoutingBtn">مسیریابی</button><button class="btn secondary" id="srActivityBtn">گزارش فعالیت</button><button class="btn secondary" id="srBotBtn">ربات تلگرام</button><button class="btn secondary" id="srSettingsBtn">تنظیمات</button><button class="btn secondary" id="srAdminsBtn">مدیران</button></div></div>
+  <div class="section-head"><h2>ابزارهای مدیریتی SideRail</h2><div class="toolbar"><button class="btn secondary" id="srRestartXray">راه‌اندازی مجدد Xray</button><button class="btn secondary" id="srRoutingBtn">مسیریابی</button><button class="btn secondary" id="srActivityBtn">گزارش فعالیت</button><button class="btn secondary" id="srClearActivity">پاک‌کردن گزارش</button><button class="btn secondary" id="srBotBtn">ربات تلگرام</button><button class="btn secondary" id="srSettingsBtn">تنظیمات</button><button class="btn secondary" id="srAdminsBtn">مدیران</button></div></div>
   <pre id="srExtra" style="white-space:pre-wrap;direction:ltr;text-align:left;color:#d8c8f3;font-size:12px;line-height:2">داده‌های مدیریتی پس از انتخاب ابزار نمایش داده می‌شوند.</pre>
  </div>
  <div class="card section">
@@ -261,6 +261,8 @@ $("srCreateForm").onsubmit=async e=>{
  }catch(e){$("srCreateMsg").style.color="var(--red)";$("srCreateMsg").textContent="خطا: "+e.message}finally{$("srCreateBtn").disabled=false}
 };
 $("srSearch").oninput=renderSrUsers;$("srRefresh").onclick=()=>loadSideRail().catch(showSrError);
+$("srRestartXray").onclick=async()=>{if(!confirm("هسته Xray واقعی SideRail راه‌اندازی مجدد شود؟"))return;try{await sr("/system/restart-xray",{method:"POST",body:{}});srNotice("درخواست راه‌اندازی مجدد Xray به SideRail ارسال شد.");}catch(e){showSrError(e)}};
+$("srClearActivity").onclick=async()=>{if(!confirm("گزارش فعالیت SideRail پاک شود؟"))return;try{await sr("/activity",{method:"DELETE",body:{}});$("srExtra").textContent="گزارش فعالیت پاک شد.";srNotice("گزارش فعالیت SideRail پاک شد.");}catch(e){showSrError(e)}};
 $("srRoutingBtn").onclick=async()=>{try{$("srExtra").textContent=JSON.stringify(await sr("/routing"),null,2)}catch(e){showSrError(e)}};
 $("srActivityBtn").onclick=async()=>{try{$("srExtra").textContent=JSON.stringify(await sr("/activity"),null,2)}catch(e){showSrError(e)}};
 $("srBotBtn").onclick=async()=>{try{$("srExtra").textContent=JSON.stringify(await sr("/bot"),null,2)}catch(e){showSrError(e)}};
