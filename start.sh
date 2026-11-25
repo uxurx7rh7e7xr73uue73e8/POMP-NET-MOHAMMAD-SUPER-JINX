@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-# Owner identity is stable; credentials come from a Railway Secret or a one-time
-# random password stored on the persistent Volume. Never reset an existing owner on boot.
+# Owner identity is stable; credentials come from the ADMIN_PASSWORD Railway Secret.
+# Never generate, rotate, or print an owner password during startup.
 export ADMIN_USERNAME="${ADMIN_USERNAME:-ADMIN_tanel9990}"
 export ALLOW_INSECURE_ADMIN_PASSWORD="${ALLOW_INSECURE_ADMIN_PASSWORD:-0}"
 export RESET_ADMIN_PASSWORD="${RESET_ADMIN_PASSWORD:-0}"
@@ -12,7 +12,7 @@ echo "=== ⚡ POMP NET MOHAMMAD | SUPER JINX ==="
 ulimit -n 65535 2>/dev/null || ulimit -n "$(ulimit -Hn)" 2>/dev/null || true
 
 # Owner credentials are stored as a bcrypt hash in the persistent Marzban database.
-# The owner username is fixed as ADMIN_tanel9990; ensure_admin.py generates a one-time password if no Secret is supplied.
+# The owner username is fixed as ADMIN_tanel9990; the password is operator-supplied.
 unset SUDO_USERNAME SUDO_PASSWORD
 # internal wiring is forced too, so a wrong Railway variable can never break the panel
 export UVICORN_HOST=127.0.0.1
