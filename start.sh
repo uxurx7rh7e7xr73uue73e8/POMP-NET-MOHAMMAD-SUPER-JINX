@@ -238,10 +238,6 @@ for name in ("clash/default.yml", "clash/settings.yml"):
             print(f"[start] clash apps: latency test -> {T}", flush=True)
 PY
 
-python main.py &
-MAIN=$!
-echo "$MAIN" > /run/jinx/marzban.pid
-
 # Independent POMP NET Xray engine. It has its own SQLite registry/config and
 # separate loopback listeners (21001-21003); Marzban's existing core remains
 # untouched during this staged migration.
@@ -268,6 +264,11 @@ if [ "$ENGINE_READY" != "1" ]; then
   exit 1
 fi
 echo "[pompnet-engine] independent Xray health check passed"
+
+# Start the panel only after the independent Xray core is confirmed healthy.
+python main.py &
+MAIN=$!
+echo "$MAIN" > /run/jinx/marzban.pid
 trap 'kill -TERM $MAIN 2>/dev/null; wait $MAIN; exit 0' TERM INT
 
 # helpers restart themselves if they ever stop; the panel keeps running no matter what
