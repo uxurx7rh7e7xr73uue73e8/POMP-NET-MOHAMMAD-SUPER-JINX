@@ -44,7 +44,7 @@ python3 migration/marzban_to_siderail_backup.py \
   --output /secure/siderail-import.json
 ```
 
-The converter preserves supported user IDs, credentials, subscription token values, expiry, data limit, current used traffic, enabled/disabled state, notes, and inbound assignments. Once imported, the POMP NET `/sub/{token}` compatibility gateway tries SideRail first for imported tokens and falls back to Marzban on a SideRail 404; thus old token URLs remain unchanged for supported migrated users. Current used traffic is represented as download usage because the Marzban export field is a combined counter; upload/download split and online/IP history cannot be reconstructed from that export. Admin accounts/password hashes are intentionally not migrated.
+The converter preserves supported user IDs, credentials, subscription token values, expiry, data limit, current used traffic, compatible IP limits, enabled/disabled state, notes, and inbound assignments. Once imported, the POMP NET `/sub/{token}` compatibility gateway tries SideRail first for imported tokens and falls back to Marzban on a SideRail 404; thus old token URLs remain unchanged for supported migrated users. Current used traffic is represented as download usage because the Marzban export field is a combined counter; upload/download split and online/IP history cannot be reconstructed from that export. Admin accounts/password hashes are intentionally not migrated.
 
 It rejects duplicate IDs/tokens, missing mappings, unsupported protocols/transports and differing per-protocol credentials because SideRail stores one client credential per user.
 
