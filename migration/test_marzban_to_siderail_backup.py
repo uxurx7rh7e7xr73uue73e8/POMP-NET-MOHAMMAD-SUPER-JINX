@@ -18,6 +18,8 @@ class ConvertTests(unittest.TestCase):
         self.assertEqual(u["sub_token"],"sub-token-123")
         self.assertEqual(u["down"],125)
         self.assertEqual(out["user_inbounds"],[{"user_id":7,"inbound_id":1}])
+    def test_parses_iso_datetime_export(self):
+        self.assertEqual(m.epoch_ms("2024-01-01T00:00:00+00:00"),1704067200000)
     def test_rejects_unsupported_transport(self):
         bad={"vless-ws":dict(self.map["vless-ws"],transport="grpc")}
         with self.assertRaisesRegex(ValueError,"unsupported_inbound_mapping"):
