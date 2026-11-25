@@ -1,4 +1,4 @@
-# Official PasarGuard panel behind an internal TLS hop + Railway HTTP edge.
+# Official PasarGuard panel behind a fixed Railway HTTP ingress and an internal TLS hop.
 FROM pasarguard/panel:latest
 
 USER root
@@ -10,7 +10,7 @@ COPY start-railway.sh /usr/local/bin/start-railway.sh
 RUN chmod 0755 /usr/local/bin/start-railway.sh
 
 ENV UVICORN_HOST=0.0.0.0 \
-    UVICORN_PORT=8000 \
+    UVICORN_PORT=8001 \
     UVICORN_SSL_CERTFILE=/var/lib/pasarguard/certs/railway-cert.pem \
     UVICORN_SSL_KEYFILE=/var/lib/pasarguard/certs/railway-key.pem \
     UVICORN_SSL_CA_TYPE=private \
