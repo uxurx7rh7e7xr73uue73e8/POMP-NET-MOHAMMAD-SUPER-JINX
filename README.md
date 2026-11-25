@@ -8,7 +8,7 @@
 
 **قدرت ساخت، آزادی انتخاب، کنترل در دستان تو**
 
-محصول اختصاصی **POMP NET MOHAMMAD** با امضای ویژهٔ **SUPER JINX**؛ دارای داشبورد فارسی، مدیریت کاربران و اشتراک، پایش سرویس و زیرساخت مبتنی بر Xray.
+محصول اختصاصی با دو برند متعلق به مالک: **POMP NET MOHAMMAD** و **SUPER JINX**؛ نام **SUPER JINX** هم برند اختصاصی و هم امضای ویژهٔ محصول است. دارای داشبورد فارسی، مدیریت کاربران و اشتراک، پایش سرویس و زیرساخت مبتنی بر Xray.
 
 [![Validation](https://github.com/uxurx7rh7e7xr73uue73e8/POMP-NET-MOHAMMAD-SUPER-JINX/actions/workflows/validate.yml/badge.svg)](https://github.com/uxurx7rh7e7xr73uue73e8/POMP-NET-MOHAMMAD-SUPER-JINX/actions/workflows/validate.yml)
 [![Docker](https://img.shields.io/badge/Runtime-Docker-168CFF?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com/)
@@ -56,13 +56,13 @@
 
 **POMP NET MOHAMMAD** هویت اصلی و نام برند این پروژه است. **POMP NET NEXUS** نام محصول/نسخه پنل است و در سلسله‌مراتب بصری زیر نام برند قرار می‌گیرد.
 
-این مخزن یک بسته سفارشی‌سازی و استقرار برای پنل مبتنی بر **Marzban** است. اجزای آن شامل رابط اختصاصی پمپ‌نت، تنظیمات Nginx و Caddy، پیکربندی Xray، صفحه اشتراک، ابزارهای API جانبی، ابزارهای نگهداری، Docker و گردش‌کار CI است.
+این مخزن پروژهٔ اختصاصی با هویت مشترک **POMP NET MOHAMMAD × SUPER JINX** است. در وضعیت فعلی، بستهٔ سفارشی‌سازی و استقرار پنل هنوز مبتنی بر **Marzban** است. اجزای آن شامل رابط اختصاصی پمپ‌نت، تنظیمات Nginx و Caddy، پیکربندی Xray، صفحه اشتراک، ابزارهای API جانبی، ابزارهای نگهداری، Docker و گردش‌کار CI است.
 
 > **شفافیت:** وجود یک فایل یا قابلیت در مخزن به معنی فعال‌بودن آن روی سرور عمومی نیست. در این سند، «موجود در سورس»، «آزمون‌شده در CI» و «تأییدشده روی سرور عمومی» از یکدیگر جدا شده‌اند.
 
 ## وضعیت واقعی مهاجرت هسته
 
-> **هویت محصول:** برند اصلی و مالک محصول **POMP NET MOHAMMAD** است؛ **SUPER JINX** فقط امضای ویژه/نام ادیشن محصول است و برند مستقل یا مالک پنل نیست.
+> **مالکیت برند:** هر دو نام **POMP NET MOHAMMAD** و **SUPER JINX** متعلق به مالک پروژه هستند. **SUPER JINX** هم یک برند اختصاصی و هم امضای ویژهٔ محصول است؛ برند شخص یا مجموعهٔ دیگری نیست.
 
 - رابط ورود، داشبورد و اشتراک با نام اصلی **POMP NET MOHAMMAD** برند شده‌اند؛ نام محصول نمایشی **POMP NET NEXUS** است.
 - ماژول مستقل Xray در `native_core/pompnet_core.py` اضافه شده و ذخیره‌سازی SQLite، ساخت تنظیمات Xray، اعتبارسنجی تنظیمات و API مدیریتی محدود دارد.
@@ -75,7 +75,7 @@
 | مشخصه | مقدار |
 |---|---|
 | برند اصلی | **POMP NET MOHAMMAD** |
-| نام محصول | POMP NET NEXUS |
+| برند دوم و امضای ویژه | **SUPER JINX / 𝗦𝗨𝗣𝗘𝗥 𝗝𝗜𝗡𝗫** |
 | زبان رابط اختصاصی | فارسی |
 | جهت رابط | RTL |
 | رنگ پس‌زمینه | مشکی عمیق `#050509` |
@@ -88,7 +88,7 @@
 
 ### محل استفاده از هویت برند
 
-- `assets/pompnet-super-jinx-hero.svg` — بنر اصلی مخزن؛ نام POMP NET MOHAMMAD بزرگ‌تر از نام محصول است.
+- `assets/pompnet-super-jinx-hero.svg` — بنر رسمی دو برند POMP NET MOHAMMAD و SUPER JINX.
 - `pompnet-dashboard.html` — صفحه ورود و داشبورد مستقل پمپ‌نت.
 - `pompnet-motion.css` و `pompnet-motion.js` — لایه حرکت پس‌زمینه داشبورد.
 - `jinx.css` و `jinx.js` — پوسته و رابط جانبی Jinx.
