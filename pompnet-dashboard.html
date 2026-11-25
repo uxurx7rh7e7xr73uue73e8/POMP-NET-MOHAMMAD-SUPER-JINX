@@ -171,6 +171,14 @@ td,th{border-bottom:1px solid #ffffff0b}
   <div class="section-head"><h2>ابزارهای پیشرفته مدیریت</h2><div class="toolbar"><button class="btn secondary" id="srRestartXray">راه‌اندازی مجدد Xray</button><button class="btn secondary" id="srRoutingBtn">مسیریابی</button><button class="btn secondary" id="srActivityBtn">گزارش فعالیت</button><button class="btn secondary" id="srClearActivity">پاک‌کردن گزارش</button><button class="btn secondary" id="srBotBtn">ربات تلگرام</button><button class="btn secondary" id="srSettingsBtn">تنظیمات</button><button class="btn secondary" id="srAdminsBtn">مدیران</button></div></div>
   <pre id="srExtra" style="white-space:pre-wrap;direction:ltr;text-align:left;color:#d8c8f3;font-size:12px;line-height:2">داده‌های مدیریتی پس از انتخاب ابزار نمایش داده می‌شوند.</pre>
  </div>
+ <div class="card section" id="srProxyPanel">
+  <div class="section-head"><h2>منابع پراکسی و تست اتصال</h2><button class="btn secondary" id="srProxySourcesRefresh">بارگذاری منابع</button></div>
+  <div class="form-grid"><div class="field"><label>منبع پراکسی</label><select id="srProxySource"></select></div><div class="field"><label>اینباند مقصد</label><select id="srProxyInbound"></select></div>
+   <div class="field wide"><button class="btn" id="srProxyScan" type="button">اسکن منبع واقعی</button><span id="srProxyMsg" class="msg"></span></div>
+  </div>
+  <div class="table-wrap"><table><thead><tr><th>انتخاب</th><th>IP</th><th>پورت</th><th>نوع</th><th>کشور</th><th>وضعیت</th><th>تست</th></tr></thead><tbody id="srProxyRows"><tr><td colspan="7" class="empty">منبعی انتخاب نشده است.</td></tr></tbody></table></div>
+  <button class="btn secondary" id="srProxyApply" type="button">افزودن پراکسی‌های انتخاب‌شده به اینباند</button>
+ </div>
  <div class="card section" id="srRoutingPanel">
   <div class="section-head"><h2>مسیریابی هسته</h2><button class="btn secondary" id="srRoutingRefresh">بروزرسانی قوانین</button></div>
   <form id="srRoutingForm" class="form-grid">
@@ -274,7 +282,7 @@ async function loadSideRail(){
  $("srCoreVersion").textContent=system.coreVersion||system.xrayVersion||"فعال";
  srNotice("اتصال API هسته برقرار است. عملیات این صفحه روی دیتابیس هسته انجام می‌شود.");
  renderSrUsers();renderSrInbounds();renderSrInboundPicks();
- Promise.all([loadSrRouting(),loadSrBot(),loadSrSettings(),loadSrAdmins(),loadSrTraffic(),loadSrActivity()]).catch(e=>console.warn("Optional management section:",e.message));
+ Promise.all([loadSrRouting(),loadSrBot(),loadSrSettings(),loadSrAdmins(),loadSrTraffic(),loadSrActivity()]).catch(e=>console.warn("Optional management section:",e.message));loadSrProxySources().catch(e=>console.warn("Proxy sources:",e.message));
 }
 function renderSrUsers(){
  const q=($("srSearch").value||"").toLowerCase();
@@ -282,6 +290,9 @@ function renderSrUsers(){
  const active=!!u.enabled;const link=location.origin+"/sub/"+encodeURIComponent(u.sub_token||"");
  return "<tr><td><b>"+esc(u.email)+"</b><br><small>#"+u.id+"</small></td><td><span class='tag "+(active?"":"off")+"'>"+(active?"فعال":"غیرفعال")+"</span></td><td>"+srBytes(u.total)+"</td><td>"+(u.data_limit?srBytes(u.data_limit):"نامحدود")+"</td><td>"+srDate(u.expire_at)+"</td><td><a href='"+esc(link)+"' target='_blank' rel='noopener'>بازکردن</a></td><td><div class='toolbar'><button class='btn secondary' data-sr-toggle='"+u.id+"' data-enabled='"+(!active)+"'>"+(active?"خاموش":"روشن")+"</button><button class='btn secondary' data-sr-reset='"+u.id+"'>ریست</button><button class='btn secondary' data-sr-rotate='"+u.id+"'>توکن جدید</button><button class='btn danger' data-sr-delete='"+u.id+"'>حذف</button></div></td></tr>"
  }).join("")||"<tr><td colspan='7' class='empty'>کاربری ثبت نشده است.</td></tr>";
+ document.querySelectorAll("[data-sr-edit]").forEach(b=>b.onclick=async()=>{
+  try{const u=await sr("/users/"+b.dataset.srEdit);const email=prompt("ایمیل/نام کاربری:",u.email||"");if(email===null)return;const limit=prompt("حجم GB (0 نامحدود):",String((u.data_limit||0)/1024**3));if(limit===null)return;const days=prompt("اعتبار روز (0 بدون انقضا):","30");if(days===null)return;await sr("/users/"+b.dataset.srEdit,{method:"PUT",body:{email:email.trim(),dataLimit:Number(limit)*1024**3,expireDays:Number(days)}});await loadSideRail()}catch(e){showSrError(e)}
+ });
  document.querySelectorAll("[data-sr-toggle]").forEach(b=>b.onclick=async()=>{try{await sr("/users/"+b.dataset.srToggle+"/toggle",{method:"POST",body:{enabled:b.dataset.enabled==="true"}});await loadSideRail()}catch(e){showSrError(e)}});
  document.querySelectorAll("[data-sr-reset]").forEach(b=>b.onclick=async()=>{if(!confirm("مصرف این کاربر صفر شود؟"))return;try{await sr("/users/"+b.dataset.srReset+"/reset-traffic",{method:"POST",body:{}});await loadSideRail()}catch(e){showSrError(e)}});
  document.querySelectorAll("[data-sr-rotate]").forEach(b=>b.onclick=async()=>{if(!confirm("توکن اشتراک قبلی باطل و توکن جدید ساخته شود؟"))return;try{await sr("/users/"+b.dataset.srRotate+"/rotate-token",{method:"POST",body:{}});await loadSideRail()}catch(e){showSrError(e)}});
@@ -289,6 +300,13 @@ function renderSrUsers(){
 }
 function renderSrInbounds(){
  $("srInboundRows").innerHTML=srInbounds.map(i=>"<tr><td>"+esc(i.tag)+"</td><td>"+esc(i.protocol)+"</td><td>"+esc(i.transport)+"</td><td>"+esc(i.port)+"</td><td><span class='tag "+(i.enabled?"":"off")+"'>"+(i.enabled?"فعال":"غیرفعال")+"</span></td><td><button class='btn secondary' data-sr-ib='"+i.id+"' data-sr-ib-enabled='"+(!i.enabled)+"'>"+(i.enabled?"خاموش":"روشن")+"</button></td></tr>").join("")||"<tr><td colspan='6' class='empty'>اینباندی وجود ندارد.</td></tr>";
+ document.querySelectorAll("[data-sr-ib-edit]").forEach(b=>b.onclick=async()=>{
+  const item=srInbounds.find(x=>String(x.id)===b.dataset.srIbEdit);if(!item)return;
+  const address=prompt("عنوان اتصال (خالی = خودکار):",item.address||"");if(address===null)return;
+  const host=prompt("Host header (خالی = خودکار):",item.host||"");if(host===null)return;
+  const sni=prompt("SNI (خالی = خودکار):",item.sni||"");if(sni===null)return;
+  try{await sr("/inbounds/"+b.dataset.srIbEdit,{method:"PATCH",body:{address,host,sni}});await loadSideRail()}catch(e){showSrError(e)}
+ });
  document.querySelectorAll("[data-sr-ib]").forEach(b=>b.onclick=async()=>{try{await sr("/inbounds/"+b.dataset.srIb,{method:"PATCH",body:{enabled:b.dataset.srIbEnabled==="true"}});await loadSideRail()}catch(e){showSrError(e)}});
 }
 function renderSrInboundPicks(){
@@ -307,10 +325,21 @@ $("srSearch").oninput=renderSrUsers;$("srRefresh").onclick=()=>loadSideRail().ca
 
 $("srRestartXray").onclick=async()=>{if(!confirm("هسته Xray راه‌اندازی مجدد شود؟"))return;try{await sr("/system/restart-xray",{method:"POST",body:{}});srNotice("درخواست راه‌اندازی مجدد Xray ارسال شد.");}catch(e){showSrError(e)}};
 $("srClearActivity").onclick=async()=>{if(!confirm("گزارش فعالیت هسته پاک شود؟"))return;try{await sr("/activity",{method:"DELETE",body:{}});$("srExtra").textContent="گزارش فعالیت پاک شد.";srNotice("گزارش فعالیت هسته پاک شد.");}catch(e){showSrError(e)}};
+let srProxies=[];
+async function loadSrProxySources(){const x=await sr("/proxies/sources");$("srProxySource").innerHTML=(x.sources||[]).map(s=>'<option value="'+esc(s.id)+'">'+esc(s.label)+'</option>').join("");$("srProxyInbound").innerHTML=srInbounds.map(i=>'<option value="'+i.id+'">'+esc(i.tag)+'</option>').join("")}
+$("srProxySourcesRefresh").onclick=()=>loadSrProxySources().catch(showSrError);
+$("srProxyScan").onclick=async()=>{try{$("srProxyMsg").textContent="در حال اسکن منبع…";const x=await sr("/proxies/scan",{method:"POST",body:{source:$("srProxySource").value}});srProxies=x.proxies||[];$("srProxyRows").innerHTML=srProxies.map((p,i)=>'<tr><td><input type="checkbox" name="srProxyPick" value="'+i+'"></td><td>'+esc(p.ip)+'</td><td>'+esc(p.port)+'</td><td>'+esc(p.type)+'</td><td>'+esc(p.country||"—")+'</td><td>'+esc(p.ms??"—")+' ms</td><td><button class="btn secondary" data-sr-proxy-test="'+i+'">تست</button></td></tr>').join("")||'<tr><td colspan="7" class="empty">پراکسی سالمی از این منبع پیدا نشد.</td></tr>';$("srProxyMsg").textContent=srProxies.length+" مورد دریافت شد.";document.querySelectorAll("[data-sr-proxy-test]").forEach(b=>b.onclick=async()=>{const p=srProxies[Number(b.dataset.srProxyTest)];try{const r=await sr("/proxies/test",{method:"POST",body:{ip:p.ip,port:Number(p.port),type:p.type}});$("srProxyMsg").textContent=JSON.stringify(r)}catch(e){$("srProxyMsg").textContent=e.message}})}catch(e){$("srProxyMsg").textContent="خطا: "+e.message}};
+$("srProxyApply").onclick=async()=>{const idx=[...document.querySelectorAll('input[name="srProxyPick"]:checked')].map(x=>Number(x.value));if(!idx.length)return alert("حداقل یک پراکسی انتخاب کن.");const inbound=srInbounds.find(x=>String(x.id)===$("srProxyInbound").value);if(!inbound)return alert("اینباند مقصد انتخاب نشده است.");const proxies=[...(inbound.proxies||[]),...idx.map(i=>srProxies[i]).filter(Boolean)];try{await sr("/inbounds/"+inbound.id,{method:"PATCH",body:{proxies}});$("srProxyMsg").textContent="پراکسی‌ها به اینباند اضافه شدند؛ هسته در حال اعمال تغییر است.";await loadSideRail()}catch(e){$("srProxyMsg").textContent="خطا: "+e.message}};
 async function loadSrRouting(){
  const rules=await sr("/routing");const ins=await sr("/inbounds");srInbounds=Array.isArray(ins)?ins:srInbounds;
  $("srRouteInboundPicks").innerHTML=srInbounds.map(i=>'<label><input type="checkbox" name="srRouteInbound" value="'+i.id+'"> '+esc(i.tag)+'</label>').join("")||"اینباندی موجود نیست.";
- $("srRoutingRows").innerHTML=(Array.isArray(rules)?rules:[]).map(r=>'<tr><td>'+esc(r.label||r.domain)+'</td><td>'+esc(r.kind||"domain")+'</td><td>'+esc((r.inboundIds||[]).join(", "))+'</td><td><button class="btn danger" data-sr-route-delete="'+r.id+'">حذف</button></td></tr>').join("")||'<tr><td colspan="4" class="empty">قانونی ثبت نشده است.</td></tr>';
+ $("srRoutingRows").innerHTML=(Array.isArray(rules)?rules:[]).map(r=>'<tr><td>'+esc(r.label||r.domain)+'</td><td>'+esc(r.kind||"domain")+'</td><td>'+esc((r.inboundIds||[]).join(", "))+'</td><td><button class="btn secondary" data-sr-route-edit=""+r.id+"">تغییر مقصد</button> <button class="btn danger" data-sr-route-delete="'+r.id+'">حذف</button></td></tr>').join("")||'<tr><td colspan="4" class="empty">قانونی ثبت نشده است.</td></tr>';
+ document.querySelectorAll("[data-sr-route-edit]").forEach(b=>b.onclick=async()=>{
+  const r=(Array.isArray(rules)?rules:[]).find(x=>String(x.id)===b.dataset.srRouteEdit);if(!r)return;
+  const ids=prompt("شناسه اینباندها را با کاما وارد کن:",(r.inboundIds||[]).join(","));if(ids===null)return;
+  const inboundIds=ids.split(",").map(x=>Number(x.trim())).filter(Number.isFinite);
+  try{await sr("/routing/"+b.dataset.srRouteEdit,{method:"PUT",body:{inboundIds}});await loadSrRouting()}catch(e){$("srRouteMsg").textContent=e.message}
+ });
  document.querySelectorAll("[data-sr-route-delete]").forEach(b=>b.onclick=async()=>{if(!confirm("این قانون مسیریابی حذف شود؟"))return;try{await sr("/routing/"+b.dataset.srRouteDelete,{method:"DELETE"});await loadSrRouting()}catch(e){$("srRouteMsg").textContent=e.message}});
 }
 $("srRoutingForm").onsubmit=async e=>{e.preventDefault();const ids=[...document.querySelectorAll('input[name="srRouteInbound"]:checked')].map(x=>Number(x.value));try{await sr("/routing",{method:"POST",body:{domain:$("srRouteDomain").value.trim(),kind:$("srRouteKind").value,label:$("srRouteLabel").value.trim(),inboundIds:ids}});$("srRouteMsg").textContent="قانون با موفقیت ثبت شد.";e.target.reset();await loadSrRouting()}catch(err){$("srRouteMsg").textContent="خطا: "+err.message}};
