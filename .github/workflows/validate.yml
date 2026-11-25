@@ -23,6 +23,23 @@ jobs:
           bash -n tests/runtime-smoke.sh
           bash -n setup-vps.sh
 
+      - name: Validate native Marzban SideRail integration
+        run: |
+          node --check pompnet-siderail.js
+          python - <<'PY'
+          from pathlib import Path
+          nginx = Path("nginx.conf").read_text(encoding="utf-8")
+          docker = Path("Dockerfile").read_text(encoding="utf-8")
+          js = Path("pompnet-siderail.js").read_text(encoding="utf-8")
+          assert 'location = / { return 302 /dashboard/; }' in nginx
+          assert 'location ^~ /dashboard/' in nginx
+          assert 'sub_filter \'</body>\'' in nginx
+          assert 'COPY pompnet-siderail.js /opt/jinx/pompnet-siderail.js' in docker
+          assert 'localStorage.getItem("token")' in js
+          assert 'api(\'/users\',\'POST\'' in js
+          print("Native Marzban UI route and authenticated SideRail module wiring OK")
+          PY
+
       - name: Validate Python syntax
         run: |
           python -m py_compile doctor.py enforce_hosts.py ensure_admin.py jinx_api.py lock.py pompnet_telegram_bot.py
