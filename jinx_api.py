@@ -1064,7 +1064,9 @@ class H(BaseHTTPRequestHandler):
         side_path = bool(re.fullmatch(r"/sub/[A-Za-z0-9_-]{8,128}(?:/(?:json|clash|singbox))?", path))
         base = siderail_base()
         if side_path and base:
-            target = base + path + (("?" + query) if query else "")
+            # SideRail is private API/core only; never send its browser subscription UI.
+            raw_query = query + ("&" if query else "") + "raw=1"
+            target = base + path + "?" + raw_query
             headers = {"Host": self.headers.get("Host", ""),
                        "X-Forwarded-Proto": self.headers.get("X-Forwarded-Proto", "https"),
                        "User-Agent": self.headers.get("User-Agent", "POMP-NET-Subscription")}
@@ -1106,11 +1108,6 @@ class H(BaseHTTPRequestHandler):
         caller = self.caller(True)
         if not caller:
             return
-        if path == "/siderail/public-url" and method == "GET":
-            public_url = (os.environ.get("SIDERAIL_PUBLIC_URL") or "").strip()
-            if public_url and not re.match(r"^https://[^/]+(?:/)?$", public_url):
-                return self.send(500, {"error": "invalid_siderail_public_url"})
-            return self.send(200, {"url": public_url})
         if path == "/siderail/health" and method == "GET":
             target = "/healthz"
             raw = b""
