@@ -85,7 +85,8 @@ def restart_engine():
         c = db()
         cfg = make_config(c)
         c.close()
-        tmp = CFG + ".tmp"
+        # Xray selects the parser from the file extension; keep .json as the final suffix.
+        tmp = CFG + ".tmp.json"
         with open(tmp, "w", encoding="utf-8") as f:
             json.dump(cfg, f, ensure_ascii=False, separators=(",", ":"))
             f.flush(); os.fsync(f.fileno())
