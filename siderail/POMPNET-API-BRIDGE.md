@@ -12,6 +12,7 @@ Configure these secrets on the POMP NET service:
 - `SIDERAIL_INTERNAL_URL` — SideRail internal URL, e.g. the private Railway service URL.
 - `SIDERAIL_OWNER_USERNAME` — SideRail owner username.
 - `SIDERAIL_OWNER_PASSWORD` — SideRail owner password.
+- `SIDERAIL_PUBLIC_URL` — optional HTTPS public URL of the SideRail web app; shown only to authenticated POMP NET owners as a shortcut to the complete upstream UI.
 
 Do not commit credentials to Git. The helper caches the SideRail JWT in process memory and renews it after an upstream 401.
 
