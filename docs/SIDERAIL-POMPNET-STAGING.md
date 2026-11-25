@@ -1,39 +1,53 @@
-# POMP NET × SideRail integration staging
+# POMP NET × SideRail — isolated runtime staging
 
-This branch pins the upstream SideRail source as a Git submodule. It does not replace the current Marzban runtime and does not migrate or modify production users, subscriptions, databases, or Xray listeners.
+## What this branch contains
 
-## Source pin
+- The official SideRail source is pinned as a submodule at `vendor/SideRail`.
+- `siderail/Dockerfile` builds the same upstream revision directly from its immutable commit SHA, so Railway does not need to initialize Git submodules.
+- `siderail/railway.json` is the Railway config for a **separate SideRail service**. Select this config file in that service's Railway settings.
+- The existing POMP NET service, Marzban database, subscription routes, and Xray process are not modified by this staging deployment.
 
-- Upstream: https://github.com/icubaby/SideRail
-- Pinned upstream commit: 6d794ce2303a01ecc412941a4f38fd00a3bda65b
-- Local path: vendor/SideRail
-- Keep the upstream LICENSE, NOTICE, copyright headers, response headers, repository URL, and embedded watermark intact unless a verifiable written authorization from the upstream copyright holder expressly permits specific changes.
+## Deploy an isolated SideRail service
 
-## What was verified from source
+Create a new Railway service from this same repository and branch. Set its Railway config file path to `siderail/railway.json`. Attach a dedicated persistent Volume at `/data`. Do not attach or reuse the current POMP NET/Marzban volume.
 
-SideRail is a Node 24 application with a React/Vite frontend and Express backend. Its Dockerfile builds both workspaces and runs `apps/server/dist/index.js` on port 8080. Its server starts and manages its own Xray process, uses a separate SQLite database at `SIDERAIL_DATA_DIR/siderail.db`, and generates its own Xray config and internal listener ports.
+Required service variables:
+- `PORT=8080`
+- `SIDERAIL_DATA_DIR=/data`
+- `CORE_DIR=/data/core`
+- `CORE_VERSION=v26.9.9`
+- `CORE_API_PORT=10085`
+- `CORE_INBOUND_BASE_PORT=20000`
+- `NODE_ENV=production`
 
-## Safety boundary
+Set a long, unique `JWT_SECRET` in Railway Variables (at least 48 random bytes encoded as hex). Do not reuse the POMP NET admin password or any Marzban secret. SideRail's first-run setup endpoint is only for initializing the isolated staging instance; complete it immediately and do not expose an uninitialized admin setup to the public.
 
-The current POMP NET service is still built on the existing Marzban image and existing POMP NET API/database/subscription routes. SideRail uses a separate database and a separate Xray process. Starting both engines against the same listener ports or sharing their data directories would risk port collisions and data loss.
+Railway edge HTTPS terminates at the service. SideRail's own Xray listeners are separate from Marzban. Keep the two services and their volumes isolated.
 
-Therefore this staging branch deliberately does NOT:
-- change the production Docker base image or startup command;
-- start SideRail's Xray process beside the existing Xray process;
-- point SideRail at Marzban's database or Xray config;
-- import users or subscriptions without a tested mapping and backup;
-- claim live connectivity, traffic statistics, or production readiness.
+## Verification gates
 
-## Required cutover work
+After Railway builds and starts the service, verify:
+1. Railway deployment build succeeds.
+2. `/healthz` returns HTTP 200 and includes the upstream attribution fields.
+3. First-run setup and subsequent login work.
+4. SideRail downloads and starts its own Xray binary.
+5. Xray config validates and its internal API is reachable.
+6. A real client handshake succeeds against a deliberately configured test inbound.
+7. Create, update, disable, delete, expiry, quota, and subscription operations work on the staging database.
+8. Restart/redeploy preserves the SideRail database and generated secrets under `/data`.
 
-1. Build and run SideRail in an isolated staging service with a dedicated persistent volume and dedicated internal ports.
-2. Confirm its health endpoint, setup/login, Xray binary download, Xray config validation, and actual VLESS client handshake.
-3. Implement a read-only migration inventory for the existing Marzban users, inbounds, expiry, quota, and subscription tokens; redact credentials in logs.
-4. Build and test an explicit importer with duplicate handling, rollback, and backup/restore. Do not migrate historical traffic unless a reliable mapping exists.
-5. Adapt the POMP NET visual theme and Persian RTL only in permitted UI files while preserving upstream attribution and security headers.
-6. Add an authenticated compatibility layer for existing POMP NET dashboard/subscription routes, then run end-to-end tests against staging.
-7. Switch traffic only after successful tests and an operator-approved maintenance window. Keep the previous deployment and database backup for rollback.
+Do not call this live or working until these checks have actually passed.
+
+## POMP NET integration boundary
+
+The current POMP NET panel still runs its existing Marzban runtime. Do not point existing POMP NET `/sub/{token}` links at SideRail yet. SideRail has a different user schema, token format, database, authentication model, and Xray lifecycle.
+
+The next integration change must add an authenticated server-to-server adapter and a read-only migration inventory first. It must map existing user IDs, UUIDs, expiry, quota, enabled state, inbounds, and subscription tokens with collision detection and rollback. Existing POMP NET dashboard/login/subscription routes must remain the public interface. Only after staging handshake and migration tests pass may traffic be switched.
+
+## License and attribution
+
+The upstream repository's LICENSE, README, author attribution, headers, signature, and watermark are retained. This integration does not remove SideRail attribution or claim authorship of upstream code.
 
 ## Current status
 
-Source pin added; runtime integration, user migration, Xray handshake, production deployment, and UI re-skin are NOT yet completed or verified.
+This commit adds a reproducible, isolated SideRail runtime build definition and Railway service configuration. It does not create a Railway service, attach a volume, deploy, migrate POMP NET users, proxy POMP NET APIs, change the production panel, or prove an Xray client handshake. Those require Railway-side service configuration and live test results.
