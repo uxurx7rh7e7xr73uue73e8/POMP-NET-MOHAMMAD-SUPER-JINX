@@ -987,7 +987,7 @@ function isDesk() { try { return window.matchMedia("(min-width:900px)").matches;
   }
   var pingTry = 0, lastHealth = null;
   function measure(cb) {
-    if (DEMO) { st.ping = 74; st.pings = [82, 77, 79, 74, 76, 73, 75, 74]; setPing(); drawSpark(); if (cb) cb(); return; }
+    /* Demo ping removed: only measured network results may be displayed. */
     var best = Infinity, n = 0;
     var once = function () {
       probe("/jinx-api/health", 4000).then(function (r) {
