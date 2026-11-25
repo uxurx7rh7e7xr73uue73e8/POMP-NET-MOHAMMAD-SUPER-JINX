@@ -818,7 +818,10 @@ def siderail_call(method, api_path, raw=b"", retry=True):
 def siderail_allowed(method, path):
     exact = {
         ("GET", "/status"), ("GET", "/system"), ("POST", "/system/restart-xray"),
-        ("GET", "/users"), ("POST", "/users"), ("GET", "/inbounds"),
+        ("GET", "/users"), ("GET", "/users/summary"), ("POST", "/users"), ("GET", "/inbounds"),
+        ("GET", "/proxies/sources"), ("POST", "/proxies/scan"), ("POST", "/proxies/test"), ("POST", "/proxies/check"),
+        ("DELETE", "/activity"), ("GET", "/bot"), ("PUT", "/bot"), ("POST", "/bot/test"),
+        ("POST", "/backup/import"),
         ("GET", "/activity"), ("GET", "/routing"), ("GET", "/routing/presets"),
         ("GET", "/settings"), ("PUT", "/settings"), ("GET", "/stats/traffic"),
         ("GET", "/admins"), ("POST", "/admins"), ("GET", "/backup/export"),
@@ -1028,7 +1031,7 @@ class H(BaseHTTPRequestHandler):
         return self.send(404, "not_found")
 
 
-    def siderail(self, method, path):
+    def siderail(self, method, path, query=""):
         # Existing POMP NET owner authentication is mandatory for every bridged call.
         caller = self.caller(True)
         if not caller:
@@ -1052,6 +1055,8 @@ class H(BaseHTTPRequestHandler):
                 target = "/api/status"
             else:
                 target = "/api" + target
+            if query:
+                target += "?" + query
         try:
             code, ctype, payload = siderail_call(method, target, raw)
         except RuntimeError as e:
@@ -1076,7 +1081,7 @@ class H(BaseHTTPRequestHandler):
                 return self.gate(method)
             p = path.rstrip("/")
             if p == "/siderail" or p.startswith("/siderail/"):
-                return self.siderail(method, p)
+                return self.siderail(method, p, query)
             if method == "GET" and p.endswith("/donate-page"):
                 return self.static_page(DON_FILES, "text/html; charset=utf-8", DON_FALLBACK)
             if method == "GET" and p.endswith("/donate-config.js"):
