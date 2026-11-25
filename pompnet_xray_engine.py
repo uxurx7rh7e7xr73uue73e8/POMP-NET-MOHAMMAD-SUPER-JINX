@@ -33,7 +33,7 @@ def db():
     c.row_factory = sqlite3.Row
     c.execute("""CREATE TABLE IF NOT EXISTS users(
       id TEXT PRIMARY KEY, username TEXT NOT NULL, protocol TEXT NOT NULL,
-      secret TEXT NOT NULL, sub_token TEXT NOT NULL UNIQUE, expire INTEGER NOT NULL DEFAULT 0,
+      secret TEXT NOT NULL, sub_token TEXT NOT NULL, expire INTEGER NOT NULL DEFAULT 0,
       data_limit_gb REAL NOT NULL DEFAULT 0, enabled INTEGER NOT NULL DEFAULT 1,
       created INTEGER NOT NULL, UNIQUE(username, protocol))""")
     c.commit()
