@@ -77,7 +77,9 @@ jobs:
           printf '%s' "$root_html" | grep -q 'id="root"' || { echo "SideRail SPA root element missing"; exit 1; }
           asset=$(printf '%s' "$root_html" | grep -oE 'src="/assets/[^"]+\.js"' | head -1 | cut -d'"' -f2)
           [ -n "$asset" ] || { echo "SideRail SPA JavaScript asset not referenced"; exit 1; }
-          curl -fsS "http://127.0.0.1:18081$asset" | grep -q "SideRail" || { echo "SideRail SPA JavaScript asset failed to serve"; exit 1; }
+          curl -fsS "http://127.0.0.1:18081$asset" -o /tmp/siderail-app.js
+          test -s /tmp/siderail-app.js || { echo "SideRail SPA JavaScript asset is empty"; exit 1; }
+          grep -q "SideRail" /tmp/siderail-app.js || { echo "SideRail SPA JavaScript asset content is missing"; exit 1; }
           login_html=$(curl -fsS http://127.0.0.1:18081/login)
           printf '%s' "$login_html" | grep -q 'id="root"' || { echo "SideRail SPA history fallback failed"; exit 1; }
           echo "PASS: complete SideRail React SPA, static assets and client-side routes are served by the production runtime."
