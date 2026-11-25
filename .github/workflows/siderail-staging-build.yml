@@ -1,6 +1,18 @@
 name: SideRail isolated staging image
 
 on:
+  workflow_dispatch:
+  push:
+    branches: ["siderail-pompnet-staging"]
+    paths:
+      - "siderail/**"
+      - "vendor/SideRail"
+      - "migration/marzban_to_siderail_backup.py"
+      - "migration/test_marzban_to_siderail_backup.py"
+      - "jinx_api.py"
+      - "pompnet-dashboard.html"
+      - "nginx.conf"
+      - ".github/workflows/siderail-staging-build.yml"
   pull_request:
     paths:
       - "siderail/**"
