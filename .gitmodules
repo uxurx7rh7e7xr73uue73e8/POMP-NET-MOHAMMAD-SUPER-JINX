@@ -1,0 +1,3 @@
+[submodule "vendor/SideRail"]
+	path = vendor/SideRail
+	url = https://github.com/icubaby/SideRail.git
