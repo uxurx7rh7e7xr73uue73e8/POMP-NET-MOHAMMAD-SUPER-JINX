@@ -90,17 +90,16 @@ grep -q -- 'bankCard: "6280231311605819"' <<< "$DONATE_CONFIG"
 if grep -q -- "هر بخش از POMP NET" <<< "$DONATE_PAGE"; then echo "Unexpected extra support text" >&2; exit 1; fi
 echo "[smoke] project support page shows bank card only: OK"
 
-# Verify the real PasarGuard dashboard is served and receives the POMP NET skin.
+# Verify the real POMP NET login/dashboard is served at the primary route.
+# The branded page keeps the existing authenticated Marzban API behind it.
 DASHBOARD_HTML="$(curl --fail --silent --show-error "$BASE/dashboard/")"
-grep -q -- 'href="/jinx.css"' <<< "$DASHBOARD_HTML"
-grep -q -- 'src="/jinx.js"' <<< "$DASHBOARD_HTML"
-JINX_SCRIPT="$(curl --fail --silent --show-error "$BASE/jinx.js")"
-grep -q -- "POMP NET MOHAMMAD" <<< "$JINX_SCRIPT"
-grep -q -- "pompnet-panel-credit" <<< "$JINX_SCRIPT"
-grep -q -- "هسته و زیرساخت POMP NET MOHAMMAD" <<< "$JINX_SCRIPT"
-JINX_STYLE="$(curl --fail --silent --show-error "$BASE/jinx.css")"
-grep -q -- "Vazirmatn" <<< "$JINX_STYLE"
-echo "[smoke] native PasarGuard dashboard + POMP NET skin: OK"
+grep -q -- '<title>POMP NET MOHAMMAD</title>' <<< "$DASHBOARD_HTML"
+grep -q -- 'به پنل پمپ نت محمد خوش آمدید' <<< "$DASHBOARD_HTML"
+grep -q -- 'id="loginForm"' <<< "$DASHBOARD_HTML"
+grep -q -- 'data-page="siderail"' <<< "$DASHBOARD_HTML"
+grep -q -- 'data-page="users"' <<< "$DASHBOARD_HTML"
+grep -q -- 'fetch("/api/admin/token"' <<< "$DASHBOARD_HTML"
+echo "[smoke] primary POMP NET login/dashboard + real authenticated API routes: OK"
 # Telegram bot settings are served, but configuration stays owner-only.
 BOT_PAGE="$(curl --fail --silent --show-error "$BASE/bot/")"
 grep -q "ربات مدیریت POMP NET MOHAMMAD" <<< "$BOT_PAGE"
