@@ -229,12 +229,11 @@ fi
 # Start the actual SideRail application (React SPA + authenticated REST API + Xray engine).
 # Keep its SQLite/JWT/Xray state separate from legacy Marzban data; no data is migrated or deleted.
 export NODE_ENV=production
-export PORT=8092
 export SIDERAIL_DATA_DIR="${SIDERAIL_DATA_DIR:-/var/lib/marzban/siderail}"
 export CORE_DIR="${CORE_DIR:-/var/lib/marzban/siderail/core}"
 export XRAY_VERSION="${XRAY_VERSION:-v26.9.9}"
 mkdir -p "$SIDERAIL_DATA_DIR" "$CORE_DIR"
-( cd /opt/siderail && exec /usr/local/bin/node /opt/siderail/apps/server/dist/index.js ) &
+( cd /opt/siderail && exec env PORT=8092 /usr/local/bin/node /opt/siderail/apps/server/dist/index.js ) &
 SIDERAIL_PID=$!
 echo "$SIDERAIL_PID" > /run/jinx/siderail.pid
 SIDERAIL_READY=0
