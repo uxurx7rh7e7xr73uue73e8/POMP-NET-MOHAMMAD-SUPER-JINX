@@ -5,7 +5,8 @@ Standalone control plane for Xray. It deliberately does not import Marzban modul
 Activation is opt-in until the existing users/subscription tokens have been migrated
 and the old runtime can be stopped safely.
 """
-import base64, hashlib, json, os, secrets, shutil, signal, sqlite3, subprocess, threading, time, uuid
+import json, os, secrets, shutil, signal, sqlite3, subprocess, threading, time, uuid
+from contextlib import contextmanager
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import quote
 
@@ -20,23 +21,32 @@ WS_PATH = os.environ.get("POMPNET_WS_PATH", "/pompnet/ws")
 LOCK = threading.RLock()
 PROC = None
 
+@contextmanager
 def db():
     os.makedirs(os.path.dirname(DB), exist_ok=True)
     c = sqlite3.connect(DB, timeout=20)
     c.row_factory = sqlite3.Row
+    c.execute("PRAGMA foreign_keys=ON")
     c.execute("PRAGMA journal_mode=WAL")
-    c.execute("""CREATE TABLE IF NOT EXISTS inbounds(
+    try:
+        c.execute("""CREATE TABLE IF NOT EXISTS inbounds(
       id INTEGER PRIMARY KEY AUTOINCREMENT, tag TEXT UNIQUE NOT NULL,
       protocol TEXT NOT NULL CHECK(protocol='vless'), port INTEGER UNIQUE NOT NULL,
       network TEXT NOT NULL CHECK(network='ws'), path TEXT NOT NULL,
       enabled INTEGER NOT NULL DEFAULT 1, created_at INTEGER NOT NULL)""")
-    c.execute("""CREATE TABLE IF NOT EXISTS clients(
-      id TEXT PRIMARY KEY, inbound_tag TEXT NOT NULL, name TEXT NOT NULL,
-      uuid TEXT UNIQUE NOT NULL, enabled INTEGER NOT NULL DEFAULT 1,
-      expire_at INTEGER NOT NULL DEFAULT 0, quota_bytes INTEGER NOT NULL DEFAULT 0,
-      created_at INTEGER NOT NULL, FOREIGN KEY(inbound_tag) REFERENCES inbounds(tag))""")
-    c.commit()
-    return c
+        c.execute("""CREATE TABLE IF NOT EXISTS clients(
+          id TEXT PRIMARY KEY, inbound_tag TEXT NOT NULL, name TEXT NOT NULL,
+          uuid TEXT UNIQUE NOT NULL, enabled INTEGER NOT NULL DEFAULT 1,
+          expire_at INTEGER NOT NULL DEFAULT 0, quota_bytes INTEGER NOT NULL DEFAULT 0,
+          created_at INTEGER NOT NULL, FOREIGN KEY(inbound_tag) REFERENCES inbounds(tag))""")
+        c.commit()
+        yield c
+        c.commit()
+    except Exception:
+        c.rollback()
+        raise
+    finally:
+        c.close()
 
 def init():
     with db() as c:
