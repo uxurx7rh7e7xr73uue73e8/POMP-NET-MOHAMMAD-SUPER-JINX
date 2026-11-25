@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="fa" dir="rtl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080711"><title>POMP NET MOHAMMAD</title>
+<link rel="stylesheet" href="/pompnet-motion.css"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#070710;--card:#10101d;--card2:#151426;--line:#29243e;--purple:#963cff;--blue:#168cff;--text:#f5f2ff;--muted:#9691ad;--green:#39dba4;--red:#ff647d}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 85% -10%,#51208a55,transparent 38%),radial-gradient(ellipse at 0% 40%,#0d4c7a22,transparent 35%),var(--bg);color:var(--text);font-family:Vazirmatn,Tahoma,sans-serif;min-height:100vh}button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}
+.login-wrap{min-height:100vh;display:grid;place-items:center;padding:22px}.login{width:min(440px,100%);padding:30px;border:1px solid #7543a955;border-radius:28px;background:linear-gradient(145deg,#171326ed,#0d0c17f2);box-shadow:0 30px 100px #0009,0 0 55px #963cff18}.logo{display:flex;align-items:center;gap:13px;margin-bottom:28px}.mark{width:52px;height:52px;border-radius:17px;background:linear-gradient(135deg,var(--purple),var(--blue));display:grid;place-items:center;font-size:25px;font-weight:900;box-shadow:0 8px 30px #963cff55}.brand{font-weight:900;letter-spacing:.5px}.brand small{display:block;color:var(--muted);font-size:11px;letter-spacing:2px}.eyebrow{color:#bd91ff;font-size:12px;font-weight:800;letter-spacing:1px}.login h1{font-size:26px;margin:8px 0}.sub{color:var(--muted);font-size:13px;line-height:2}.field{margin:17px 0}.field label{display:block;color:#c8c1db;font-size:12px;margin-bottom:8px}.field input,.field select{width:100%;border:1px solid var(--line);background:#090914;color:white;padding:13px 14px;border-radius:13px;outline:none}.field input:focus,.field select:focus{border-color:var(--purple);box-shadow:0 0 0 3px #963cff22}.btn{border:0;border-radius:13px;padding:12px 17px;color:white;font-weight:800;background:linear-gradient(110deg,var(--purple),#6333d8);box-shadow:0 8px 24px #8135d633}.btn:disabled{opacity:.5;cursor:wait}.btn.secondary{background:#201c31;border:1px solid #39304f;box-shadow:none}.btn.blue{background:linear-gradient(110deg,#168cff,#365bdb)}.btn.danger{background:#421c2b;border:1px solid #713044;box-shadow:none}.full{width:100%}.msg{min-height:24px;color:var(--red);font-size:12px;margin-top:12px}
+.app{display:grid;grid-template-columns:250px minmax(0,1fr);min-height:100vh}.side{border-left:1px solid var(--line);background:#0b0a14eF;padding:24px 17px;position:sticky;top:0;height:100vh}.side .logo{padding:0 8px 24px;border-bottom:1px solid var(--line)}.nav{display:grid;gap:7px;margin-top:22px}.nav button{border:1px solid transparent;background:transparent;color:#aaa5be;text-align:right;padding:12px 14px;border-radius:13px}.nav button.active,.nav button:hover{color:white;background:linear-gradient(90deg,#963cff22,#168cff12);border-color:#7445a744}.nav .ico{display:inline-block;width:28px;color:#b78bff}.side-foot{position:absolute;bottom:20px;right:18px;left:18px;color:var(--muted);font-size:11px;line-height:2}
+main{min-width:0;padding:28px clamp(16px,3vw,42px) 55px}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:26px}.top h1{font-size:23px;margin:0}.top p{margin:4px 0 0;color:var(--muted);font-size:12px}.actions{display:flex;gap:9px;align-items:center}.pill{padding:8px 12px;border-radius:30px;background:#172a27;border:1px solid #245346;color:var(--green);font-size:11px}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.card{background:linear-gradient(145deg,#151326eF,#0e0d18f5);border:1px solid var(--line);border-radius:19px;padding:18px;box-shadow:0 12px 34px #0002;min-width:0}.stat{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:12px}.stat-icon{width:38px;height:38px;border-radius:12px;background:#963cff22;color:#c89cff;display:grid;place-items:center;font-size:18px}.number{font-size:28px;font-weight:900;margin-top:12px;direction:ltr;text-align:right}.hint{font-size:11px;color:var(--muted);margin-top:3px}.section{margin-top:20px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:13px}.section-head h2{font-size:16px;margin:0}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:650px}th,td{text-align:right;padding:13px 10px;border-bottom:1px solid #29243a;font-size:12px;white-space:nowrap}th{color:#aaa4bc;font-weight:600}td{color:#eeeaf8}.tag{display:inline-flex;padding:5px 9px;border-radius:20px;font-size:10px;background:#18382f;color:#64e6b7}.tag.off{background:#3a202b;color:#ff8195}.empty{text-align:center;color:var(--muted);padding:35px}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px}.form-grid .wide{grid-column:1/-1}.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.toolbar input{background:#0a0914;border:1px solid var(--line);color:white;border-radius:12px;padding:10px 13px;min-width:220px}.notice{border:1px solid #65469a66;background:#25183b88;padding:13px 15px;border-radius:14px;color:#d9c9f3;font-size:12px;line-height:2;margin-top:16px}
+.mobile-head{display:none}
+@media(max-width:900px){.app{grid-template-columns:1fr}.side{position:fixed;z-index:20;top:auto;bottom:0;left:0;right:0;height:auto;padding:7px 8px calc(7px + env(safe-area-inset-bottom));border-left:0;border-top:1px solid var(--line);background:#0d0b18f5;backdrop-filter:blur(18px)}.side .logo,.side-foot{display:none}.nav{display:flex;justify-content:space-around;margin:0;gap:3px}.nav button{font-size:10px;text-align:center;padding:8px 4px;flex:1}.nav .ico{display:block;width:auto;font-size:17px}.nav button span:last-child{display:block}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}main{padding:20px 14px 100px}.top h1{font-size:19px}.mobile-head{display:block}.form-grid{grid-template-columns:1fr}.form-grid .wide{grid-column:auto}}
+@media(max-width:380px){.grid{gap:8px}.card{padding:13px}.number{font-size:23px}.nav button{font-size:9px}}
+
+/* POMP NET login identity — custom artwork-free UI, no upstream login template */
+body:before,body:after{content:"";position:fixed;pointer-events:none;z-index:0;border-radius:50%;filter:blur(2px)}
+body:before{width:520px;height:520px;top:-230px;right:-150px;background:radial-gradient(circle,#8b35ff35,transparent 68%);animation:loginAura 13s ease-in-out infinite alternate}
+body:after{width:480px;height:480px;bottom:-250px;left:-170px;background:radial-gradient(circle,#168cff2b,transparent 68%);animation:loginAura 16s ease-in-out infinite alternate-reverse}
+@keyframes loginAura{to{transform:translate(35px,24px) scale(1.13)}}
+.login-wrap{position:relative;isolation:isolate;overflow:hidden;background-image:linear-gradient(rgba(139,53,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(22,140,255,.03) 1px,transparent 1px);background-size:48px 48px}
+.login{position:relative;z-index:1;overflow:hidden;border:1px solid #8b35ff66;background:linear-gradient(145deg,rgba(24,19,42,.97),rgba(9,9,19,.98));box-shadow:0 35px 110px #000b,0 0 0 1px #168cff18 inset,0 0 85px #8b35ff20;backdrop-filter:blur(22px)}
+.login:before{content:"";position:absolute;top:0;right:12%;left:12%;height:1px;background:linear-gradient(90deg,transparent,#b98aff,#168cff,transparent);box-shadow:0 0 22px #963cff}
+.login .logo{position:relative;padding-bottom:20px;border-bottom:1px solid #ffffff12}
+.login .mark{border-radius:18px;background:linear-gradient(135deg,#8b35ff,#168cff);box-shadow:0 9px 34px #8b35ff66,0 0 0 5px #8b35ff12;position:relative}
+.login .mark:after{content:"";position:absolute;inset:-5px;border:1px solid #a96aff55;border-radius:22px;animation:markPulse 3s ease-out infinite}
+@keyframes markPulse{to{transform:scale(1.18);opacity:0}}
+.login .eyebrow{display:inline-flex;padding:7px 11px;border:1px solid #8b35ff44;border-radius:30px;background:#8b35ff12;color:#cba8ff}
+.login h1{font-size:25px;letter-spacing:-.5px;margin-top:14px}
+.login .sub{margin-top:7px}
+.login .field input{height:50px;background:#090914;border-color:#39304f;transition:.2s}
+.login .field input:focus{border-color:#963cff;box-shadow:0 0 0 4px #963cff20,0 0 24px #963cff15}
+.login .btn{min-height:49px;background:linear-gradient(105deg,#8b35ff,#5b35d5 55%,#168cff);box-shadow:0 12px 30px #7135db40;transition:transform .2s,filter .2s}
+.login .btn:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.login .btn:active{transform:scale(.985)}
+@media(max-width:480px){.login{padding:24px 20px;border-radius:24px}.login h1{font-size:22px}}
+@media(prefers-reduced-motion:reduce){body:before,body:after,.login .mark:after{animation:none!important}.login .btn{transition:none}}
+
+
+/* POMP NET identity layer — login, dashboard and support */
+:root{--pn-violet:#8b35ff;--pn-blue:#168cff}
+.login-wrap{position:relative;isolation:isolate;overflow:hidden}
+.login{position:relative;z-index:2;backdrop-filter:blur(18px);border:1px solid #8b35ff66;background:linear-gradient(145deg,rgba(22,17,39,.96),rgba(8,9,20,.94));box-shadow:0 28px 100px #000b,0 0 0 1px #168cff18,0 0 65px #8b35ff24}
+.login:before{content:"";display:block;height:3px;border-radius:9px;margin:-30px -30px 25px;background:linear-gradient(90deg,#168cff,#8b35ff,#168cff);background-size:200% 100%;animation:pnBar 5s linear infinite}
+@keyframes pnBar{to{background-position:200% 0}}
+.login .mark{position:relative;overflow:hidden;background:linear-gradient(135deg,#8b35ff,#168cff);box-shadow:0 0 28px #8b35ff55}
+.login .brand{font-size:15px;letter-spacing:1.1px}.login .brand small{color:#a99acb;letter-spacing:2.5px}
+.login h1{line-height:1.8}.login .eyebrow{display:inline-flex;padding:6px 10px;border:1px solid #8b35ff55;border-radius:99px;background:#8b35ff14}
+.login .field input{background:#080812;border-color:#383052;transition:border-color .2s,box-shadow .2s}
+.login .btn.full{min-height:52px;background:linear-gradient(105deg,#8b35ff,#6335d8 55%,#168cff);box-shadow:0 10px 30px #7135db55}
+.pn-support{display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none!important;color:#e9e2ff!important;background:linear-gradient(110deg,#14223b,#17102a);border:1px solid #168cff66;border-radius:13px;padding:10px 14px;font-size:12px;font-weight:800;box-shadow:0 6px 24px #168cff18;transition:transform .2s,border-color .2s}
+.pn-support:hover{transform:translateY(-2px);border-color:#8b35ff!important}
+.login-support{width:100%;margin-top:10px;min-height:44px}
+.side .pn-support{width:100%;margin-top:16px}
+.top .pn-support{white-space:nowrap}
+@media(max-width:720px){.top .pn-support{font-size:11px;padding:9px 10px}.login{padding:27px 22px}.login:before{margin:-27px -22px 22px}}
+@media(prefers-reduced-motion:reduce){.login:before{animation:none}.pn-support{transition:none}}
+
+
+/* Premium POMP NET login + table finish. Master brand leads; SUPER JINX stays a small signature. */
+.login .logo{align-items:center;gap:16px}
+.login .brand{font-size:clamp(19px,4.5vw,24px)!important;font-weight:900;letter-spacing:.25px!important;line-height:1.45;color:#fff;text-shadow:0 0 22px #8b35ff55;white-space:nowrap}
+.login .brand small{font-size:8px!important;letter-spacing:4.5px!important;color:#9d8abb!important;margin-top:4px}
+.side .brand{font-size:16px!important;font-weight:900;letter-spacing:.15px!important;line-height:1.4}
+.side .brand small{font-size:8px!important;letter-spacing:3.5px!important;color:#9d8abb!important}
+.login-credential-note{margin:14px 0 17px;padding:12px 14px;border-color:#8b35ff55;background:linear-gradient(110deg,#8b35ff14,#168cff0c);font-size:11px}
+.login-credential-note code{direction:ltr;display:inline-block;color:#d8c4ff;background:#080711;padding:2px 6px;border-radius:6px}
+.login-support{margin-top:14px}
+.table-wrap{border:1px solid #302844;border-radius:15px;background:#09081288}
+table{border-collapse:separate;border-spacing:0;min-width:650px}
+thead th{position:sticky;top:0;z-index:1;background:linear-gradient(100deg,#211638,#121b30);color:#d8c6fa;font-size:11px;font-weight:800;border-bottom:1px solid #7547a866}
+tbody tr{transition:background .18s}
+tbody tr:nth-child(even){background:#ffffff04}
+tbody tr:hover{background:linear-gradient(90deg,#8b35ff12,#168cff0d)}
+tbody td{border-bottom:1px solid #ffffff0c;padding-top:15px;padding-bottom:15px}
+tbody tr:last-child td{border-bottom:0}
+.section-head h2{font-weight:900;letter-spacing:-.2px}
+.stat-icon{border:1px solid #8b35ff25;box-shadow:0 0 20px #8b35ff12}
+.tag{border:1px solid #39dba433}
+.tag.off{border-color:#ff647d33}
+@media(max-width:480px){.login .brand{font-size:18px!important}.login .brand small{font-size:8px!important;letter-spacing:3.5px!important}.login-credential-note{font-size:10px}}
+
+/* POMP NET MOHAMMAD — premium dashboard system */
+:root{--purple:#8b35ff;--blue:#168cff;--line:#302747}
+.brand{font-size:18px!important;line-height:1.25;letter-spacing:.35px}
+.brand small{display:block!important;margin-top:5px;font-size:9px!important;letter-spacing:3px!important;color:#a98bd9!important;font-weight:800}
+.logo .mark{background:linear-gradient(135deg,#8b35ff 0%,#5d35d5 48%,#168cff 100%);box-shadow:0 10px 32px #8b35ff45,0 0 0 5px #8b35ff12}
+.top{position:relative;padding:17px 20px;border:1px solid #8b35ff35;border-radius:20px;background:linear-gradient(110deg,#171226f2,#0d1020f2);box-shadow:0 16px 42px #0004,0 0 32px #8b35ff0d}
+.top:after{content:"";position:absolute;inset:0 auto 0 0;width:3px;border-radius:20px;background:linear-gradient(#168cff,#8b35ff);box-shadow:0 0 18px #8b35ff80}
+.top h1{font-size:22px;font-weight:900;letter-spacing:-.4px}
+.top p{font-variant-numeric:tabular-nums}
+.pn-hero{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 20px;padding:22px 24px;border:1px solid #8b35ff4a;border-radius:22px;background:radial-gradient(ellipse at 8% 50%,#8b35ff24,transparent 42%),linear-gradient(115deg,#171229,#0b1425);box-shadow:0 18px 46px #0004,inset 0 1px #ffffff0c;overflow:hidden;position:relative}
+.pn-hero:after{content:"";position:absolute;width:180px;height:180px;left:-65px;top:-90px;border-radius:50%;background:#168cff18;filter:blur(12px)}
+.pn-hero-copy{display:grid;gap:4px;position:relative;z-index:1}
+.pn-hero-copy .eyebrow{font-size:10px;letter-spacing:2px;color:#c39aff}
+.pn-hero-copy strong{font-size:21px;font-weight:900}
+.pn-hero-copy small{font-size:9px;letter-spacing:3px;color:#8e8aa8;font-weight:800;direction:ltr;text-align:right}
+.pn-hero-state{display:flex;align-items:center;gap:9px;padding:10px 13px;border:1px solid #168cff55;border-radius:30px;background:#081c2b88;color:#b8ddff;font-size:11px;white-space:nowrap;position:relative;z-index:1}
+.pn-hero-state i{width:8px;height:8px;border-radius:50%;background:#39dba4;box-shadow:0 0 12px #39dba4;display:block}
+.pill.api-ok{background:#112d27;border-color:#28634e;color:#61e8b7}
+.pill.api-error{background:#3b1826;border-color:#773147;color:#ff8ca1}
+.grid .card{position:relative;overflow:hidden;border-color:#35264e;background:linear-gradient(145deg,#171426,#0d0d18);transition:transform .22s,border-color .22s,box-shadow .22s}
+.grid .card:before{content:"";position:absolute;inset:0 0 auto;height:2px;background:linear-gradient(90deg,transparent,#8b35ff,#168cff,transparent);opacity:.75}
+.grid .card:hover{transform:translateY(-3px);border-color:#8b35ff77;box-shadow:0 18px 38px #0005,0 0 25px #8b35ff13}
+.stat-icon{background:linear-gradient(145deg,#8b35ff2a,#168cff20);border:1px solid #8b35ff3b}
+.number{font-size:30px;letter-spacing:-.8px}
+.section .card,.card{border-color:#302747}
+table{border-collapse:separate;border-spacing:0}
+thead th{position:sticky;top:0;background:#171326;color:#cbb8ef}
+tbody tr:hover{background:#8b35ff0b}
+td,th{border-bottom:1px solid #ffffff0b}
+.nav button.active{background:linear-gradient(100deg,#8b35ff2b,#168cff18);border-color:#8b35ff66;box-shadow:inset -3px 0 #8b35ff;color:#fff}
+.btn{background:linear-gradient(110deg,#8b35ff,#5c37d5 58%,#168cff)}
+.btn.secondary{background:#171629;border-color:#39304f}
+.login .brand{font-size:19px!important}
+.login .brand small{font-size:9px!important}
+.login h1{font-weight:900}
+.login .notice{border-color:#8b35ff55;background:#201633;color:#d8c8f3}
+@media(max-width:900px){.pn-hero{padding:17px;align-items:flex-start;flex-direction:column}.pn-hero-copy strong{font-size:18px}.pn-hero-state{font-size:10px}.top{padding:14px;border-radius:16px}.top .actions{flex-wrap:wrap;justify-content:flex-end}.top .actions .pn-support{display:none}}
+@media(max-width:420px){.pn-hero{margin-bottom:14px}.pn-hero-state{white-space:normal}.brand{font-size:15px!important}.top h1{font-size:18px}}
+@media(prefers-reduced-motion:reduce){.grid .card{transition:none}.grid .card:hover{transform:none}}
+
+.protocol-picks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.protocol-picks label{display:flex;align-items:center;gap:8px;padding:12px;border:1px solid #39304f;border-radius:12px;background:#0b0a16;color:#e8ddff;font-size:12px}.protocol-picks input{accent-color:#963cff;width:17px;height:17px}@media(max-width:560px){.protocol-picks{grid-template-columns:1fr}}\n/* Small animated glass attribution — authenticated panel only, never the login view. */
+.pn-brand-credit{position:relative;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;width:max-content;max-width:100%;margin:0 auto 15px;padding:7px 13px;overflow:hidden;border:1px solid #8b35ff55;border-radius:999px;background:linear-gradient(110deg,rgba(22,16,39,.88),rgba(8,19,35,.84));color:#d9d0eb;font-size:10px;font-weight:600;line-height:1.7;box-shadow:0 5px 22px #0004,inset 0 1px #ffffff12;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.pn-brand-credit:before{content:"";position:absolute;inset:0;transform:translateX(-120%);background:linear-gradient(100deg,transparent,#ffffff18,transparent);animation:pnCreditShine 5s ease-in-out infinite}
+.pn-brand-credit b{color:#fff;font-weight:800}.pn-brand-credit i{font-style:normal;color:#a879ff;text-shadow:0 0 10px #8b35ff}.pn-brand-credit span:last-child{color:#b8cfff}.pn-credit-dot{width:6px;height:6px;border-radius:50%;background:#168cff;box-shadow:0 0 10px #168cff;flex:none}
+@keyframes pnCreditShine{55%,100%{transform:translateX(120%)}}
+@media(max-width:560px){.pn-brand-credit{font-size:9px;padding:6px 10px;gap:6px;margin-bottom:12px}}
+@media(prefers-reduced-motion:reduce){.pn-brand-credit:before{animation:none}}
+.sr-data{white-space:pre-wrap;direction:ltr;text-align:left;max-height:380px;overflow:auto;background:#090914;border:1px solid var(--line);border-radius:12px;padding:12px;color:#d8c8f3;font-size:11px;line-height:1.8}.protocol-picks label{display:inline-flex;gap:6px;align-items:center;margin:5px 12px 5px 0}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.form-grid .wide{grid-column:1/-1}textarea{width:100%;background:#090914;color:white;border:1px solid var(--line);border-radius:12px;padding:12px}@media(max-width:850px){.form-grid{grid-template-columns:1fr}.form-grid .wide{grid-column:auto}}</style></head><body>
+<div id="loginView" class="login-wrap"><section class="login"><div class="logo"><div class="mark">P</div><div class="brand">POMP NET MOHAMMAD<small>𝗦𝗨𝗣𝗘𝗥 𝗝𝗜𝗡𝗫 · OFFICIAL BRAND</small></div></div><div class="eyebrow">SECURE ADMIN ACCESS</div><h1>به پنل پمپ نت محمد خوش آمدید</h1><p class="sub">برای ورود به مرکز مدیریت اختصاصی پمپ‌نت، اطلاعات مدیر را وارد کنید.</p><div class="notice login-credential-note"><b>راهنمای ورود امن:</b> در نصب تازه، نام کاربری پیش‌فرض <code>admin</code> است و رمز قوی به‌صورت خودکار ساخته می‌شود؛ آن را فقط از گزارش‌های خصوصی اجرای سرور دریافت کنید. رمز پیش‌فرض admin/admin وجود ندارد.</div><form id="loginForm"><div class="field"><label>نام کاربری</label><input id="username" autocomplete="username" required></div><div class="field"><label>رمز عبور</label><input id="password" type="password" autocomplete="current-password" required></div><button class="btn full" id="loginBtn">ورود به پنل</button><div class="msg" id="loginMsg" role="alert" aria-live="polite"></div></form><a class="pn-support login-support" href="https://t.me/NovaTunneli" target="_blank" rel="noopener noreferrer">✈ پشتیبانی ورود · @NovaTunneli</a></section></div>
+<div id="appView" class="app hidden"><aside class="side"><div class="logo"><div class="mark">P</div><div class="brand">POMP NET MOHAMMAD<small>𝗦𝗨𝗣𝗘𝗥 𝗝𝗜𝗡𝗫 · OFFICIAL BRAND</small></div></div><nav class="nav"><button class="active" data-page="siderail"><span class="ico">◉</span><span>مرکز مدیریت POMP NET</span></button></nav><div class="side-foot">قدرت ساخت، آزادی انتخاب، کنترل در دستان تو<br>نسخه اختصاصی POMP NET MOHAMMAD</div></aside>
+<main><header class="top"><div><div class="eyebrow mobile-head">POMP NET MOHAMMAD / 𝗦𝗨𝗣𝗘𝗥 𝗝𝗜𝗡𝗫</div><h1 id="pageTitle">داشبورد مدیریت</h1><p id="today"></p></div><div class="actions"><span class="pill" id="apiStatus" role="status">● در حال اتصال به API</span><button class="btn secondary" id="refreshAll">↻ بروزرسانی</button><button class="btn secondary" id="logoutBtn">خروج</button></div></header>
+<div class="pn-brand-credit" role="note"><span class="pn-credit-dot"></span><b>کدنویسی و توسعه توسط تیم پمپ‌نت</b><i>✦</i><span>با همکاری آقای جنیکس · POMP NET MOHAMMAD</span></div><section class="pn-hero"><div class="pn-hero-copy"><span class="eyebrow">POMP NET MOHAMMAD · 𝗦𝗨𝗣𝗘𝗥 𝗝𝗜𝗡𝗫</span><strong>مرکز فرماندهی اختصاصی</strong><small>POMP NET NEXUS · LIVE CONTROL PANEL</small></div><div class="pn-hero-state"><i></i><span>نمایش اطلاعات واقعی از هسته پنل</span></div></section>
+<section id="page-overview"><div class="grid"><article class="card"><div class="stat">کل کاربران <span class="stat-icon">♙</span></div><div class="number" id="totalUsers">—</div><div class="hint">حساب‌های ثبت‌شده</div></article><article class="card"><div class="stat">فعال <span class="stat-icon">✦</span></div><div class="number" id="activeUsers">—</div><div class="hint">کاربران فعال</div></article><article class="card"><div class="stat">حجم مصرف‌شده <span class="stat-icon">⇅</span></div><div class="number" id="usedTraffic">—</div><div class="hint">مجموع دانلود و آپلود</div></article><article class="card"><div class="stat">حجم کل مجاز <span class="stat-icon">◉</span></div><div class="number" id="totalTraffic">—</div><div class="hint">بر اساس محدودیت کاربران</div></article></div><div class="section card"><div class="section-head"><h2>آخرین کاربران</h2><button class="btn secondary" data-go="users">مشاهده همه</button></div><div class="table-wrap"><table><thead><tr><th>نام کاربری</th><th>وضعیت</th><th>مصرف</th><th>انقضا</th></tr></thead><tbody id="recentRows"><tr><td colspan="4" class="empty">در حال دریافت اطلاعات…</td></tr></tbody></table></div></div><div class="notice">این داشبورد رابط اختصاصی POMP NET است و اطلاعات را از API پنل دریافت می‌کند؛ اعداد نمایشی نمونه نیستند و در صورت خطای API به‌صورت خطا گزارش می‌شوند.</div></section>
+<section id="page-users" class="hidden"><div class="card"><div class="section-head"><h2>مدیریت کاربران</h2><div class="toolbar"><input id="searchUser" placeholder="جستجوی نام کاربری…"><button class="btn secondary" id="refreshUsers">بروزرسانی</button></div></div><div class="table-wrap"><table><thead><tr><th>نام کاربری</th><th>وضعیت</th><th>مصرف</th><th>محدودیت</th><th>انقضا</th><th>عملیات</th></tr></thead><tbody id="usersRows"><tr><td colspan="6" class="empty">در حال دریافت…</td></tr></tbody></table></div></div></section>
+<section id="page-create" class="hidden"><div class="card"><div class="section-head"><h2>ساخت کاربر جدید</h2><span class="tag">اتصال مستقیم به API</span></div><form id="createForm"><div class="form-grid"><div class="field"><label>نام کاربری</label><input id="newUsername" required minlength="3" maxlength="32" pattern="[A-Za-z0-9_.@-]+"></div><div class="field"><label>حجم (GB) — صفر یعنی نامحدود</label><input id="newLimit" type="number" min="0" step="1" value="30"></div><div class="field"><label>مدت اعتبار (روز) — صفر یعنی بدون انقضا</label><input id="newDays" type="number" min="0" value="30"></div><div class="field"><label>ریست حجم</label><select id="resetStrategy"><option value="no_reset">بدون ریست</option><option value="daily">روزانه</option><option value="weekly">هفتگی</option><option value="monthly">ماهانه</option></select></div><div class="field wide"><label>پروتکل‌ها و کانفیگ‌های واقعی (یک یا چند مورد)</label><div class="protocol-picks"><label><input type="checkbox" name="protocols" value="vless" checked> VLESS · SUPER JINX</label><label><input type="checkbox" name="protocols" value="vmess" checked> VMess · SUPER JINX</label><label><input type="checkbox" name="protocols" value="trojan" checked> Trojan · SUPER JINX</label></div><small class="hint">هر گزینه به inbound واقعی همان پروتکل در هسته Xray متصل می‌شود؛ انتخاب همه، سه کانفیگ مستقل در یک سرور می‌سازد.</small></div></div><button class="btn" id="createBtn">＋ ساخت کاربر</button><div class="msg" id="createMsg"></div></form></div></section>
+<section id="page-system" class="hidden"><div class="card"><div class="section-head"><h2>وضعیت سرویس</h2><button class="btn secondary" id="refreshSystem">بررسی مجدد</button></div><pre id="systemInfo" style="white-space:pre-wrap;direction:ltr;text-align:left;color:#cfc7e4;font-size:12px;line-height:2">در حال دریافت وضعیت…</pre></div></section>
+<section id="page-control" class="hidden"><div class="card"><div class="section-head"><h2>مرکز اتصال و همگام‌سازی POMP NET</h2><button class="btn" id="runDiagnostics">⚡ بررسی واقعی اتصال</button></div><p class="sub">این صفحه وضعیت API احراز‌شده SideRail و هسته Xray آن را بررسی می‌کند. هیچ رمز یا توکنی در صفحه نمایش داده نمی‌شود.</p><div id="diagSummary" class="notice">برای شروع، «بررسی واقعی اتصال» را بزنید.</div><div id="diagChecks" class="grid section"></div></div><div class="card section"><div class="section-head"><h2>Inboundهای واقعی هسته</h2><button class="btn secondary" id="refreshInbounds">↻ بروزرسانی</button></div><div class="table-wrap"><table><thead><tr><th>نام / تگ</th><th>پروتکل</th><th>پورت</th><th>شناسه</th><th>وضعیت</th></tr></thead><tbody id="inboundRows"><tr><td colspan="5" class="empty">برای دریافت اطلاعات بررسی اتصال را اجرا کنید.</td></tr></tbody></table></div></div><div class="card section"><div class="section-head"><h2>تنظیمات و مهاجرت</h2><span class="tag">Staging</span></div><div class="notice">مقادیر محرمانه مانند آدرس API، نام کاربری، رمز، API Token، کلید Adapter و آدرس اشتراک باید در Variables سرویس Railway تنظیم شوند؛ این صفحه فقط وجود تنظیمات را بدون افشای مقدار بررسی می‌کند. برای تغییرشان باید دسترسی Developer یا بالاتر به Railway داشته باشید.</div><div class="notice">ابزار انتقال Marzban به 3X-UI در این شاخه به‌صورت Dry-run-first آماده شده است؛ اجرای انتقال واقعی هنوز از این داشبورد فعال نشده و تا قبل از تهیه پشتیبان و تطبیق Inboundها نباید اجرا شود. نگاشت لینک‌های قدیمی اشتراک نیز فقط پس از import واقعی قابل تأیید است.</div><div class="toolbar"><a class="btn secondary" href="https://github.com/uxurx7rh7e7xr73uue73e8/POMP-NET-MOHAMMAD-SUPER-JINX/blob/pompnet-3xui-migration-staging/docs/3XUI-MIGRATION-STAGING.md" target="_blank" rel="noopener noreferrer">راهنمای مهاجرت</a><a class="btn secondary" href="https://railway.com" target="_blank" rel="noopener noreferrer">تنظیم Variables در Railway</a></div></div><section id="page-inbounds" class="hidden"><div class="card"><div class="section-head"><h2>مدیریت Inboundهای رسمی SideRail</h2><span class="tag">SideRail Official API</span></div><p class="sub">فهرست و وضعیت اینباندها مستقیماً از API رسمی SideRail خوانده می‌شود. ساخت Inbound سفارشی در API عمومی این نسخه ارائه نشده؛ Inboundهای پیش‌فرض SideRail از دیتابیس رسمی آن خوانده و ویرایش می‌شوند. قبل از ساخت، اتصال هسته را از «مرکز اتصال» بررسی کن.</p><form id="inboundForm"><div class="form-grid"><div class="field"><label>پروتکل</label><select id="ibProtocol"><option value="vless">VLESS</option><option value="vmess">VMess</option><option value="trojan">Trojan</option></select></div><div class="field"><label>پورت آزاد سرور</label><input id="ibPort" type="number" min="1024" max="65535" value="2053" required></div><div class="field wide"><label>نام اینباند با برند شما</label><input id="ibName" maxlength="64" value="POMP NET MOHAMMAD - VLESS WS" required></div><div class="field wide"><label>مسیر WebSocket</label><input id="ibPath" maxlength="96" value="/pompnet/vless" required></div></div><div class="toolbar"><button class="btn" id="ibCreateBtn" type="submit" disabled>ساخت سفارشی در API رسمی موجود نیست</button><button class="btn secondary" id="ibQuickBtn" type="button" disabled>ساخت دسته‌ای در API رسمی موجود نیست</button><button class="btn secondary" id="ibReloadBtn" type="button">↻ تازه‌سازی فهرست</button></div><div class="msg" id="ibMsg" aria-live="polite"></div></form><div class="notice">پیش‌فرض‌ها WebSocket بدون TLS هستند؛ برای اتصال عمومی باید TLS روی Reverse Proxy یا خود سرور تنظیم شود. پورت‌های پیشنهادی 2053، 2083 و 2087 هستند؛ اگر اشغال باشند، ساخت آن مورد رد می‌شود. هیچ پورت Railway TCP/443 فرض نشده است.</div></div><div class="card section"><div class="section-head"><h2>اینباندهای رسمی SideRail</h2><button class="btn secondary" id="ibRefreshList">بروزرسانی</button></div><div class="table-wrap"><table><thead><tr><th>نام برند</th><th>پروتکل</th><th>پورت</th><th>شناسه</th><th>وضعیت</th></tr></thead><tbody id="ibRows"><tr><td colspan="5" class="empty">در حال دریافت…</td></tr></tbody></table></div></div></section></section>
+<section id="page-siderail" class="hidden">
+ <div class="card">
+  <div class="section-head"><h2>مدیریت یکپارچه هسته POMP NET</h2><div class="toolbar"><span id="srState" class="tag off">در حال بررسی</span><button class="btn secondary" id="srRefresh">↻ بروزرسانی</button></div></div>
+  <p class="sub">این بخش با نشست امن مدیر POMP NET به هسته عملیاتی متصل می‌شود؛ اطلاعات ورود داخلی هرگز در مرورگر ذخیره نمی‌شود.</p>
+  <div id="srMessage" class="notice">در انتظار اتصال امن به هسته POMP NET…</div>
+  <div class="grid section">
+   <article class="card"><div class="stat">کاربران POMP NET</div><div class="number" id="srUsersCount">—</div></article>
+   <article class="card"><div class="stat">کاربران آنلاین</div><div class="number" id="srOnlineCount">—</div></article>
+   <article class="card"><div class="stat">اینباندها</div><div class="number" id="srInboundCount">—</div></article>
+   <article class="card"><div class="stat">نسخه Xray</div><div class="number" id="srCoreVersion" style="font-size:17px">—</div></article>
+  </div>
+ </div>
+ <div class="card section">
+  <div class="section-head"><h2>ساخت کاربر در هسته POMP NET</h2><div class="toolbar"><span class="tag">API واقعی</span></div></div>
+  <form id="srCreateForm"><div class="form-grid">
+   <div class="field"><label>نام کاربری / ایمیل</label><input id="srEmail" required maxlength="100"></div>
+   <div class="field"><label>حجم (GB) · صفر نامحدود</label><input id="srLimit" type="number" min="0" value="30"></div>
+   <div class="field"><label>اعتبار (روز) · صفر بدون انقضا</label><input id="srDays" type="number" min="0" value="30"></div>
+   <div class="field"><label>شناسه UUID (اختیاری)</label><input id="srUuid" maxlength="64" placeholder="خودکار"></div>
+   <div class="field"><label>رمز Trojan (اختیاری)</label><input id="srPassword" maxlength="128"></div>
+   <div class="field"><label>Fingerprint</label><input id="srFingerprint" value="chrome"></div>
+   <div class="field"><label>ALPN</label><input id="srAlpn" placeholder="h2,http/1.1"></div>
+   <div class="field"><label>محدودیت IP (صفر نامحدود)</label><input id="srIpLimit" type="number" min="0" value="0"></div>
+   <div class="field"><label>انقضای اشتراک (روز، صفر پیش‌فرض)</label><input id="srSubDays" type="number" min="0" value="0"></div>
+   <div class="field"><label>Telegram ID</label><input id="srTelegram" maxlength="64"></div>
+   <div class="field"><label>Traffic Reset</label><select id="srTrafficReset"><option value="never">هرگز</option><option value="daily">روزانه</option><option value="weekly">هفتگی</option><option value="monthly">ماهانه</option></select></div>
+   <div class="field wide"><label>Fragment (JSON اختیاری)</label><input id="srFragment" placeholder='{"tcp":[]} '></div>
+   <div class="field wide"><label>ECH Config (اختیاری)</label><input id="srEch" maxlength="2048"></div>
+   <div class="field wide"><label>توضیحات</label><input id="srComment" maxlength="200"></div>
+   <div class="field wide"><label>اینباندهای فعال</label><div id="srInboundPicks" class="protocol-picks">ابتدا اینباندها را بارگذاری کنید.</div></div>
+  </div><button class="btn" id="srCreateBtn">＋ ساخت کاربر واقعی</button><div id="srCreateMsg" class="msg"></div></form>
+ </div>
+ <div class="card section">
+  <div class="section-head"><h2>کاربران و اشتراک‌ها</h2><input id="srSearch" placeholder="جستجوی کاربر…"></div>
+  <div class="table-wrap"><table><thead><tr><th>کاربر</th><th>وضعیت</th><th>مصرف</th><th>حجم</th><th>انقضا</th><th>اشتراک</th><th>عملیات</th></tr></thead><tbody id="srUserRows"><tr><td colspan="7" class="empty">در حال دریافت…</td></tr></tbody></table></div>
+ </div>
+ <div class="card section">
+  <div class="section-head"><h2>اینباندهای هسته</h2></div>
+  <div class="table-wrap"><table><thead><tr><th>تگ</th><th>پروتکل</th><th>انتقال</th><th>پورت</th><th>وضعیت</th><th>عملیات</th></tr></thead><tbody id="srInboundRows"><tr><td colspan="6" class="empty">در حال دریافت…</td></tr></tbody></table></div>
+ </div>
+ <div class="card section">
+  <div class="section-head"><h2>ابزارهای پیشرفته مدیریت</h2><div class="toolbar"><button class="btn secondary" id="srRestartXray">راه‌اندازی مجدد Xray</button><button class="btn secondary" id="srRoutingBtn">مسیریابی</button><button class="btn secondary" id="srActivityBtn">گزارش فعالیت</button><button class="btn secondary" id="srClearActivity">پاک‌کردن گزارش</button><button class="btn secondary" id="srBotBtn">ربات تلگرام</button><button class="btn secondary" id="srSettingsBtn">تنظیمات</button><button class="btn secondary" id="srAdminsBtn">مدیران</button></div></div>
+  <pre id="srExtra" style="white-space:pre-wrap;direction:ltr;text-align:left;color:#d8c8f3;font-size:12px;line-height:2">داده‌های مدیریتی پس از انتخاب ابزار نمایش داده می‌شوند.</pre>
+ </div>
+ <div class="card section" id="srProxyPanel">
+  <div class="section-head"><h2>منابع پراکسی و تست اتصال</h2><button class="btn secondary" id="srProxySourcesRefresh">بارگذاری منابع</button></div>
+  <div class="form-grid"><div class="field"><label>منبع پراکسی</label><select id="srProxySource"></select></div><div class="field"><label>اینباند مقصد</label><select id="srProxyInbound"></select></div>
+   <div class="field wide"><button class="btn" id="srProxyScan" type="button">اسکن منبع واقعی</button><span id="srProxyMsg" class="msg"></span></div>
+  </div>
+  <div class="table-wrap"><table><thead><tr><th>انتخاب</th><th>IP</th><th>پورت</th><th>نوع</th><th>کشور</th><th>وضعیت</th><th>تست</th></tr></thead><tbody id="srProxyRows"><tr><td colspan="7" class="empty">منبعی انتخاب نشده است.</td></tr></tbody></table></div>
+  <button class="btn secondary" id="srProxyApply" type="button">افزودن پراکسی‌های انتخاب‌شده به اینباند</button>
+ </div>
+ <div class="card section" id="srRoutingPanel">
+  <div class="section-head"><h2>مسیریابی هسته</h2><button class="btn secondary" id="srRoutingRefresh">بروزرسانی قوانین</button></div>
+  <form id="srRoutingForm" class="form-grid">
+   <div class="field"><label>دامنه یا IP / CIDR</label><input id="srRouteDomain" required placeholder="example.com یا 1.1.1.0/24"></div>
+   <div class="field"><label>نوع قانون</label><select id="srRouteKind"><option value="domain">دامنه</option><option value="ip">IP</option></select></div>
+   <div class="field"><label>عنوان</label><input id="srRouteLabel" placeholder="نام قانون"></div>
+   <div class="field wide"><label>اینباندهای مقصد</label><div id="srRouteInboundPicks" class="protocol-picks"></div></div>
+   <div class="field wide"><button class="btn" type="submit">افزودن قانون مسیریابی</button><span id="srRouteMsg" class="msg"></span></div>
+  </form>
+  <div class="table-wrap"><table><thead><tr><th>قانون</th><th>نوع</th><th>اینباندها</th><th>عملیات</th></tr></thead><tbody id="srRoutingRows"><tr><td colspan="4" class="empty">برای دریافت قوانین، بروزرسانی را بزنید.</td></tr></tbody></table></div>
+ </div>
+ <div class="grid section">
+  <div class="card" id="srBotPanel"><div class="section-head"><h2>ربات تلگرام هسته</h2><button class="btn secondary" id="srBotRefresh">بارگذاری</button></div>
+   <form id="srBotForm"><div class="field"><label>توکن ربات (خالی = حفظ توکن فعلی)</label><input id="srBotToken" type="password" autocomplete="new-password" placeholder="توکن جدید ربات"></div>
+    <div class="field"><label>شناسه چت‌ها (هر خط یک شناسه)</label><textarea id="srBotChats" rows="3"></textarea></div>
+    <label><input id="srBotEnabled" type="checkbox"> فعال‌سازی ربات</label><label style="display:block;margin:10px 0"><input id="srBotBackup" type="checkbox"> پشتیبان‌گیری روزانه</label>
+    <button class="btn" type="submit">ذخیره تنظیمات ربات</button><button class="btn secondary" type="button" id="srBotTest">تست ربات</button><div id="srBotMsg" class="msg"></div>
+   </form>
+  </div>
+  <div class="card" id="srSettingsPanel"><div class="section-head"><h2>تنظیمات هسته</h2><button class="btn secondary" id="srSettingsRefresh">بارگذاری</button></div>
+   <form id="srSettingsForm"><div class="field"><label>عنوان صفحه اشتراک</label><input id="srSubTitle" maxlength="100"></div>
+    <div class="field"><label>کد کشور سرور (دو حرف انگلیسی)</label><input id="srLocation" maxlength="2" placeholder="FI"></div>
+    <button class="btn" type="submit">ذخیره تنظیمات</button><div id="srSettingsMsg" class="msg"></div>
+   </form>
+   <div class="notice">ورود مدیر از حساب POMP NET انجام می‌شود؛ اعتبارنامه داخلی سرویس در تنظیمات امن سرور نگهداری می‌شود.</div>
+  </div>
+ </div>
+ <div class="card section" id="srAdminsPanel">
+  <div class="section-head"><h2>مدیران و دسترسی‌ها</h2><button class="btn secondary" id="srAdminsRefresh">بارگذاری مدیران</button></div>
+  <form id="srAdminForm" class="form-grid">
+   <div class="field"><label>نام کاربری</label><input id="srAdminUser" required minlength="3"></div><div class="field"><label>رمز عبور</label><input id="srAdminPass" type="password" required minlength="6"></div>
+   <div class="field"><label>سقف حجم (GB، صفر نامحدود)</label><input id="srAdminLimit" type="number" min="0" value="0"></div><div class="field"><label>اعتبار (روز، صفر نامحدود)</label><input id="srAdminDays" type="number" min="0" value="0"></div>
+   <div class="field wide"><label>دسترسی‌ها</label><div class="protocol-picks"><label><input type="checkbox" name="srPerm" value="dashboard" checked> داشبورد</label><label><input type="checkbox" name="srPerm" value="users" checked> کاربران</label><label><input type="checkbox" name="srPerm" value="inbounds"> اینباندها</label><label><input type="checkbox" name="srPerm" value="routing"> مسیریابی</label><label><input type="checkbox" name="srPerm" value="activity"> گزارش‌ها</label><label><input type="checkbox" name="srPerm" value="bot"> ربات</label><label><input type="checkbox" name="srPerm" value="settings"> تنظیمات</label></div></div>
+   <div class="field wide"><label>توضیحات</label><input id="srAdminComment" maxlength="200"></div>
+   <div class="field wide"><button class="btn" type="submit">ساخت مدیر جدید</button><span id="srAdminMsg" class="msg"></span></div>
+  </form>
+  <div class="table-wrap"><table><thead><tr><th>مدیر</th><th>نقش</th><th>کاربران</th><th>مصرف</th><th>دسترسی</th><th>عملیات</th></tr></thead><tbody id="srAdminRows"></tbody></table></div>
+ </div>
+ <div class="grid section">
+  <div class="card"><div class="section-head"><h2>ترافیک سرور</h2><button class="btn secondary" id="srTrafficRefresh">بروزرسانی</button></div><pre id="srTrafficData" class="sr-data">—</pre></div>
+  <div class="card"><div class="section-head"><h2>گزارش فعالیت</h2><button class="btn secondary" id="srActivityRefresh">بروزرسانی</button></div><pre id="srActivityData" class="sr-data">—</pre></div>
+ </div>
+ <div class="card section">
+  <div class="section-head"><h2>پشتیبان هسته POMP NET</h2><div class="toolbar"><button class="btn secondary" id="srExport">خروجی پشتیبان</button><label class="btn secondary" for="srImportFile">ورود پشتیبان</label><input id="srImportFile" type="file" accept="application/json" hidden></div></div>
+  <div class="notice">هشدار: بازیابی پشتیبان، اطلاعات کاربران و اینباندهای هسته را جایگزین می‌کند. پیش از اجرا از اطلاعات فعلی نسخه پشتیبان تهیه کنید.</div>
+ </div>
+</section>
+</main></div>
+<script>
+const $=id=>document.getElementById(id);let token=sessionStorage.getItem("pomp_token")||"",users=[];
+const api=async(path,opts={})=>{const h={...(opts.headers||{})};if(token)h.Authorization="Bearer "+token;if(opts.body&&typeof opts.body!=="string")h["Content-Type"]="application/json";const r=await fetch(path,{...opts,headers:h,body:opts.body&&typeof opts.body!=="string"?JSON.stringify(opts.body):opts.body});const t=await r.text();let j;try{j=JSON.parse(t)}catch{j={detail:t}}if(!r.ok)throw Error(j.detail?.msg||j.detail||("HTTP "+r.status));return j};
+const fmt=n=>{n=Number(n||0);if(n<1024**3)return (n/1024**2).toFixed(1)+" MB";return (n/1024**3).toFixed(2)+" GB"};
+const date=v=>{if(!v)return"—";let d=new Date(v*1000);return isNaN(d)? "—":d.toLocaleDateString("fa-IR")};
+const status=u=>String(u.status||"").toLowerCase()==="active"?"فعال":"غیرفعال";
+function showApp(){ $("loginView").classList.add("hidden");$("appView").classList.remove("hidden");navigate("siderail")}
+function showLogin(){ $("appView").classList.add("hidden");$("loginView").classList.remove("hidden")}
+$("loginForm").onsubmit=async e=>{e.preventDefault();$("loginBtn").disabled=true;$("loginMsg").textContent="در حال ورود…";try{let body=new URLSearchParams({username:$("username").value,password:$("password").value,grant_type:"password"});let r=await fetch("/api/admin/token",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body});let j=await r.json();if(!r.ok)throw Error(j.detail||"ورود ناموفق بود");token=j.access_token;sessionStorage.setItem("pomp_token",token);$("loginMsg").textContent="";showApp()}catch(e){$("loginMsg").textContent=e.message}finally{$("loginBtn").disabled=false}};
+$("logoutBtn").onclick=()=>{token="";sessionStorage.removeItem("pomp_token");showLogin()};
+function navigate(page){document.querySelectorAll("[id^=page-]").forEach(x=>x.classList.add("hidden"));$("page-"+page).classList.remove("hidden");document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===page));$("pageTitle").textContent="مدیریت یکپارچه POMP NET";if(page==="siderail")loadSideRail().catch(showSrError)}
+document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>navigate(b.dataset.page));document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>navigate(b.dataset.go));
+async function loadUsers(){let j=await api("/api/users");users=Array.isArray(j)?j:(j.users||[]);renderStats();renderRecent();renderUsers()}
+function renderStats(){ $("totalUsers").textContent=users.length;$("activeUsers").textContent=users.filter(u=>String(u.status).toLowerCase()==="active").length;$("usedTraffic").textContent=fmt(users.reduce((a,u)=>a+Number(u.used_traffic||0),0));$("totalTraffic").textContent=fmt(users.reduce((a,u)=>a+Number(u.data_limit||0),0))}
+function row(u,full=false){return "<tr><td><b>"+esc(u.username)+"</b></td><td><span class='tag "+(status(u)==="فعال"?"":"off")+"'>"+status(u)+"</span></td><td>"+fmt(u.used_traffic)+"</td>"+(full?"<td>"+(u.data_limit?fmt(u.data_limit):"نامحدود")+"</td>":"")+"<td>"+date(u.expire)+"</td>"+(full?"<td><button class='btn danger' data-delete='"+esc(u.username)+"'>حذف</button></td>":"")+"</tr>"}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function renderRecent(){$("recentRows").innerHTML=users.slice(0,6).map(u=>row(u)).join("")||"<tr><td colspan='4' class='empty'>هنوز کاربری ثبت نشده است.</td></tr>"}
+function renderUsers(){let q=($("searchUser").value||"").toLowerCase();$("usersRows").innerHTML=users.filter(u=>u.username.toLowerCase().includes(q)).map(u=>row(u,true)).join("")||"<tr><td colspan='6' class='empty'>کاربری پیدا نشد.</td></tr>";document.querySelectorAll("[data-delete]").forEach(b=>b.onclick=()=>deleteUser(b.dataset.delete))}
+async function deleteUser(name){if(!confirm("کاربر "+name+" حذف شود؟"))return;try{await api("/api/user/"+encodeURIComponent(name),{method:"DELETE"});await loadUsers()}catch(e){alert("حذف انجام نشد: "+e.message)}}
+$("searchUser").oninput=renderUsers;$("refreshUsers").onclick=()=>loadUsers().catch(e=>alert(e.message));
+$("createForm").onsubmit=async e=>{e.preventDefault();$("createBtn").disabled=true;$("createMsg").textContent="در حال ساخت…";try{let days=Number($("newDays").value),gb=Number($("newLimit").value),selected=[...document.querySelectorAll('input[name="protocols"]:checked')].map(x=>x.value);if(!selected.length)throw Error("حداقل یک پروتکل را انتخاب کنید.");let proxies={},inbounds={};const tags={vless:"VLESS WS",vmess:"VMESS WS",trojan:"TROJAN WS"};for(const p of selected){proxies[p]={};inbounds[p]=[tags[p]]}let body={username:$("newUsername").value.trim(),proxies,inbounds,data_limit:gb?gb*1024**3:null,data_limit_reset_strategy:$("resetStrategy").value,expire:days?Math.floor(Date.now()/1000)+days*86400:null};let j=await api("/api/user",{method:"POST",body});$("createMsg").style.color="var(--green)";$("createMsg").textContent="کاربر با موفقیت به API ارسال شد.";e.target.reset();$("newLimit").value=30;$("newDays").value=30;await loadUsers();navigate("users")}catch(e){$("createMsg").style.color="var(--red)";$("createMsg").textContent="خطا: "+e.message}finally{$("createBtn").disabled=false}};
+function showDiagError(e){$("diagSummary").textContent="بررسی ناموفق: "+e.message;$("diagChecks").innerHTML="";$("inboundRows").innerHTML="<tr><td colspan='5' class='empty'>اطلاعات Inbound دریافت نشد.</td></tr>"}
+async function runDiagnostics(){ $("diagSummary").textContent="در حال بررسی هسته رسمی SideRail…";$("diagChecks").innerHTML="";const [status,system,ins]=await Promise.all([sr("/status"),sr("/system"),sr("/inbounds")]);$("diagSummary").textContent="اتصال احراز‌شده به SideRail برقرار است. هسته: "+(system.coreVersion||system.xrayVersion||"فعال")+" · تعداد Inboundهای رسمی: "+ins.length;$("diagChecks").innerHTML=[["SideRail API",true],["راه‌اندازی مالک",status.setup!==false],["Xray Core",!!(system.coreVersion||system.xrayVersion)],["Inboundهای SideRail",ins.length>0]].map(([k,v])=>"<article class='card'><div class='stat'>"+esc(k)+"</div><div class='number' style='font-size:18px;color:"+(v?"var(--green)":"var(--red)")+"'>"+(v?"فعال":"بررسی لازم")+"</div></article>").join("");$("inboundRows").innerHTML=ins.map(x=>"<tr><td>"+esc(x.tag)+"</td><td>"+esc(String(x.protocol||"").toUpperCase()+" · "+String(x.transport||"").toUpperCase())+"</td><td>"+esc(x.port)+"</td><td>"+esc(x.id)+"</td><td><span class='tag "+(x.enabled?"":"off")+"'>"+(x.enabled?"فعال":"غیرفعال")+"</span></td></tr>").join("")||"<tr><td colspan='5' class='empty'>SideRail هنوز Inbound فعالی ندارد.</td></tr>"}
+$("runDiagnostics").onclick=()=>runDiagnostics().catch(showDiagError);$("refreshInbounds").onclick=()=>runDiagnostics().catch(showDiagError);
+function showInboundError(e){$("ibMsg").style.color="var(--red)";$("ibMsg").textContent="خطا: "+e.message}
+async function loadInboundList(){const rows=await sr("/inbounds");$("ibRows").innerHTML=rows.map(x=>"<tr><td>"+esc(x.tag)+"</td><td>"+esc(String(x.protocol||"").toUpperCase()+" · "+String(x.transport||"").toUpperCase())+"</td><td>"+esc(x.port)+"</td><td>"+esc(x.id)+"</td><td><span class='tag "+(x.enabled?"":"off")+"'>"+(x.enabled?"فعال":"غیرفعال")+"</span></td></tr>").join("")||"<tr><td colspan='5' class='empty'>هنوز Inboundی در دیتابیس SideRail وجود ندارد.</td></tr>"}
+function inboundPreset(){const p=$("ibProtocol").value;const names={vless:"POMP NET MOHAMMAD - VLESS WS",vmess:"POMP NET MOHAMMAD - VMESS WS",trojan:"POMP NET MOHAMMAD - TROJAN WS"};const paths={vless:"/pompnet/vless",vmess:"/pompnet/vmess",trojan:"/pompnet/trojan"};const ports={vless:2053,vmess:2083,trojan:2087};$("ibName").value=names[p];$("ibPath").value=paths[p];$("ibPort").value=ports[p]}
+$("ibProtocol").onchange=inboundPreset;
+async function createInbound(){throw Error("نسخه رسمی SideRail در API عمومی این نسخه فقط فهرست و ویرایش Inboundهای seedشده را ارائه می‌کند؛ ساخت Inbound سفارشی از مسیر رسمی پشتیبانی نمی‌شود.")}
+$("inboundForm").onsubmit=async e=>{e.preventDefault();$("ibMsg").style.color="var(--muted)";$("ibMsg").textContent="ساخت Inbound سفارشی در API رسمی این نسخه از SideRail وجود ندارد. فهرست و وضعیت Inboundهای رسمی را تازه‌سازی کنید.";await loadInboundList().catch(showInboundError)};
+$("ibQuickBtn").onclick=()=>{$("ibMsg").style.color="var(--muted)";$("ibMsg").textContent="برای جلوگیری از ساخت Inbound در هسته اشتباه، ساخت دسته‌ای غیرفعال است؛ این صفحه فقط API رسمی SideRail را مدیریت می‌کند."};
+$("ibReloadBtn").onclick=$("ibRefreshList").onclick=()=>loadInboundList().catch(showInboundError);
+async function loadSystem(){try{let j=await api("/api/system");$("systemInfo").textContent=JSON.stringify(j,null,2)}catch(e){$("systemInfo").textContent="API error: "+e.message}}
+$("refreshSystem").onclick=loadSystem;
+async function loadAll(){ $("today").textContent=new Date().toLocaleString("fa-IR");try{await loadUsers();const b=$("apiStatus");if(b){b.textContent="● اتصال API برقرار است";b.classList.remove("api-error");b.classList.add("api-ok")}}catch(e){const b=$("apiStatus");if(b){b.textContent="● خطا در اتصال API";b.classList.remove("api-ok");b.classList.add("api-error")};if(String(e.message).includes("401")||String(e.message).includes("Unauthorized")){$("loginMsg").textContent="نشست منقضی شده؛ دوباره وارد شوید.";token="";sessionStorage.removeItem("pomp_token");showLogin();return} $("recentRows").innerHTML="<tr><td colspan='4' class='empty'>خطای دریافت کاربران: "+esc(e.message)+"</td></tr>"}loadSystem()}
+if($("refreshAll"))$("refreshAll").onclick=()=>loadSideRail().catch(showSrError);
+if(token)showApp();
+setInterval(()=>{if(token&&!document.hidden)loadSideRail().catch(showSrError)},60000);
+
+/* Real SideRail bridge UI. All requests reuse the authenticated POMP NET admin token. */
+let srUsers=[],srInbounds=[];
+const sr=(path,opts={})=>api("/jinx-api/siderail"+path,opts);
+const srBytes=n=>{n=Number(n||0);if(n<1024**3)return(n/1024**2).toFixed(1)+" MB";return(n/1024**3).toFixed(2)+" GB"};
+const srDate=n=>n?new Date(Number(n)).toLocaleDateString("fa-IR"):"بدون انقضا";
+function srNotice(msg,ok=true){$("srMessage").textContent=msg;$("srState").textContent=ok?"متصل":"خطا";$("srState").className="tag"+(ok?"":" off")}
+function showSrError(e){srNotice("اتصال هسته برقرار نشد: "+e.message,false)}
+async function loadSideRail(){
+ srNotice("در حال بررسی API و ورود امن به هسته POMP NET…");
+ const [status,system,userData,inbounds]=await Promise.all([sr("/status"),sr("/system"),sr("/users"),sr("/inbounds")]);
+ if(status.setup===false)throw Error("راه‌اندازی اولیه هسته انجام نشده است؛ تنظیمات مالک سرویس را بررسی کنید.");
+ srUsers=userData.users||[];srInbounds=Array.isArray(inbounds)?inbounds:[];
+ $("srUsersCount").textContent=srUsers.length;$("srOnlineCount").textContent=srUsers.filter(x=>x.online).length;$("srInboundCount").textContent=srInbounds.length;
+ $("srCoreVersion").textContent=system.coreVersion||system.xrayVersion||"فعال";
+ srNotice("اتصال API هسته برقرار است. عملیات این صفحه روی دیتابیس هسته انجام می‌شود.");
+ renderSrUsers();renderSrInbounds();renderSrInboundPicks();
+ Promise.all([loadSrRouting(),loadSrBot(),loadSrSettings(),loadSrAdmins(),loadSrTraffic(),loadSrActivity()]).catch(e=>console.warn("Optional management section:",e.message));loadSrProxySources().catch(e=>console.warn("Proxy sources:",e.message));
+}
+function renderSrUsers(){
+ const q=($("srSearch").value||"").toLowerCase();
+ $("srUserRows").innerHTML=srUsers.filter(u=>(u.email||"").toLowerCase().includes(q)).map(u=>{
+ const active=!!u.enabled;const link=location.origin+"/sub/"+encodeURIComponent(u.sub_token||"");
+ return "<tr><td><b>"+esc(u.email)+"</b><br><small>#"+u.id+"</small></td><td><span class='tag "+(active?"":"off")+"'>"+(active?"فعال":"غیرفعال")+"</span></td><td>"+srBytes(u.total)+"</td><td>"+(u.data_limit?srBytes(u.data_limit):"نامحدود")+"</td><td>"+srDate(u.expire_at)+"</td><td><a href='"+esc(link)+"' target='_blank' rel='noopener'>بازکردن</a></td><td><div class='toolbar'><button class='btn secondary' data-sr-edit='"+u.id+"'>ویرایش</button><button class='btn secondary' data-sr-toggle='"+u.id+"' data-enabled='"+(!active)+"'>"+(active?"خاموش":"روشن")+"</button><button class='btn secondary' data-sr-reset='"+u.id+"'>ریست</button><button class='btn secondary' data-sr-rotate='"+u.id+"'>توکن جدید</button><button class='btn danger' data-sr-delete='"+u.id+"'>حذف</button></div></td></tr>"
+ }).join("")||"<tr><td colspan='7' class='empty'>کاربری ثبت نشده است.</td></tr>";
+ document.querySelectorAll("[data-sr-edit]").forEach(b=>b.onclick=async()=>{
+  try{const u=await sr("/users/"+b.dataset.srEdit);const email=prompt("ایمیل/نام کاربری:",u.email||"");if(email===null)return;const limit=prompt("حجم GB (0 نامحدود):",String((u.data_limit||0)/1024**3));if(limit===null)return;const days=prompt("اعتبار روز (0 بدون انقضا):","30");if(days===null)return;await sr("/users/"+b.dataset.srEdit,{method:"PUT",body:{email:email.trim(),dataLimit:Number(limit)*1024**3,expireDays:Number(days)}});await loadSideRail()}catch(e){showSrError(e)}
+ });
+ document.querySelectorAll("[data-sr-toggle]").forEach(b=>b.onclick=async()=>{try{await sr("/users/"+b.dataset.srToggle+"/toggle",{method:"POST",body:{enabled:b.dataset.enabled==="true"}});await loadSideRail()}catch(e){showSrError(e)}});
+ document.querySelectorAll("[data-sr-reset]").forEach(b=>b.onclick=async()=>{if(!confirm("مصرف این کاربر صفر شود؟"))return;try{await sr("/users/"+b.dataset.srReset+"/reset-traffic",{method:"POST",body:{}});await loadSideRail()}catch(e){showSrError(e)}});
+ document.querySelectorAll("[data-sr-rotate]").forEach(b=>b.onclick=async()=>{if(!confirm("توکن اشتراک قبلی باطل و توکن جدید ساخته شود؟"))return;try{await sr("/users/"+b.dataset.srRotate+"/rotate-token",{method:"POST",body:{}});await loadSideRail()}catch(e){showSrError(e)}});
+ document.querySelectorAll("[data-sr-delete]").forEach(b=>b.onclick=async()=>{if(!confirm("این کاربر از دیتابیس هسته حذف شود؟"))return;try{await sr("/users/"+b.dataset.srDelete,{method:"DELETE"});await loadSideRail()}catch(e){showSrError(e)}});
+}
+function renderSrInbounds(){
+ $("srInboundRows").innerHTML=srInbounds.map(i=>"<tr><td>"+esc(i.tag)+"</td><td>"+esc(i.protocol)+"</td><td>"+esc(i.transport)+"</td><td>"+esc(i.port)+"</td><td><span class='tag "+(i.enabled?"":"off")+"'>"+(i.enabled?"فعال":"غیرفعال")+"</span></td><td><button class='btn secondary' data-sr-ib-edit='"+i.id+"'>ویرایش</button><button class='btn secondary' data-sr-ib='"+i.id+"' data-sr-ib-enabled='"+(!i.enabled)+"'>"+(i.enabled?"خاموش":"روشن")+"</button></td></tr>").join("")||"<tr><td colspan='6' class='empty'>اینباندی وجود ندارد.</td></tr>";
+ document.querySelectorAll("[data-sr-ib-edit]").forEach(b=>b.onclick=async()=>{
+  const item=srInbounds.find(x=>String(x.id)===b.dataset.srIbEdit);if(!item)return;
+  const address=prompt("عنوان اتصال (خالی = خودکار):",item.address||"");if(address===null)return;
+  const host=prompt("Host header (خالی = خودکار):",item.host||"");if(host===null)return;
+  const sni=prompt("SNI (خالی = خودکار):",item.sni||"");if(sni===null)return;
+  try{await sr("/inbounds/"+b.dataset.srIbEdit,{method:"PATCH",body:{address,host,sni}});await loadSideRail()}catch(e){showSrError(e)}
+ });
+ document.querySelectorAll("[data-sr-ib]").forEach(b=>b.onclick=async()=>{try{await sr("/inbounds/"+b.dataset.srIb,{method:"PATCH",body:{enabled:b.dataset.srIbEnabled==="true"}});await loadSideRail()}catch(e){showSrError(e)}});
+}
+function renderSrInboundPicks(){
+ $("srInboundPicks").innerHTML=srInbounds.filter(x=>x.enabled).map(i=>"<label><input type='checkbox' name='srInbound' value='"+i.id+"'> "+esc(i.tag)+" · "+esc(i.protocol)+"</label>").join("")||"اینباند فعال وجود ندارد؛ ابتدا یک اینباند فعال بسازید.";
+}
+$("srCreateForm").onsubmit=async e=>{
+ e.preventDefault();$("srCreateBtn").disabled=true;$("srCreateMsg").textContent="در حال ساخت کاربر در هسته POMP NET…";
+ try{
+ const inboundIds=[...document.querySelectorAll('input[name="srInbound"]:checked')].map(x=>Number(x.value));
+ if(!inboundIds.length)throw Error("حداقل یک inbound فعال انتخاب کنید.");
+ await sr("/users",{method:"POST",body:{email:$("srEmail").value.trim(),uuid:$("srUuid").value.trim()||undefined,password:$("srPassword").value||undefined,fingerprint:$("srFingerprint").value.trim()||undefined,alpn:$("srAlpn").value.trim()||undefined,fragment:$("srFragment").value.trim()||undefined,echConfig:$("srEch").value.trim()||undefined,dataLimit:Number($("srLimit").value||0),ipLimit:Number($("srIpLimit").value||0),expireDays:Number($("srDays").value||0),subExpireDays:Number($("srSubDays").value||0),trafficReset:$("srTrafficReset").value,telegramId:$("srTelegram").value.trim()||undefined,comment:$("srComment").value.trim(),inboundIds}});
+ $("srCreateMsg").style.color="var(--green)";$("srCreateMsg").textContent="کاربر با موفقیت ساخته شد.";e.target.reset();$("srLimit").value=30;$("srDays").value=30;await loadSideRail();
+ }catch(e){$("srCreateMsg").style.color="var(--red)";$("srCreateMsg").textContent="خطا: "+e.message}finally{$("srCreateBtn").disabled=false}
+};
+$("srSearch").oninput=renderSrUsers;$("srRefresh").onclick=()=>loadSideRail().catch(showSrError);
+
+$("srRestartXray").onclick=async()=>{if(!confirm("هسته Xray راه‌اندازی مجدد شود؟"))return;try{await sr("/system/restart-xray",{method:"POST",body:{}});srNotice("درخواست راه‌اندازی مجدد Xray ارسال شد.");}catch(e){showSrError(e)}};
+$("srClearActivity").onclick=async()=>{if(!confirm("گزارش فعالیت هسته پاک شود؟"))return;try{await sr("/activity",{method:"DELETE",body:{}});$("srExtra").textContent="گزارش فعالیت پاک شد.";srNotice("گزارش فعالیت هسته پاک شد.");}catch(e){showSrError(e)}};
+let srProxies=[];
+async function loadSrProxySources(){const x=await sr("/proxies/sources");$("srProxySource").innerHTML=(x.sources||[]).map(s=>'<option value="'+esc(s.id)+'">'+esc(s.label)+'</option>').join("");$("srProxyInbound").innerHTML=srInbounds.map(i=>'<option value="'+i.id+'">'+esc(i.tag)+'</option>').join("")}
+$("srProxySourcesRefresh").onclick=()=>loadSrProxySources().catch(showSrError);
+$("srProxyScan").onclick=async()=>{try{$("srProxyMsg").textContent="در حال اسکن منبع…";const x=await sr("/proxies/scan",{method:"POST",body:{source:$("srProxySource").value}});srProxies=x.proxies||[];$("srProxyRows").innerHTML=srProxies.map((p,i)=>'<tr><td><input type="checkbox" name="srProxyPick" value="'+i+'"></td><td>'+esc(p.ip)+'</td><td>'+esc(p.port)+'</td><td>'+esc(p.type)+'</td><td>'+esc(p.country||"—")+'</td><td>'+esc(p.ms??"—")+' ms</td><td><button class="btn secondary" data-sr-proxy-test="'+i+'">تست</button></td></tr>').join("")||'<tr><td colspan="7" class="empty">پراکسی سالمی از این منبع پیدا نشد.</td></tr>';$("srProxyMsg").textContent=srProxies.length+" مورد دریافت شد.";document.querySelectorAll("[data-sr-proxy-test]").forEach(b=>b.onclick=async()=>{const p=srProxies[Number(b.dataset.srProxyTest)];try{const r=await sr("/proxies/test",{method:"POST",body:{ip:p.ip,port:Number(p.port),type:p.type}});$("srProxyMsg").textContent=JSON.stringify(r)}catch(e){$("srProxyMsg").textContent=e.message}})}catch(e){$("srProxyMsg").textContent="خطا: "+e.message}};
+$("srProxyApply").onclick=async()=>{const idx=[...document.querySelectorAll('input[name="srProxyPick"]:checked')].map(x=>Number(x.value));if(!idx.length)return alert("حداقل یک پراکسی انتخاب کن.");const inbound=srInbounds.find(x=>String(x.id)===$("srProxyInbound").value);if(!inbound)return alert("اینباند مقصد انتخاب نشده است.");const proxies=[...(inbound.proxies||[]),...idx.map(i=>srProxies[i]).filter(Boolean)];try{await sr("/inbounds/"+inbound.id,{method:"PATCH",body:{proxies}});$("srProxyMsg").textContent="پراکسی‌ها به اینباند اضافه شدند؛ هسته در حال اعمال تغییر است.";await loadSideRail()}catch(e){$("srProxyMsg").textContent="خطا: "+e.message}};
+async function loadSrRouting(){
+ const rules=await sr("/routing");const ins=await sr("/inbounds");srInbounds=Array.isArray(ins)?ins:srInbounds;
+ $("srRouteInboundPicks").innerHTML=srInbounds.map(i=>'<label><input type="checkbox" name="srRouteInbound" value="'+i.id+'"> '+esc(i.tag)+'</label>').join("")||"اینباندی موجود نیست.";
+ $("srRoutingRows").innerHTML=(Array.isArray(rules)?rules:[]).map(r=>'<tr><td>'+esc(r.label||r.domain)+'</td><td>'+esc(r.kind||"domain")+'</td><td>'+esc((r.inboundIds||[]).join(", "))+'</td><td><button class="btn secondary" data-sr-route-edit="'+r.id+'">تغییر مقصد</button> <button class="btn danger" data-sr-route-delete="'+r.id+'">حذف</button></td></tr>').join("")||'<tr><td colspan="4" class="empty">قانونی ثبت نشده است.</td></tr>';
+ document.querySelectorAll("[data-sr-route-edit]").forEach(b=>b.onclick=async()=>{
+  const r=(Array.isArray(rules)?rules:[]).find(x=>String(x.id)===b.dataset.srRouteEdit);if(!r)return;
+  const ids=prompt("شناسه اینباندها را با کاما وارد کن:",(r.inboundIds||[]).join(","));if(ids===null)return;
+  const inboundIds=ids.split(",").map(x=>Number(x.trim())).filter(Number.isFinite);
+  try{await sr("/routing/"+b.dataset.srRouteEdit,{method:"PUT",body:{inboundIds}});await loadSrRouting()}catch(e){$("srRouteMsg").textContent=e.message}
+ });
+ document.querySelectorAll("[data-sr-route-delete]").forEach(b=>b.onclick=async()=>{if(!confirm("این قانون مسیریابی حذف شود؟"))return;try{await sr("/routing/"+b.dataset.srRouteDelete,{method:"DELETE"});await loadSrRouting()}catch(e){$("srRouteMsg").textContent=e.message}});
+}
+$("srRoutingForm").onsubmit=async e=>{e.preventDefault();const ids=[...document.querySelectorAll('input[name="srRouteInbound"]:checked')].map(x=>Number(x.value));try{await sr("/routing",{method:"POST",body:{domain:$("srRouteDomain").value.trim(),kind:$("srRouteKind").value,label:$("srRouteLabel").value.trim(),inboundIds:ids}});$("srRouteMsg").textContent="قانون با موفقیت ثبت شد.";e.target.reset();await loadSrRouting()}catch(err){$("srRouteMsg").textContent="خطا: "+err.message}};
+$("srRoutingRefresh").onclick=()=>loadSrRouting().catch(showSrError);
+async function loadSrBot(){const b=await sr("/bot");$("srBotEnabled").checked=!!b.enabled;$("srBotBackup").checked=!!b.dailyBackup;$("srBotChats").value=(b.chatIds||[]).join("\n");$("srBotToken").value="";$("srBotToken").placeholder=b.token?"توکن تنظیم شده؛ برای حفظ آن خالی بگذارید":"توکن ربات را وارد کنید"}
+$("srBotForm").onsubmit=async e=>{e.preventDefault();const body={enabled:$("srBotEnabled").checked,dailyBackup:$("srBotBackup").checked,chatIds:$("srBotChats").value.split(/\s+/).filter(Boolean)};if($("srBotToken").value.trim())body.token=$("srBotToken").value.trim();try{await sr("/bot",{method:"PUT",body});$("srBotMsg").textContent="تنظیمات ربات ذخیره شد.";$("srBotToken").value=""}catch(err){$("srBotMsg").textContent="خطا: "+err.message}};
+$("srBotTest").onclick=async()=>{try{const b=await sr("/bot");await sr("/bot/test",{method:"POST",body:{token:$("srBotToken").value.trim()||b.token,chatIds:$("srBotChats").value.split(/\s+/).filter(Boolean)}});$("srBotMsg").textContent="پیام آزمایشی ارسال شد."}catch(e){$("srBotMsg").textContent="خطا: "+e.message}};
+$("srBotRefresh").onclick=()=>loadSrBot().catch(showSrError);
+async function loadSrSettings(){const s=await sr("/settings");$("srSubTitle").value=s.subTitle||"";$("srLocation").value=s.location||""}
+$("srSettingsForm").onsubmit=async e=>{e.preventDefault();try{await sr("/settings",{method:"PUT",body:{subTitle:$("srSubTitle").value,location:$("srLocation").value.trim().toUpperCase()}});$("srSettingsMsg").textContent="تنظیمات ذخیره شد."}catch(err){$("srSettingsMsg").textContent="خطا: "+err.message}};
+$("srSettingsRefresh").onclick=()=>loadSrSettings().catch(showSrError);
+
+async function loadSrAdmins(){const data=await sr("/admins");const list=data.admins||[];$("srAdminRows").innerHTML=list.map(a=>'<tr><td>'+esc(a.username)+'</td><td>'+esc(a.role||"admin")+'</td><td>'+esc(a.userCount??"—")+'</td><td>'+srBytes(a.used||0)+'</td><td>'+esc((a.permissions||[]).join(", "))+'</td><td><button class="btn secondary" data-sr-admin-edit="'+a.id+'">ویرایش</button> <button class="btn danger" data-sr-admin-delete="'+a.id+'">حذف</button></td></tr>').join("")||'<tr><td colspan="6" class="empty">مدیری ثبت نشده است.</td></tr>';
+ document.querySelectorAll("[data-sr-admin-delete]").forEach(b=>b.onclick=async()=>{if(!confirm("این مدیر حذف شود؟"))return;try{await sr("/admins/"+b.dataset.srAdminDelete,{method:"DELETE"});await loadSrAdmins()}catch(e){$("srAdminMsg").textContent=e.message}});
+ document.querySelectorAll("[data-sr-admin-edit]").forEach(b=>b.onclick=async()=>{const id=b.dataset.srAdminEdit;const limit=prompt("سقف حجم جدید GB (0 نامحدود):","0");if(limit===null)return;const days=prompt("اعتبار روز جدید (0 نامحدود):","0");if(days===null)return;const pass=prompt("رمز جدید (خالی = بدون تغییر):","");const perms=prompt("دسترسی‌ها با کاما (dashboard,users,inbounds,routing,activity,bot,settings):",(a.permissions||[]).join(","));if(perms===null)return;const body={dataLimit:Number(limit),expireDays:Number(days),permissions:perms.split(",").map(x=>x.trim()).filter(Boolean)};if(pass)body.password=pass;try{await sr("/admins/"+id,{method:"PUT",body});await loadSrAdmins()}catch(e){$("srAdminMsg").textContent=e.message}});
+}
+$("srAdminForm").onsubmit=async e=>{e.preventDefault();const permissions=[...document.querySelectorAll('input[name="srPerm"]:checked')].map(x=>x.value);try{await sr("/admins",{method:"POST",body:{username:$("srAdminUser").value.trim(),password:$("srAdminPass").value,permissions,dataLimit:Number($("srAdminLimit").value||0),expireDays:Number($("srAdminDays").value||0),comment:$("srAdminComment").value}});$("srAdminMsg").textContent="مدیر جدید ساخته شد." ;e.target.reset();await loadSrAdmins()}catch(err){$("srAdminMsg").textContent="خطا: "+err.message}};
+async function loadSrTraffic(){const t=await sr("/stats/traffic");$("srTrafficData").textContent=JSON.stringify(t,null,2)}
+async function loadSrActivity(){const a=await sr("/activity");$("srActivityData").textContent=JSON.stringify(a,null,2)}
+$("srTrafficRefresh").onclick=()=>loadSrTraffic().catch(showSrError);$("srActivityRefresh").onclick=()=>loadSrActivity().catch(showSrError);
+$("srRoutingBtn").onclick=()=>{loadSrRouting().catch(showSrError);$("srRoutingPanel").scrollIntoView({behavior:"smooth"})};
+$("srActivityBtn").onclick=()=>{loadSrActivity().catch(showSrError);$("srActivityRefresh").scrollIntoView({behavior:"smooth"})};
+$("srBotBtn").onclick=()=>{loadSrBot().catch(showSrError);$("srBotPanel").scrollIntoView({behavior:"smooth"})};
+$("srSettingsBtn").onclick=()=>{loadSrSettings().catch(showSrError);$("srSettingsPanel").scrollIntoView({behavior:"smooth"})};
+$("srAdminsBtn").onclick=()=>{loadSrAdmins().catch(showSrError);$("srAdminsPanel").scrollIntoView({behavior:"smooth"})};
+
+$("srExport").onclick=async()=>{try{const data=await sr("/backup/export");const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="pompnet-siderail-backup.json";a.click();URL.revokeObjectURL(a.href)}catch(e){showSrError(e)}};
+$("srImportFile").onchange=async e=>{const file=e.target.files?.[0];if(!file)return;if(!confirm("هشدار: این عملیات کاربران و اینباندهای دیتابیس هسته را جایگزین می‌کند. ادامه می‌دهید؟")){e.target.value="";return}try{const data=JSON.parse(await file.text());await sr("/backup/import",{method:"POST",body:data});await loadSideRail();alert("پشتیبان هسته POMP NET وارد شد.")}catch(err){showSrError(err)}finally{e.target.value=""}};
+
+</script><script src="/pompnet-motion.js" defer></script></body></html>

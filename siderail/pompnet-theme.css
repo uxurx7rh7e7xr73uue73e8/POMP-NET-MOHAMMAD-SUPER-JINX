@@ -1,0 +1,312 @@
+/* POMP NET visual integration layer for the official SideRail UI.
+   Upstream SideRail attribution and signature are intentionally preserved. */
+:root {
+  --main: #8b35ff;
+  --overlay: rgba(0, 0, 0, .88);
+  --bg: #050509;
+  --bw: #11101a;
+  --blank: #fff;
+  --border: #30204b;
+  --text: #f3edff;
+  --mtext: #fff;
+  --ring: #8b35ff;
+  --ring-offset: #050509;
+  --shadow: 0 0 0 1px rgba(139,53,255,.24), 0 8px 28px rgba(0,0,0,.38);
+}
+.dark {
+  --main: #8b35ff;
+  --overlay: rgba(0,0,0,.9);
+  --bg: #050509;
+  --bw: #11101a;
+  --blank: #fff;
+  --border: #30204b;
+  --text: #f3edff;
+  --mtext: #fff;
+  --ring: #8b35ff;
+  --ring-offset: #050509;
+  --shadow: 0 0 0 1px rgba(139,53,255,.22), 0 8px 28px rgba(0,0,0,.4);
+}
+html, body, #root { min-height: 100%; background: #050509; }
+body { color: #f3edff; font-family: Vazirmatn, IRANSans, Tahoma, sans-serif; }
+.bg-main { background-color: #8b35ff !important; }
+.text-main { color: #a96aff !important; }
+.border-border { border-color: #30204b !important; }
+.bg-bw { background-color: rgba(17,16,26,.96) !important; }
+.bg-bg { background-color: #050509 !important; }
+.neo-shadow { box-shadow: 0 0 0 1px rgba(139,53,255,.22), 0 8px 28px rgba(0,0,0,.4) !important; }
+.rounded-base { border-radius: 14px !important; }
+button, a, input, select, textarea { transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease; }
+input:focus, select:focus, textarea:focus { outline: 2px solid #8b35ff !important; outline-offset: 1px; }
+@media (max-width: 1023px) {
+  main { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
+}
+
+/* Keep upstream SideRail name visible and pair it with the POMP NET host brand. */
+.truncate.font-heading.text-lg.tracking-tight::after {
+  content: "POMP NET MOHAMMAD";
+  display: block;
+  margin-top: 2px;
+  color: #a96aff;
+  font-family: Vazirmatn, IRANSans, Tahoma, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+}
+
+
+/* Marzban-inspired POMP NET shell: presentation only; SideRail routes and
+   React components remain the real implementation underneath. */
+html[lang="fa"], html[lang="fa"] body, html[lang="fa"] #root {
+  direction: rtl;
+  text-align: right;
+}
+html[lang="fa"] body {
+  font-family: Vazirmatn, IRANSans, Tahoma, sans-serif;
+}
+#root .bg-bw\/60, #root .bg-bw\/70, #root .bg-bw\/85 {
+  background-color: rgba(13, 12, 23, .94) !important;
+}
+#root .border-r-2, #root .border-l-2 {
+  border-color: #30204b !important;
+}
+#root .rounded-base {
+  border-radius: 16px !important;
+}
+#root .card-lift, #root [class*="rounded-base"][class*="border"] {
+  border-color: #30204b !important;
+  box-shadow: 0 10px 32px rgba(0,0,0,.22), 0 0 0 1px rgba(139,53,255,.08);
+}
+#root input, #root select, #root textarea {
+  color: #f3edff !important;
+  background: #090914 !important;
+  border-color: #39304f !important;
+  border-radius: 12px !important;
+}
+#root input:focus, #root select:focus, #root textarea:focus {
+  border-color: #8b35ff !important;
+  box-shadow: 0 0 0 3px rgba(139,53,255,.18) !important;
+}
+#root button:not([aria-label]) {
+  border-radius: 12px;
+}
+#root .bg-main {
+  background: linear-gradient(115deg, #8b35ff, #168cff) !important;
+}
+#root .text-main { color: #b98aff !important; }
+#root .text-text\/60, #root .text-text\/70 { color: #a7a0ba !important; }
+#root .bg-bg { background-color: #080711 !important; }
+#root .bg-bw { background-color: #11101a !important; }
+#root .border-border { border-color: #30204b !important; }
+#root table { border-collapse: separate; border-spacing: 0; }
+#root th, #root td { border-color: #29243a !important; }
+#root aside { background: rgba(10,9,19,.97) !important; }
+#root nav a[aria-current="page"] {
+  background: linear-gradient(100deg, rgba(139,53,255,.22), rgba(22,140,255,.10)) !important;
+  border-color: rgba(139,53,255,.5) !important;
+  color: #fff !important;
+}
+#root .max-w-6xl > .grid {
+  border: 1px solid #7543a9 !important;
+  border-radius: 26px !important;
+  background: linear-gradient(145deg, rgba(23,19,38,.98), rgba(9,9,19,.98)) !important;
+  box-shadow: 0 30px 100px rgba(0,0,0,.65), 0 0 65px rgba(139,53,255,.14) !important;
+}
+#root .max-w-6xl > .grid > :first-child {
+  background: linear-gradient(145deg, #21113c, #111a35) !important;
+}
+#root .max-w-6xl > .grid > :last-child {
+  background: rgba(13,12,23,.97) !important;
+}
+@media (max-width: 1023px) {
+  #root aside { border-color: #30204b !important; }
+  #root .max-w-6xl > .grid { border-radius: 20px !important; }
+}
+
+
+/* ================================================================
+   POMP NET NEXUS / SUPER JINX VISUAL FUSION
+   Design-only layer inspired by the spacing, RTL/mobile safeguards,
+   compact controls and JINX purple/blue identity in the supplied
+   SuperJinX + MarzbanUpdate projects. SideRail routes and API behavior
+   remain untouched. No upstream identity or license notices removed.
+   ================================================================ */
+:root {
+  color-scheme: dark;
+  --pomp-ink: #050509;
+  --pomp-panel: #100e1a;
+  --pomp-panel-raised: #171326;
+  --pomp-line: rgba(150, 112, 210, .22);
+  --pomp-purple: #8b35ff;
+  --pomp-blue: #168cff;
+  --pomp-text: #f4f0ff;
+  --pomp-muted: #a9a2bb;
+  --pomp-glow: 0 16px 46px rgba(0,0,0,.34), 0 0 0 1px rgba(139,53,255,.10);
+}
+html, body, #root {
+  background:
+    radial-gradient(ellipse at 8% 0%, rgba(93,42,150,.16), transparent 34rem),
+    radial-gradient(ellipse at 92% 12%, rgba(22,140,255,.10), transparent 30rem),
+    var(--pomp-ink) !important;
+  color: var(--pomp-text);
+  min-height: 100%;
+}
+body {
+  font-family: Vazirmatn, IRANSans, Tahoma, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+* { -webkit-tap-highlight-color: transparent; }
+::selection { background: rgba(139,53,255,.38); color: #fff; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: linear-gradient(180deg,#8b35ff,#168cff); border-radius: 20px; }
+::-webkit-scrollbar-track { background: rgba(255,255,255,.025); }
+
+/* Side navigation: premium dark rail, crisp active state, readable labels. */
+#root aside {
+  background: linear-gradient(180deg, rgba(17,14,28,.985), rgba(7,8,16,.985)) !important;
+  border-color: var(--pomp-line) !important;
+  box-shadow: 18px 0 54px rgba(0,0,0,.22);
+  backdrop-filter: blur(16px);
+}
+#root aside a, #root aside button, #root nav a, #root nav button {
+  border-radius: 12px;
+  min-height: 42px;
+  transition: background .18s ease, border-color .18s ease, color .18s ease, transform .18s ease;
+}
+#root aside a:hover, #root aside button:hover, #root nav a:hover, #root nav button:hover {
+  background: rgba(139,53,255,.11) !important;
+  border-color: rgba(139,53,255,.25) !important;
+}
+#root nav a[aria-current="page"], #root aside a[aria-current="page"] {
+  background: linear-gradient(105deg,rgba(139,53,255,.24),rgba(22,140,255,.13)) !important;
+  border: 1px solid rgba(139,53,255,.42) !important;
+  box-shadow: inset 3px 0 0 #8b35ff, 0 6px 22px rgba(73,34,130,.16);
+  color: #fff !important;
+}
+#root aside svg, #root nav svg { flex-shrink: 0; }
+
+/* Main workspace and section hierarchy. */
+#root main { min-width: 0; }
+#root main h1, #root main h2, #root main h3 {
+  color: #fbf9ff;
+  letter-spacing: -.018em;
+  line-height: 1.45;
+}
+#root main h1 { font-size: clamp(1.25rem,2.2vw,1.8rem); font-weight: 800; }
+#root main h2 { font-size: clamp(1.05rem,1.8vw,1.35rem); font-weight: 750; }
+#root main p { line-height: 1.8; }
+#root .text-text\/60, #root .text-text\/70, #root .text-muted-foreground {
+  color: var(--pomp-muted) !important;
+}
+
+/* Dashboard cards: opaque enough for legibility, with subtle glass edges. */
+#root .card-lift,
+#root [class*="rounded-base"][class*="border"],
+#root [class*="rounded-xl"][class*="border"],
+#root [class*="rounded-2xl"][class*="border"] {
+  background-color: rgba(17,14,28,.88);
+  border-color: var(--pomp-line) !important;
+  box-shadow: var(--pomp-glow);
+  backdrop-filter: blur(12px);
+}
+#root .card-lift:hover {
+  border-color: rgba(139,53,255,.48) !important;
+  box-shadow: 0 18px 48px rgba(0,0,0,.38), 0 0 28px rgba(139,53,255,.09);
+}
+#root .bg-bw, #root .bg-bw\/60, #root .bg-bw\/70, #root .bg-bw\/85 {
+  background-color: rgba(17,14,28,.94) !important;
+}
+#root .bg-bg { background-color: #080711 !important; }
+#root .bg-main {
+  background-image: linear-gradient(112deg,#8b35ff 0%,#6844f5 48%,#168cff 100%) !important;
+  background-color: #8b35ff !important;
+  color: #fff !important;
+}
+#root .text-main { color: #b98aff !important; }
+#root .border-border { border-color: var(--pomp-line) !important; }
+
+/* Forms and actions: mobile-friendly hit targets and visible focus. */
+#root input, #root select, #root textarea {
+  min-width: 0;
+  max-width: 100%;
+  min-height: 42px;
+  color: var(--pomp-text) !important;
+  background: rgba(7,7,15,.94) !important;
+  border: 1px solid rgba(139,125,170,.30) !important;
+  border-radius: 12px !important;
+  unicode-bidi: plaintext;
+}
+#root input::placeholder, #root textarea::placeholder { color: #777087 !important; }
+#root input:focus, #root select:focus, #root textarea:focus {
+  outline: 0 !important;
+  border-color: #8b35ff !important;
+  box-shadow: 0 0 0 3px rgba(139,53,255,.19) !important;
+}
+#root button, #root [role="button"] {
+  border-radius: 11px;
+  transition: filter .18s ease, transform .18s ease, box-shadow .18s ease;
+}
+#root button:active, #root [role="button"]:active { transform: translateY(1px); }
+#root button:focus-visible, #root a:focus-visible {
+  outline: 2px solid #168cff !important;
+  outline-offset: 3px;
+}
+
+/* Data tables: dense but readable, horizontally scrollable on phones. */
+#root table { width: 100%; border-collapse: separate; border-spacing: 0; }
+#root th {
+  color: #d7c9f3 !important;
+  background: rgba(139,53,255,.075);
+  font-weight: 700;
+  white-space: nowrap;
+}
+#root th, #root td { border-color: rgba(150,112,210,.15) !important; }
+#root td { unicode-bidi: plaintext; overflow-wrap: anywhere; }
+#root pre, #root code { overflow-wrap: anywhere; word-break: break-word; }
+
+/* Login/setup surfaces: a distinct POMP NET welcome panel without replacing auth. */
+#root .max-w-6xl > .grid {
+  overflow: hidden;
+  border: 1px solid rgba(139,53,255,.42) !important;
+  border-radius: 26px !important;
+  background: linear-gradient(145deg,rgba(25,18,43,.98),rgba(9,9,19,.985)) !important;
+  box-shadow: 0 28px 90px rgba(0,0,0,.64), 0 0 60px rgba(139,53,255,.12) !important;
+}
+#root .max-w-6xl > .grid > :first-child {
+  background:
+    radial-gradient(circle at 20% 12%,rgba(22,140,255,.22),transparent 45%),
+    linear-gradient(145deg,#21113c,#101a34) !important;
+}
+#root .max-w-6xl > .grid > :last-child {
+  background: rgba(12,11,21,.98) !important;
+}
+
+/* Dialogs, dropdowns and notices stay inside the viewport. */
+[role="dialog"], [data-radix-popper-content-wrapper] > * {
+  max-width: min(94vw, 56rem);
+  border-color: var(--pomp-line);
+}
+#root [role="dialog"] { border-radius: 18px; }
+#root [role="alert"], #root [data-sonner-toast] { max-width: min(92vw, 28rem); }
+
+/* RTL, mixed identifiers and phone ergonomics borrowed from the MarzbanUpdate polish. */
+html[lang="fa"], html[lang="fa"] body, html[lang="fa"] #root { direction: rtl; text-align: right; }
+html[lang="fa"] input, html[lang="fa"] textarea { text-align: start; }
+@media (max-width: 768px) {
+  #root main { padding-inline: 12px !important; padding-bottom: max(18px,env(safe-area-inset-bottom)); }
+  #root main h1 { font-size: clamp(1.12rem,5vw,1.45rem); }
+  #root main h2 { font-size: clamp(1rem,4vw,1.2rem); }
+  #root input, #root select, #root textarea { font-size: 16px !important; min-height: 44px; }
+  #root button, #root [role="button"] { min-height: 40px; }
+  #root table { min-width: 620px; }
+  #root .overflow-x-auto { max-width: 100%; -webkit-overflow-scrolling: touch; }
+  #root .max-w-6xl > .grid { border-radius: 20px !important; }
+}
+@media (max-width: 390px) {
+  #root main { padding-inline: 9px !important; }
+  #root th, #root td { padding-inline: 7px !important; font-size: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #root *, #root *::before, #root *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}

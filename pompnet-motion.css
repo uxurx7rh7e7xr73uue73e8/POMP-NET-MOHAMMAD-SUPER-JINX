@@ -1,0 +1,7 @@
+/* POMP NET MOHAMMAD — lightweight animated scene layer */
+#pompnet-motion{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.9}
+html.pn-motion-ready,html.pn-motion-ready body{background:transparent!important}
+body>*:not(#pompnet-motion){position:relative;z-index:1}
+.pn-motion-glow{position:fixed;inset:-20%;z-index:0;pointer-events:none;background:radial-gradient(40% 35% at 15% 18%,rgba(139,53,255,.14),transparent 72%),radial-gradient(38% 32% at 86% 78%,rgba(22,140,255,.13),transparent 72%);animation:pnGlow 22s ease-in-out infinite alternate}
+@keyframes pnGlow{to{transform:translate3d(2%,-2%,0) scale(1.06)}}
+@media(prefers-reduced-motion:reduce){#pompnet-motion,.pn-motion-glow{display:none!important}}

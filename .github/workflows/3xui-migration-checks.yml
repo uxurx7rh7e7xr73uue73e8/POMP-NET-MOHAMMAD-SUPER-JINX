@@ -1,0 +1,20 @@
+name: 3X-UI migration checks
+on:
+  push:
+    branches: [pompnet-3xui-migration-staging]
+  pull_request:
+    branches: [main]
+jobs:
+  python-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile migration tools
+        run: python -m py_compile migration/pompnet_3xui_bridge.py migration/pompnet_3xui_client.py migration/export_marzban_users.py migration/import_marzban_to_3xui.py
+      - name: Run offline adapter tests
+        env:
+          PYTHONPATH: migration
+        run: python -m unittest discover -s migration -p "test_*.py" -v
