@@ -113,6 +113,13 @@ print("[lock] fallback config paths synchronized with Nginx", flush=True)
 PY
 fi
 
+# Validate the exact config produced above with the bundled Xray binary.
+# Do not start the web panel if Xray rejects the config: that would publish dead links.
+if ! python /opt/xray_preflight.py; then
+  echo "[start] FATAL: Xray config preflight failed; refusing to publish non-working VPN links."
+  exit 1
+fi
+
 # Never use documentation placeholders such as panel.example.com in generated subscriptions.
 # Resolve the public hostname automatically. Explicit PANEL_DOMAIN wins; then
 # platform-provided hostnames are checked. Never invent a hostname or use an example domain.
