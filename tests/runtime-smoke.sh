@@ -121,6 +121,8 @@ echo "[smoke] animated dashboard assets + 24 scenes: OK"
 
 TOKEN="$(login)"
 echo "[smoke] admin login: OK"
+curl --fail --silent --show-error "$BASE/pompnet-engine/health" | python -c 'import json,sys; d=json.load(sys.stdin); assert d.get("ok") is True and d.get("engine")=="xray-independent" and d.get("pid"); print("[smoke] independent Xray process is running: OK")'
+curl --fail --silent --show-error "$BASE/pompnet-engine/api/inbounds" -H "Authorization: Bearer $TOKEN" | python -c 'import json,sys; a=json.load(sys.stdin); assert {x["protocol"] for x in a}=={"vless","vmess","trojan"}; assert all(x["port"]==443 and x["transport"]=="ws" for x in a); print("[smoke] three independent Railway WebSocket inbounds: OK")'
 
 USER_JSON="$(curl --fail --silent --show-error --retry 10 --retry-all-errors --retry-delay 2 \
   -X POST "$BASE/api/user" \
