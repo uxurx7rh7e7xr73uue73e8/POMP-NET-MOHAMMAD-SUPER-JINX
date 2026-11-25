@@ -71,10 +71,16 @@ jobs:
             sleep 2
           done
           [ "$ready" = "1" ] || { echo "SideRail /healthz did not become ready"; exit 1; }
-          # SideRail is a private API/core service; POMP NET owns login/dashboard/sub UI.
-          docker exec siderail-smoke sh -c 'test ! -d /app/public && test ! -d /app/apps/web/dist'
-          root_code=$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:18081/)
-          [ "$root_code" = "404" ] || { echo "SideRail web UI unexpectedly exposed at / (HTTP $root_code)"; exit 1; }
+          # The complete upstream React SPA must be served by the same SideRail runtime as its API/Xray core.
+          docker exec siderail-smoke sh -c 'test -s /app/apps/web/dist/index.html'
+          root_html=$(curl -fsS http://127.0.0.1:18081/)
+          printf '%s' "$root_html" | grep -q 'id="root"' || { echo "SideRail SPA root element missing"; exit 1; }
+          asset=$(printf '%s' "$root_html" | grep -oE 'src="/assets/[^"]+\.js"' | head -1 | cut -d'"' -f2)
+          [ -n "$asset" ] || { echo "SideRail SPA JavaScript asset not referenced"; exit 1; }
+          curl -fsS "http://127.0.0.1:18081$asset" | grep -q "SideRail" || { echo "SideRail SPA JavaScript asset failed to serve"; exit 1; }
+          login_html=$(curl -fsS http://127.0.0.1:18081/login)
+          printf '%s' "$login_html" | grep -q 'id="root"' || { echo "SideRail SPA history fallback failed"; exit 1; }
+          echo "PASS: complete SideRail React SPA, static assets and client-side routes are served by the production runtime."
           wait_xray_listener() {
             for i in $(seq 1 120); do
               if docker exec siderail-smoke node -e 'const net=require("net"),s=net.createConnection({host:"127.0.0.1",port:20000},()=>{s.end();process.exit(0)});s.setTimeout(1000,()=>process.exit(1));s.on("error",()=>process.exit(1))'; then return 0; fi
