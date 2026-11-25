@@ -41,5 +41,5 @@ jobs:
 
       - name: Runtime integration test (login, user, subscription, Xray, persistence)
         run: |
-          sed 's|\$BASE/dashboard/|\$BASE/pompnet/|' tests/runtime-smoke.sh > /tmp/pompnet-runtime-smoke.sh
+          sed -e 's|\$BASE/dashboard/|\$BASE/pompnet/|' -e 's|data-page="users"|id="srCreateForm"|' tests/runtime-smoke.sh > /tmp/pompnet-runtime-smoke.sh
           bash /tmp/pompnet-runtime-smoke.sh pompnet-super-jinx:ci
