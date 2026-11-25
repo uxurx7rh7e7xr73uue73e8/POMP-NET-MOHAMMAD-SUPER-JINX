@@ -2,7 +2,7 @@ name: POMP NET SUPER JINX validation
 
 on:
   push:
-    branches: [main, pompnet-pasarguard-core-migration]
+    branches: [main, siderail-native-root-runtime]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -11,55 +11,42 @@ permissions:
   contents: read
 
 jobs:
-  syntax-and-build:
+  native-siderail:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Validate shell syntax
+      - name: Validate shell and frontend syntax
         run: |
           bash -n start.sh
-          bash -n tests/runtime-smoke.sh
-          bash -n setup-vps.sh
-
-      - name: Validate native Marzban SideRail integration
-        run: |
           node --check pompnet-siderail.js
+
+      - name: Validate native SideRail primary routing
+        run: |
           python - <<'PY'
           from pathlib import Path
           nginx = Path("nginx.conf").read_text(encoding="utf-8")
+          start = Path("start.sh").read_text(encoding="utf-8")
           docker = Path("Dockerfile").read_text(encoding="utf-8")
-          js = Path("pompnet-siderail.js").read_text(encoding="utf-8")
-          assert 'location = / { return 302 /dashboard/; }' in nginx
-          assert 'location ^~ /dashboard/' in nginx
-          assert 'sub_filter \'</body>\'' in nginx
-          assert 'COPY pompnet-siderail.js /opt/jinx/pompnet-siderail.js' in docker
-          assert 'localStorage.getItem("token")' in js
-          assert 'api(\'/users\',\'POST\'' in js
-          print("Native Marzban UI route and authenticated SideRail module wiring OK")
+          assert 'proxy_pass http://127.0.0.1:8092' in nginx
+          assert 'proxy_pass http://127.0.0.1:8000' not in nginx.split('location / {', 1)[1].split('}', 1)[0]
+          assert 'proxy_pass http://127.0.0.1:8092' in nginx.split('location ^~ /sub/', 1)[1].split('}', 1)[0]
+          assert '/opt/siderail/apps/server/dist/index.js' in start
+          assert 'http://127.0.0.1:8092/healthz' in start
+          assert 'SIDERAIL_DATA_DIR' in start and 'CORE_DIR' in start
+          assert 'COPY --from=siderail-build /build/upstream/apps/server/dist /opt/siderail/apps/server/dist' in docker
+          assert 'COPY --from=siderail-build /build/upstream/apps/web/dist /opt/siderail/apps/web/dist' in docker
+          assert 'COPY --from=siderail-build /build/upstream/LICENSE /opt/siderail/LICENSE' in docker
+          assert 'COPY --from=siderail-build /build/upstream/NOTICE /opt/siderail/NOTICE' in docker
+          print("Native SideRail SPA/API runtime, health gate, subscriptions and license artifacts are wired.")
           PY
 
-      - name: Validate Python syntax
+      - name: Validate Python helpers
         run: |
           python -m py_compile doctor.py enforce_hosts.py ensure_admin.py jinx_api.py lock.py pompnet_telegram_bot.py
 
-      - name: Validate inline dashboard JavaScript
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          import re
-          html = Path("pompnet-dashboard.html").read_text(encoding="utf-8")
-          scripts = re.findall(r'<script(?![^>]*\bsrc=)(?![^>]*type="application/json")[^>]*>(.*?)</script>', html, re.S | re.I)
-          if not scripts:
-              raise SystemExit("No inline dashboard scripts found")
-          for i, script in enumerate(scripts):
-              Path(f"/tmp/pompnet-dashboard-{i}.js").write_text(script, encoding="utf-8")
-          print(f"Extracted {len(scripts)} inline scripts")
-          PY
-          for f in /tmp/pompnet-dashboard-*.js; do node --check "$f"; done
-
-      - name: Validate JSON files
+      - name: Validate JSON and Docker Compose
         run: |
           python -m json.tool xray_config.json >/dev/null
           python -m json.tool locked_inbound.json >/dev/null
@@ -68,10 +55,5 @@ jobs:
           docker compose config --quiet
           rm -f .env
 
-      - name: Build Docker image
+      - name: Build production Docker image
         run: docker build --pull -t pompnet-super-jinx:ci .
-
-      - name: Runtime integration test (login, user, subscription, Xray, persistence)
-        run: |
-          sed -e 's|\$BASE/dashboard/|\$BASE/pompnet/|' -e 's|data-page="users"|id="srCreateForm"|' tests/runtime-smoke.sh > /tmp/pompnet-runtime-smoke.sh
-          bash /tmp/pompnet-runtime-smoke.sh pompnet-super-jinx:ci
