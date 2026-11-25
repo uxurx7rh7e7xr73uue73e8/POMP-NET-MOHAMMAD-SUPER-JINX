@@ -20,6 +20,17 @@ class BridgeTests(unittest.TestCase):
                 self.assertEqual(bridge.lookup_sub_id('oldtoken123'), 'newsub123')
                 self.assertIsNone(bridge.lookup_sub_id('unknown-token'))
 
+    def test_new_client_subscription_mapping_is_created(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with patch.object(bridge, "SUB_MAP_DB", str(Path(tmp) / "map.sqlite3")):
+                token = bridge.register_subscription("alice", "xui-sub-id-123")
+                self.assertGreaterEqual(len(token), 32)
+                self.assertEqual(bridge.lookup_sub_id(token), "xui-sub-id-123")
+
+    def test_missing_3xui_sub_id_fails_closed(self):
+        with self.assertRaises(bridge.BridgeError):
+            bridge.register_subscription("alice", "")
+
 
     def test_inbound_index_uses_branded_remark_and_legacy_alias(self):
         rows=[{"id":7,"remark":"POMP NET MOHAMMAD - VLESS WS","protocol":"vless","port":2053,"enable":True}]
