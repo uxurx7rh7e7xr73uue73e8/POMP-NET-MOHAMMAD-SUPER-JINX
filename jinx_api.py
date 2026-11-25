@@ -838,7 +838,8 @@ def siderail_allowed(method, path):
     ]
     return any(method in methods and re.match(pattern, path) for pattern, methods in patterns)
 
-\nclass H(BaseHTTPRequestHandler):
+
+class H(BaseHTTPRequestHandler):
     def log_message(self, *a):
         pass
     def static_page(self, files, ctype, fallback):
