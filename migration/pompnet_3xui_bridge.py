@@ -5,7 +5,7 @@ No legacy database is modified. Existing /sub tokens are mapped through a
 separate persistent SQLite table; unmapped links retain the Marzban fallback.
 """
 import base64, hashlib, hmac, http.cookiejar, json, os, re, secrets, sqlite3, threading, time
-import urllib.error, urllib.parse, urllib.request
+import urllib.error, urllib.parse, urllib.request, uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 BASE = os.getenv("XUI_BASE_URL", "").rstrip("/")
@@ -265,9 +265,34 @@ class Handler(BaseHTTPRequestHandler):
                     ids.append(int(inbound["id"]))
                 expiry=int(body.get("expire") or 0)*1000
                 quota=int(body.get("data_limit") or 0)
-                client={"email":username,"totalGB":quota,"expiryTime":expiry,"enable":True,"tgId":0,"limitIp":0,"limitHwid":0}
-                created=obj(request("POST","/panel/api/clients/add",{"client":client,"inboundIds":ids}))
-                return self.sendj(200, {"username":username,"status":"active","result":created})
+                # Use native 3X-UI addClient API separately for each selected inbound.
+                client_id=str(uuid.uuid4())
+                sub_id=secrets.token_urlsafe(12)
+                client={"id":client_id,"email":username,"enable":True,"limitIp":0,"totalGB":quota,"expiryTime":expiry,"tgId":"","subId":sub_id,"reset":0}
+                created=[]
+                for inbound_id in ids:
+                    payload={"id":inbound_id,"settings":json.dumps({"clients":[client]},separators=(",",":"))}
+                    created.append(obj(request("POST","/panel/api/inbounds/addClient",payload)))
+                verified=[]
+                for inbound_id in ids:
+                    saved=obj(request("GET","/panel/api/inbounds/get/"+str(inbound_id)))
+                    inbound=saved.get("inbound",saved) if isinstance(saved,dict) else {}
+                    settings=inbound.get("settings",{}) if isinstance(inbound,dict) else {}
+                    if isinstance(settings,str):
+                        try: settings=json.loads(settings)
+                        except Exception: settings={}
+                    clients=settings.get("clients",[]) if isinstance(settings,dict) else []
+                    if not any(isinstance(x,dict) and x.get("id")==client_id and x.get("email")==username for x in clients):
+                        raise BridgeError("3X-UI did not confirm client persistence in inbound "+str(inbound_id))
+                    verified.append(inbound_id)
+                legacy_token=register_subscription(username,sub_id)
+                normalized=dict(client)
+                normalized["inboundIds"]=ids
+                normalized["traffic"]={"up":0,"down":0}
+                normalized_user=normalize(normalized,inbound_index())
+                normalized_user["sub_url"]="/sub/"+legacy_token
+                normalized_user["subscription_url"]=normalized_user["sub_url"]
+                return self.sendj(201, {"username":username,"status":"active","sub_url":normalized_user["sub_url"],"subscription_url":normalized_user["sub_url"],"user":normalized_user,"verified_inbounds":verified,"result":created})
             if self.path == "/api/inbounds":
                 token_check(self.headers.get("Authorization",""))
                 body=json_body(self,16384)
