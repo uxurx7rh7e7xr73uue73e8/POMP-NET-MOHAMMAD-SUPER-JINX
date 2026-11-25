@@ -17,29 +17,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Validate startup scripts
+      - name: Validate selected production image configuration
         run: |
-          bash -n start.sh
-          python3 -m py_compile jinx_api.py ensure_admin.py doctor.py
+          python3 - <<'PY'
+          from pathlib import Path
+          d = Path("Dockerfile").read_text(encoding="utf-8")
+          assert "icubaby/SideRail.git" in d
+          assert "6d794ce2303a01ecc412941a4f38fd00a3bda65b" in d
+          assert "patch_brand.py" not in d and "patch_i18n.py" not in d
+          assert "upstream/LICENSE ./LICENSE" in d
+          assert "upstream/NOTICE ./NOTICE" in d
+          print("PASS: official pinned SideRail build selected.")
+          PY
 
-      - name: Build complete POMP NET production image
+      - name: Build official SideRail production image
         run: docker build --pull --tag pompnet-super-jinx:ci .
 
-      - name: Build pinned SideRail standalone image
-        run: docker build --pull --file siderail/Dockerfile --tag pompnet-siderail:ci .
-
-      - name: Verify image artifacts and retained license notices
+      - name: Verify original UI, backend and license artifacts
         run: |
           docker run --rm --entrypoint sh pompnet-super-jinx:ci -c '
-            test -s /opt/siderail/apps/server/dist/index.js &&
-            test -s /opt/siderail/apps/web/dist/index.html &&
-            test -s /opt/siderail/LICENSE &&
-            test -s /opt/siderail/NOTICE &&
-            test -s /opt/jinx/pompnet-siderail.js
+            test -s /app/apps/server/dist/index.js &&
+            test -s /app/public/index.html &&
+            test -s /app/LICENSE &&
+            test -s /app/NOTICE
           '
-          echo "PASS: production image contains SideRail API, React SPA, POMP NET UI assets and upstream license notices."
-
-      - name: Run SideRail real API/Xray end-to-end suite
-        run: |
-          docker build --pull --file siderail/Dockerfile --tag pompnet-siderail-e2e:ci .
-          echo "The dedicated SideRail staging workflow performs the full setup, user provisioning, Xray config validation and VLESS transport handshake."
+          echo "PASS: image contains the upstream SideRail server, original SPA, LICENSE and NOTICE."
