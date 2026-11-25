@@ -126,7 +126,7 @@ def convert(source, inbound_map):
                 "id": uid, "email": email, "uuid": cred, "password": cred,
                 "sub_token": token, "fingerprint": "chrome", "alpn": "h2,http/1.1",
                 "fragment": "", "ech_config": "", "data_limit": limit,
-                "ip_limit": 0, "expire_at": expire, "sub_expire_days": 0,
+                "ip_limit": max(0, int(row.get("ip_limit") or 0)), "expire_at": expire, "sub_expire_days": 0,
                 "sub_first_seen": None, "traffic_reset": str(row.get("data_limit_reset_strategy") or "never")
                     if str(row.get("data_limit_reset_strategy") or "never") in {"never","daily","weekly","monthly"} else "never",
                 "telegram_id": "", "comment": str(row.get("note") or "")[:200],
