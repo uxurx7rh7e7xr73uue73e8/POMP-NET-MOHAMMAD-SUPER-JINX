@@ -23,21 +23,25 @@ jobs:
           bash -n tests/runtime-smoke.sh
           bash -n setup-vps.sh
 
-      - name: Validate native Marzban SideRail integration
+      - name: Validate native SideRail primary runtime
         run: |
-          node --check pompnet-siderail.js
           python - <<'PY'
           from pathlib import Path
           nginx = Path("nginx.conf").read_text(encoding="utf-8")
+          start = Path("start.sh").read_text(encoding="utf-8")
           docker = Path("Dockerfile").read_text(encoding="utf-8")
-          js = Path("pompnet-siderail.js").read_text(encoding="utf-8")
-          assert 'location = / { return 302 /dashboard/; }' in nginx
-          assert 'location ^~ /dashboard/' in nginx
-          assert 'sub_filter \'</body>\'' in nginx
-          assert 'COPY pompnet-siderail.js /opt/jinx/pompnet-siderail.js' in docker
-          assert 'localStorage.getItem("token")' in js
-          assert 'api(\'/users\',\'POST\'' in js
-          print("Native Marzban UI route and authenticated SideRail module wiring OK")
+          assert 'location = / {' in nginx and 'proxy_pass http://127.0.0.1:8092' in nginx
+          assert 'location ^~ /sub/' in nginx
+          sub = nginx.split('location ^~ /sub/', 1)[1].split('}', 1)[0]
+          assert 'proxy_pass http://127.0.0.1:8092' in sub
+          assert '/opt/siderail/apps/server/dist/index.js' in start
+          assert 'http://127.0.0.1:8092/healthz' in start
+          assert 'env PORT=8092' in start
+          assert 'COPY --from=siderail-build /build/upstream/apps/server/dist /opt/siderail/apps/server/dist' in docker
+          assert 'COPY --from=siderail-build /build/upstream/apps/web/dist /opt/siderail/apps/web/dist' in docker
+          assert 'COPY --from=siderail-build /build/upstream/LICENSE /opt/siderail/LICENSE' in docker
+          assert 'COPY --from=siderail-build /build/upstream/NOTICE /opt/siderail/NOTICE' in docker
+          print("Native SideRail primary UI/API/Xray runtime and subscription routing are wired.")
           PY
 
       - name: Validate Python syntax
