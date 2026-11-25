@@ -142,8 +142,8 @@ printf '%s' "$SUB_BODY" | python -c 'import base64,sys; raw=sys.stdin.buffer.rea
 # Browser subscription page must render the custom Persian POMP NET template, not only raw config text.
 SUB_PAGE="$(curl --location --fail --silent --show-error -A 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Chrome/124.0 Mobile Safari/537.36' -H 'Accept: text/html,application/xhtml+xml' "$BASE$SUB_PATH")"
 grep -q -- "POMP NET MOHAMMAD" <<< "$SUB_PAGE"
-grep -q -- "کدنویسی و توسعه توسط تیم POMP NET MOHAMMAD" <<< "$SUB_PAGE"
-grep -q -- "هسته و زیرساخت POMP NET MOHAMMAD" <<< "$SUB_PAGE"
+grep -q -- "برند و امضای اختصاصی" <<< "$SUB_PAGE"
+grep -q -- "POMP NET MOHAMMAD" <<< "$SUB_PAGE"
 grep -q -- "#8B35FF" <<< "$SUB_PAGE"
 if grep -qi -- "SideRail" <<< "$SUB_PAGE"; then
   echo "Unexpected third-party subscription branding" >&2
