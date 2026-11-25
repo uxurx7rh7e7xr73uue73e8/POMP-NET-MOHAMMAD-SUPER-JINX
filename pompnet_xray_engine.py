@@ -32,10 +32,10 @@ def db():
     c = sqlite3.connect(DB, timeout=20)
     c.row_factory = sqlite3.Row
     c.execute("""CREATE TABLE IF NOT EXISTS users(
-      id TEXT PRIMARY KEY, username TEXT NOT NULL UNIQUE, protocol TEXT NOT NULL,
+      id TEXT PRIMARY KEY, username TEXT NOT NULL, protocol TEXT NOT NULL,
       secret TEXT NOT NULL, sub_token TEXT NOT NULL UNIQUE, expire INTEGER NOT NULL DEFAULT 0,
       data_limit_gb REAL NOT NULL DEFAULT 0, enabled INTEGER NOT NULL DEFAULT 1,
-      created INTEGER NOT NULL)""")
+      created INTEGER NOT NULL, UNIQUE(username, protocol))""")
     c.commit()
     return c
 
@@ -156,24 +156,30 @@ class Handler(BaseHTTPRequestHandler):
             return self.send(200 if ok else 503, {"ok":ok,"engine":"xray-independent","pid":PROC.pid if ok else None})
         if p.startswith("/sub/"):
             tok = p.rsplit("/",1)[-1]
-            c=db(); row=c.execute("SELECT * FROM users WHERE sub_token=? AND enabled=1",(tok,)).fetchone(); c.close()
-            if not row or (row["expire"] and row["expire"] <= int(time.time())): return self.send(404,b"not found","text/plain")
-            lines=links_for(row,host_for(self))
+            c=db(); rows=c.execute("SELECT * FROM users WHERE sub_token=? AND enabled=1 AND (expire=0 OR expire>?)",(tok,int(time.time()))).fetchall(); c.close()
+            if not rows: return self.send(404,b"not found","text/plain")
+            lines=[link for row in rows for link in links_for(row,host_for(self))]
             if not lines: return self.send(400,b"host unavailable","text/plain")
             raw=base64.b64encode(("\n".join(lines)+"\n").encode())
             return self.send(200,raw,"text/plain; charset=utf-8")
         if not admin_ok(self.token()): return self.send(401,{"detail":"مالک پنل لازم است"})
         if p == "/api/users":
-            c=db(); rows=c.execute("SELECT id,username,protocol,expire,data_limit_gb,enabled,created,sub_token FROM users ORDER BY created DESC").fetchall(); c.close()
-            host=host_for(self)
-            result=[]
+            c=db(); rows=c.execute("SELECT username,MIN(id) AS id,MAX(expire) AS expire,MAX(data_limit_gb) AS data_limit_gb,MAX(enabled) AS enabled,MIN(created) AS created,MIN(sub_token) AS sub_token,GROUP_CONCAT(protocol) AS protocols FROM users GROUP BY username ORDER BY created DESC").fetchall(); c.close()
+            host=host_for(self); result=[]
             for r in rows:
-                d=dict(r); d["subscription_url"]=("https://"+host+"/pompnet-sub/"+d.pop("sub_token")) if host else None
-                d["expired"]=bool(d["expire"] and d["expire"]<=int(time.time()))
+                d=dict(r); d["protocols"]=d["protocols"].split(",") if d["protocols"] else []
+                d["status"]="active" if d["enabled"] and (not d["expire"] or d["expire"]>int(time.time())) else "disabled"
+                d["used_traffic"]=0; d["data_limit"]=int(float(d["data_limit_gb"] or 0)*1024**3)
+                d["subscription_url"]=("https://"+host+"/pompnet-sub/"+d.pop("sub_token")) if host else None
                 result.append(d)
             return self.send(200,{"users":result,"count":len(result)})
         if p == "/api/inbounds":
-            return self.send(200,{"inbounds":[{"protocol":k,"tag":v["tag"],"transport":"ws","security":"tls-at-railway-edge","port":443,"path":v["path"]} for k,v in INBOUNDS.items()]})
+            return self.send(200,[{"protocol":k,"tag":v["tag"],"remark":"POMP NET "+k.upper()+" WS","transport":"ws","security":"tls-at-railway-edge","port":443,"path":v["path"],"id":v["port"],"enable":True} for k,v in INBOUNDS.items()])
+        if p == "/api/system":
+            return self.send(200,{"engine":"independent-xray","running":bool(PROC and PROC.poll() is None),"pid":PROC.pid if PROC else None,"protocols":list(INBOUNDS),"traffic_accounting":False,"quota_enforcement":False})
+        if p == "/api/diagnostics":
+            c=db(); count=c.execute("SELECT COUNT(DISTINCT username) FROM users").fetchone()[0]; mappings=c.execute("SELECT COUNT(DISTINCT sub_token) FROM users").fetchone()[0]; c.close()
+            return self.send(200,{"client_count":count,"inbound_count":len(INBOUNDS),"subscription_mappings":mappings,"checks":{"independent_xray_running":bool(PROC and PROC.poll() is None),"persistent_sqlite":os.path.exists(DB),"railway_websocket_edge":True,"traffic_stats":False},"configured_inbound_tags":{k:{"found":True,"tag":v["tag"]} for k,v in INBOUNDS.items()}})
         return self.send(404,{"detail":"not found"})
     def do_POST(self):
         p=urlsplit(self.path).path
@@ -181,26 +187,27 @@ class Handler(BaseHTTPRequestHandler):
         if p == "/api/users":
             try:
                 b=self.body(); name=str(b.get("username","")).strip()
-                proto=str(b.get("protocol","vless")).lower()
+                protocols=b.get("protocols") or ([b.get("protocol","vless")] if b.get("protocol") else list((b.get("proxies") or {}).keys()))
+                protocols=list(dict.fromkeys(str(x).lower() for x in protocols if str(x).lower() in INBOUNDS))
                 if not re.fullmatch(r"[A-Za-z0-9_.-]{2,48}",name): return self.send(400,{"detail":"نام کاربر نامعتبر است"})
-                if proto not in INBOUNDS: return self.send(400,{"detail":"protocol must be vless, vmess or trojan"})
+                if not protocols: return self.send(400,{"detail":"select at least one of vless, vmess, trojan"})
                 exp=int(b.get("expire",0) or 0); limit=float(b.get("data_limit_gb",0) or 0)
                 if exp<0 or limit<0 or limit>100000: return self.send(400,{"detail":"expiry/quota invalid"})
-                uid=str(uuid.uuid4()); secret=str(uuid.uuid4()) if proto!="trojan" else secrets.token_urlsafe(24)
-                sub=secrets.token_urlsafe(32)
-                c=db()
+                sub=secrets.token_urlsafe(32); created=[]; c=db()
                 try:
-                    c.execute("INSERT INTO users(id,username,protocol,secret,sub_token,expire,data_limit_gb,enabled,created) VALUES(?,?,?,?,?,?,?,?,?)",
-                              (uid,name,proto,secret,sub,exp,limit,1,int(time.time())))
+                    for proto in protocols:
+                        uid=str(uuid.uuid4()); secret=str(uuid.uuid4()) if proto!="trojan" else secrets.token_urlsafe(24)
+                        c.execute("INSERT INTO users(id,username,protocol,secret,sub_token,expire,data_limit_gb,enabled,created) VALUES(?,?,?,?,?,?,?,?,?)",
+                                  (uid,name,proto,secret,sub,exp,limit,1,int(time.time())))
+                        created.append({"id":uid,"username":name,"protocol":proto,"secret":secret,"sub_token":sub})
                     c.commit()
                 except sqlite3.IntegrityError:
-                    c.close(); return self.send(409,{"detail":"username already exists"})
+                    c.rollback(); c.close(); return self.send(409,{"detail":"username already exists for one or more selected protocols"})
                 c.close(); restart_engine()
-                row={"id":uid,"username":name,"protocol":proto,"secret":secret,"sub_token":sub}
-                links=links_for(row,host_for(self))
-                return self.send(201,{"ok":True,"user":{"id":uid,"username":name,"protocol":proto},
-                  "links":links,"subscription_url":("https://"+host_for(self)+"/pompnet-sub/"+sub) if host_for(self) else None,
-                  "note":"data_limit_gb is stored as a limit target; live traffic accounting is not enabled in this first engine phase"})
+                links=[link for row in created for link in links_for(row,host_for(self))]
+                return self.send(201,{"ok":True,"username":name,"protocols":protocols,"links":links,
+                  "subscription_url":("https://"+host_for(self)+"/pompnet-sub/"+sub) if host_for(self) else None,
+                  "note":"data_limit_gb is stored as metadata only; live traffic accounting/quota enforcement is not enabled"})
             except Exception as e: return self.send(500,{"detail":str(e)[:800]})
         if p.startswith("/api/users/") and p.endswith("/toggle"):
             uid=p.split("/")[-2]; c=db(); r=c.execute("SELECT enabled FROM users WHERE id=?",(uid,)).fetchone()
