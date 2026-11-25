@@ -4,11 +4,11 @@
 
 # POMP NET MOHAMMAD
 
-### پنل مدیریت اختصاصی POMP NET NEXUS
+### ✦ 𝗦𝗨𝗣𝗘𝗥 𝗝𝗜𝗡𝗫 · پنل مدیریت اختصاصی
 
 **قدرت ساخت، آزادی انتخاب، کنترل در دستان تو**
 
-پنل مدیریت سفارشی مبتنی بر Marzban و Xray با داشبورد اختصاصی فارسی، مدیریت کاربران و نمایندگان، اشتراک سفارشی، پایش خودکار و استقرار Docker.
+محصول اختصاصی **POMP NET MOHAMMAD** با امضای ویژهٔ **SUPER JINX**؛ دارای داشبورد فارسی، مدیریت کاربران و اشتراک، پایش سرویس و زیرساخت مبتنی بر Xray.
 
 [![Validation](https://github.com/uxurx7rh7e7xr73uue73e8/POMP-NET-MOHAMMAD-SUPER-JINX/actions/workflows/validate.yml/badge.svg)](https://github.com/uxurx7rh7e7xr73uue73e8/POMP-NET-MOHAMMAD-SUPER-JINX/actions/workflows/validate.yml)
 [![Docker](https://img.shields.io/badge/Runtime-Docker-168CFF?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com/)
@@ -61,6 +61,8 @@
 > **شفافیت:** وجود یک فایل یا قابلیت در مخزن به معنی فعال‌بودن آن روی سرور عمومی نیست. در این سند، «موجود در سورس»، «آزمون‌شده در CI» و «تأییدشده روی سرور عمومی» از یکدیگر جدا شده‌اند.
 
 ## وضعیت واقعی مهاجرت هسته
+
+> **هویت محصول:** برند اصلی و مالک محصول **POMP NET MOHAMMAD** است؛ **SUPER JINX** فقط امضای ویژه/نام ادیشن محصول است و برند مستقل یا مالک پنل نیست.
 
 - رابط ورود، داشبورد و اشتراک با نام اصلی **POMP NET MOHAMMAD** برند شده‌اند؛ نام محصول نمایشی **POMP NET NEXUS** است.
 - ماژول مستقل Xray در `native_core/pompnet_core.py` اضافه شده و ذخیره‌سازی SQLite، ساخت تنظیمات Xray، اعتبارسنجی تنظیمات و API مدیریتی محدود دارد.
