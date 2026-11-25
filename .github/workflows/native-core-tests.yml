@@ -5,6 +5,8 @@ on:
     branches: [pompnet-xray-core-native]
     paths:
       - "native_core/**"
+      - "migration/audit_marzban_db.py"
+      - "migration/test_audit_marzban_db.py"
       - "Dockerfile"
       - "README.md"
       - "pompnet-dashboard.html"
@@ -35,5 +37,8 @@ jobs:
       - name: Native core persistence and config tests
         working-directory: native_core
         run: python -m unittest -v test_pompnet_core.py
+      - name: Read-only migration audit tests
+        working-directory: migration
+        run: python -m unittest -v test_audit_marzban_db.py
       - name: Build complete application image
         run: docker build --pull -t pompnet-native-core:ci .
