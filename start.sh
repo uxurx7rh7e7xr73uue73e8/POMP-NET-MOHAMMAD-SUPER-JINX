@@ -226,6 +226,26 @@ else
 fi
 # Fail closed: never report a healthy panel while silently dropping every VPN route.
 # If the routing config is invalid, stop the deployment so the actual error is visible in Railway logs.
+# Start the actual SideRail application (React SPA + authenticated REST API + Xray engine).
+# Keep its SQLite/JWT/Xray state separate from legacy Marzban data; no data is migrated or deleted.
+export NODE_ENV=production
+export PORT=8092
+export SIDERAIL_DATA_DIR="${SIDERAIL_DATA_DIR:-/var/lib/marzban/siderail}"
+export CORE_DIR="${CORE_DIR:-/var/lib/marzban/siderail/core}"
+export XRAY_VERSION="${XRAY_VERSION:-v26.9.9}"
+mkdir -p "$SIDERAIL_DATA_DIR" "$CORE_DIR"
+( cd /opt/siderail && exec /usr/local/bin/node /opt/siderail/apps/server/dist/index.js ) &
+SIDERAIL_PID=$!
+echo "$SIDERAIL_PID" > /run/jinx/siderail.pid
+SIDERAIL_READY=0
+for i in $(seq 1 45); do
+  if curl -fsS http://127.0.0.1:8092/healthz >/dev/null 2>&1; then SIDERAIL_READY=1; break; fi
+  if ! kill -0 "$SIDERAIL_PID" 2>/dev/null; then echo "[siderail] FATAL: SideRail server exited before ready"; wait "$SIDERAIL_PID" || true; exit 1; fi
+  sleep 1
+done
+if [ "$SIDERAIL_READY" != "1" ]; then echo "[siderail] FATAL: SideRail API not ready within 45 seconds"; kill "$SIDERAIL_PID" 2>/dev/null || true; exit 1; fi
+echo "[siderail] real SideRail SPA/API/Xray service healthy on private port 8092"
+
 if ! nginx -t; then
   echo "[start] FATAL: nginx config is invalid; refusing to start a panel with non-working VPN links."
   exit 1
