@@ -171,6 +171,16 @@ sed "s#__JXB__#${JINX_WS_BASE}#g" /opt/jinx/nginx.conf.tpl > /etc/nginx/conf.d/m
 if [ "${POMPNET_3XUI_BRIDGE:-0}" != "1" ]; then
   sed -i 's#127.0.0.1:8091#127.0.0.1:8000#g' /etc/nginx/conf.d/marzban.conf
 fi
+# Preserve the original native subscription route unless SideRail is explicitly configured.
+# Once configured, /sub/* goes through the SideRail-first compatibility helper.
+if [ -z "${SIDERAIL_INTERNAL_URL:-${SIDERAIL_URL:-}}" ]; then
+  LEGACY_SUB_PORT=8000
+  [ "${POMPNET_3XUI_BRIDGE:-0}" = "1" ] && LEGACY_SUB_PORT=8091
+  sed -i "s#proxy_pass http://jinx_sub_gateway;#proxy_pass http://127.0.0.1:${LEGACY_SUB_PORT};#" /etc/nginx/conf.d/marzban.conf
+  echo "[subscription] SideRail URL not configured; native legacy /sub route preserved on ${LEGACY_SUB_PORT}"
+else
+  echo "[subscription] SideRail-first /sub compatibility gateway enabled"
+fi
 if [ "${JINX_OLD_PATHS:-1}" = "0" ]; then
   : > /etc/nginx/jinx-old.inc
   echo "[start] old config paths closed (JINX_OLD_PATHS=0)"
