@@ -4,7 +4,7 @@ Staging-only HTTP adapter for the existing dashboard's core endpoints.
 No legacy database is modified. Existing /sub tokens are mapped through a
 separate persistent SQLite table; unmapped links retain the Marzban fallback.
 """
-import base64, hashlib, hmac, http.cookiejar, json, os, re, sqlite3, threading, time
+import base64, hashlib, hmac, http.cookiejar, json, os, re, secrets, sqlite3, threading, time
 import urllib.error, urllib.parse, urllib.request
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
@@ -15,7 +15,7 @@ API_TOKEN = os.getenv("XUI_API_TOKEN", "")
 SECRET = os.getenv("POMPNET_ADAPTER_SECRET", "")
 PORT = int(os.getenv("POMPNET_3XUI_BRIDGE_PORT", "8091"))
 SUB_MAP_DB = os.getenv("POMPNET_SUB_MAP_DB", "/var/lib/marzban/pompnet-sub-map.sqlite3")
-XUI_SUBSCRIPTION_BASE_URL = os.getenv("XUI_SUBSCRIPTION_BASE_URL", "").rstrip("/")
+XUI_SUBSCRIPTION_BASE_URL = os.getenv("XUI_SUBSCRIPTION_BASE_URL", "").rstrip("/") or (BASE + "/sub" if BASE else "")
 INBOUND_TAGS = {
     "vless": os.getenv("XUI_VLESS_INBOUND_TAG", "VLESS WS"),
     "vmess": os.getenv("XUI_VMESS_INBOUND_TAG", "VMESS WS"),
@@ -164,6 +164,24 @@ def lookup_sub_id(legacy_token):
         return row[0] if row else None
     finally:
         db.close()
+
+def register_subscription(username, sub_id):
+    """Create a stable legacy /sub token that proxies to this real 3X-UI subId."""
+    if not sub_id:
+        raise BridgeError("3X-UI client was created without a subscription ID; configure the 3X-UI subscription service")
+    legacy_token = secrets.token_urlsafe(32)
+    db = map_db()
+    try:
+        db.execute(
+            'INSERT INTO legacy_sub_map (legacy_token,xui_sub_id,username,migrated_at) VALUES (?,?,?,?)',
+            (legacy_token, str(sub_id), str(username), int(time.time()))
+        )
+        db.commit()
+    except sqlite3.IntegrityError as exc:
+        raise BridgeError("subscription_id_already_mapped; refusing to overwrite another user's mapping") from exc
+    finally:
+        db.close()
+    return legacy_token
 
 def subscription_response(handler, legacy_token, suffix=''):
     sub_id = lookup_sub_id(legacy_token)
