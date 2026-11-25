@@ -333,7 +333,7 @@ $("srProxyApply").onclick=async()=>{const idx=[...document.querySelectorAll('inp
 async function loadSrRouting(){
  const rules=await sr("/routing");const ins=await sr("/inbounds");srInbounds=Array.isArray(ins)?ins:srInbounds;
  $("srRouteInboundPicks").innerHTML=srInbounds.map(i=>'<label><input type="checkbox" name="srRouteInbound" value="'+i.id+'"> '+esc(i.tag)+'</label>').join("")||"اینباندی موجود نیست.";
- $("srRoutingRows").innerHTML=(Array.isArray(rules)?rules:[]).map(r=>'<tr><td>'+esc(r.label||r.domain)+'</td><td>'+esc(r.kind||"domain")+'</td><td>'+esc((r.inboundIds||[]).join(", "))+'</td><td><button class="btn secondary" data-sr-route-edit=""+r.id+"">تغییر مقصد</button> <button class="btn danger" data-sr-route-delete="'+r.id+'">حذف</button></td></tr>').join("")||'<tr><td colspan="4" class="empty">قانونی ثبت نشده است.</td></tr>';
+ $("srRoutingRows").innerHTML=(Array.isArray(rules)?rules:[]).map(r=>'<tr><td>'+esc(r.label||r.domain)+'</td><td>'+esc(r.kind||"domain")+'</td><td>'+esc((r.inboundIds||[]).join(", "))+'</td><td><button class="btn secondary" data-sr-route-edit="'+r.id+'">تغییر مقصد</button> <button class="btn danger" data-sr-route-delete="'+r.id+'">حذف</button></td></tr>').join("")||'<tr><td colspan="4" class="empty">قانونی ثبت نشده است.</td></tr>';
  document.querySelectorAll("[data-sr-route-edit]").forEach(b=>b.onclick=async()=>{
   const r=(Array.isArray(rules)?rules:[]).find(x=>String(x.id)===b.dataset.srRouteEdit);if(!r)return;
   const ids=prompt("شناسه اینباندها را با کاما وارد کن:",(r.inboundIds||[]).join(","));if(ids===null)return;
