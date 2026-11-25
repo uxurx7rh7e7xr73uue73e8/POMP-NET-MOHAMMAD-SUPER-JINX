@@ -749,7 +749,96 @@ def bot_cfg_save(d):
         try: os.unlink(tmp)
         except OSError: pass
 
-class H(BaseHTTPRequestHandler):
+
+# =====================================================================================================
+# SideRail owner-only API bridge. The existing POMP NET login remains the front-door:
+# authenticate the caller with the current Marzban admin token, then use SideRail owner
+# credentials server-side. SideRail credentials/JWT are never returned to the browser.
+# Configure SIDERAIL_INTERNAL_URL, SIDERAIL_OWNER_USERNAME and SIDERAIL_OWNER_PASSWORD
+# as Railway/VPS secrets. This bridge does not perform data import or production cutover.
+# =====================================================================================================
+_sr_token = None
+_sr_token_until = 0
+_sr_lock = threading.RLock()
+
+def siderail_base():
+    base = (os.environ.get("SIDERAIL_INTERNAL_URL") or os.environ.get("SIDERAIL_URL") or "").strip().rstrip("/")
+    if not base or not re.match(r"^https?://[^/]+$", base):
+        return ""
+    return base
+
+def siderail_login(force=False):
+    global _sr_token, _sr_token_until
+    with _sr_lock:
+        if not force and _sr_token and time.time() < _sr_token_until:
+            return _sr_token
+        base = siderail_base()
+        username = os.environ.get("SIDERAIL_OWNER_USERNAME", "")
+        password = os.environ.get("SIDERAIL_OWNER_PASSWORD", "")
+        if not base or not username or not password:
+            raise RuntimeError("siderail_not_configured")
+        body = json.dumps({"username": username, "password": password}).encode()
+        req = urllib.request.Request(base + "/api/login", data=body,
+            headers={"Content-Type": "application/json", "Accept": "application/json"}, method="POST")
+        try:
+            with urllib.request.urlopen(req, timeout=12) as response:
+                payload = json.loads(response.read().decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            raise RuntimeError("siderail_auth_failed_" + str(e.code))
+        token = payload.get("token") if isinstance(payload, dict) else None
+        if not token:
+            raise RuntimeError("siderail_auth_token_missing")
+        _sr_token = str(token)
+        _sr_token_until = time.time() + 6 * 86400
+        return _sr_token
+
+def siderail_call(method, api_path, raw=b"", retry=True):
+    base = siderail_base()
+    if not base:
+        raise RuntimeError("siderail_not_configured")
+    token = siderail_login()
+    headers = {"Authorization": "Bearer " + token, "Accept": "application/json"}
+    if raw:
+        headers["Content-Type"] = "application/json"
+    req = urllib.request.Request(base + api_path, data=raw if raw else None, headers=headers, method=method)
+    try:
+        with urllib.request.urlopen(req, timeout=35) as response:
+            data = response.read()
+            return response.status, response.headers.get("Content-Type", "application/json"), data
+    except urllib.error.HTTPError as e:
+        data = e.read()
+        if e.code == 401 and retry:
+            with _sr_lock:
+                global _sr_token, _sr_token_until
+                _sr_token, _sr_token_until = None, 0
+            siderail_login(force=True)
+            return siderail_call(method, api_path, raw, retry=False)
+        return e.code, e.headers.get("Content-Type", "application/json"), data
+
+def siderail_allowed(method, path):
+    exact = {
+        ("GET", "/status"), ("GET", "/system"), ("POST", "/system/restart-xray"),
+        ("GET", "/users"), ("POST", "/users"), ("GET", "/inbounds"),
+        ("GET", "/activity"), ("GET", "/routing"), ("GET", "/routing/presets"),
+        ("GET", "/settings"), ("PUT", "/settings"), ("GET", "/stats/traffic"),
+        ("GET", "/admins"), ("POST", "/admins"), ("GET", "/backup/export"),
+        ("GET", "/me"), ("GET", "/healthz"),
+    }
+    if (method, path) in exact:
+        return True
+    patterns = [
+        (r"^/users/\\d+$", {"GET", "PUT", "DELETE"}),
+        (r"^/users/\\d+/ips$", {"GET"}),
+        (r"^/users/\\d+/(toggle|reset-traffic|rotate-token)$", {"POST"}),
+        (r"^/inbounds/\\d+$", {"PATCH"}),
+        (r"^/admins/\\d+$", {"PUT", "DELETE"}),
+        (r"^/settings/credentials$", {"POST"}),
+        (r"^/routing/\\d+$", {"PUT", "DELETE"}),
+        (r"^/routing$", {"POST"}),
+    ]
+    return any(method in methods and re.match(pattern, path) for pattern, methods in patterns)
+
+\nclass H(BaseHTTPRequestHandler):
     def log_message(self, *a):
         pass
     def static_page(self, files, ctype, fallback):
@@ -937,12 +1026,56 @@ class H(BaseHTTPRequestHandler):
             return self.send(*rs_delete(c, parts[0]))
         return self.send(404, "not_found")
 
+
+    def siderail(self, method, path):
+        # Existing POMP NET owner authentication is mandatory for every bridged call.
+        caller = self.caller(True)
+        if not caller:
+            return
+        if path == "/siderail/health" and method == "GET":
+            target = "/healthz"
+            raw = b""
+        else:
+            target = path[len("/siderail"):] or "/"
+            if not siderail_allowed(method, target):
+                return self.send(404, "siderail_route_not_allowed")
+            try:
+                raw = self.body(1048576) if method in ("POST", "PUT", "PATCH") else b""
+                if raw:
+                    parsed = json.loads(raw.decode("utf-8"))
+                    if not isinstance(parsed, dict):
+                        return self.send(400, "bad_request")
+            except (ValueError, UnicodeDecodeError):
+                return self.send(400, "bad_request")
+            if target == "/status":
+                target = "/api/status"
+            else:
+                target = "/api" + target
+        try:
+            code, ctype, payload = siderail_call(method, target, raw)
+        except RuntimeError as e:
+            reason = str(e)
+            if reason == "siderail_not_configured":
+                return self.send(503, {"error": reason, "detail": "SideRail URL and owner credentials must be configured as server-side secrets."})
+            return self.send(502, {"error": reason})
+        except Exception as e:
+            print("[siderail-bridge] upstream error: " + type(e).__name__, flush=True)
+            return self.send(502, {"error": "siderail_unreachable"})
+        self.send_response(code)
+        self.send_header("Content-Type", ctype or "application/json")
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("Content-Length", str(len(payload)))
+        self.end_headers()
+        self.wfile.write(payload)
+
     def dispatch(self, method):
         path, _, query = self.path.partition("?")
         try:
             if path.startswith("/api/"):
                 return self.gate(method)
             p = path.rstrip("/")
+            if p == "/siderail" or p.startswith("/siderail/"):
+                return self.siderail(method, p)
             if method == "GET" and p.endswith("/donate-page"):
                 return self.static_page(DON_FILES, "text/html; charset=utf-8", DON_FALLBACK)
             if method == "GET" and p.endswith("/donate-config.js"):
