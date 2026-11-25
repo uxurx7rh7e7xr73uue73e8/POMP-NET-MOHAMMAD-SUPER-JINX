@@ -1031,6 +1031,62 @@ class H(BaseHTTPRequestHandler):
         return self.send(404, "not_found")
 
 
+
+    def _subscription_response(self, code, headers, payload):
+        self.send_response(code)
+        allowed = {"content-type", "subscription-userinfo", "profile-update-interval",
+                   "profile-title", "cache-control", "etag", "last-modified"}
+        for key, value in headers.items():
+            if key.lower() in allowed:
+                self.send_header(key, value)
+        self.send_header("Content-Length", str(len(payload)))
+        self.end_headers()
+        if payload:
+            self.wfile.write(payload)
+
+    def subscription(self, path, query=""):
+        # Preserve the historical /sub/{token} address. Only SideRail-shaped
+        # token routes are tried; a 404 means this is an old Marzban token.
+        side_path = bool(re.fullmatch(r"/sub/[A-Za-z0-9_-]{8,128}(?:/(?:json|clash|singbox))?", path))
+        base = siderail_base()
+        if side_path and base:
+            target = base + path + (("?" + query) if query else "")
+            headers = {"Host": self.headers.get("Host", ""),
+                       "X-Forwarded-Proto": self.headers.get("X-Forwarded-Proto", "https"),
+                       "User-Agent": self.headers.get("User-Agent", "POMP-NET-Subscription")}
+            if self.headers.get("Accept"):
+                headers["Accept"] = self.headers.get("Accept")
+            req = urllib.request.Request(target, headers=headers, method="GET")
+            try:
+                with urllib.request.urlopen(req, timeout=20) as upstream:
+                    payload = upstream.read()
+                    return self._subscription_response(upstream.status, upstream.headers, payload)
+            except urllib.error.HTTPError as e:
+                payload = e.read()
+                if e.code != 404:
+                    return self._subscription_response(e.code, e.headers, payload)
+                # Unknown SideRail token: retain legacy Marzban/3X-UI behavior.
+            except Exception as e:
+                print("[siderail-sub] upstream unavailable: " + type(e).__name__, flush=True)
+                return self.send(503, {"error": "siderail_subscription_unavailable"})
+        # Exact legacy fallback. Keep the existing optional 3X-UI adapter path.
+        legacy_port = "8091" if os.environ.get("POMPNET_3XUI_BRIDGE") == "1" else "8000"
+        target = "http://127.0.0.1:" + legacy_port + path + (("?" + query) if query else "")
+        headers = {"Host": self.headers.get("Host", ""),
+                   "X-Forwarded-Proto": self.headers.get("X-Forwarded-Proto", "https"),
+                   "User-Agent": self.headers.get("User-Agent", "POMP-NET-Subscription")}
+        if self.headers.get("Accept"):
+            headers["Accept"] = self.headers.get("Accept")
+        req = urllib.request.Request(target, headers=headers, method="GET")
+        try:
+            with urllib.request.urlopen(req, timeout=30) as upstream:
+                return self._subscription_response(upstream.status, upstream.headers, upstream.read())
+        except urllib.error.HTTPError as e:
+            return self._subscription_response(e.code, e.headers, e.read())
+        except Exception as e:
+            print("[subscription] legacy upstream error: " + type(e).__name__, flush=True)
+            return self.send(502, {"error": "legacy_subscription_unavailable"})
+
     def siderail(self, method, path, query=""):
         # Existing POMP NET owner authentication is mandatory for every bridged call.
         caller = self.caller(True)
@@ -1080,6 +1136,8 @@ class H(BaseHTTPRequestHandler):
             if path.startswith("/api/"):
                 return self.gate(method)
             p = path.rstrip("/")
+            if p.startswith("/sub/") and method == "GET":
+                return self.subscription(p, query)
             if p == "/siderail" or p.startswith("/siderail/"):
                 return self.siderail(method, p, query)
             if method == "GET" and p.endswith("/donate-page"):
