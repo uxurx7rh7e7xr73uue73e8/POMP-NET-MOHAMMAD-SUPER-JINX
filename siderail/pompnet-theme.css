@@ -310,3 +310,34 @@ html[lang="fa"] input, html[lang="fa"] textarea { text-align: start; }
 @media (prefers-reduced-motion: reduce) {
   #root *, #root *::before, #root *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+
+/* SUPER JINX identity lockup: POMP NET owner brand + product name. */
+.truncate.font-heading.text-lg.tracking-tight {
+  position: relative;
+  line-height: 1.25 !important;
+}
+.truncate.font-heading.text-lg.tracking-tight::before {
+  content: "POMP NET MOHAMMAD";
+  display: block;
+  color: #f4f0ff;
+  font-family: Vazirmatn, IRANSans, Tahoma, sans-serif;
+  font-size: 12px;
+  font-weight: 850;
+  letter-spacing: .04em;
+  white-space: normal;
+}
+.truncate.font-heading.text-lg.tracking-tight::after {
+  content: "SUPER JINX";
+  display: block;
+  margin-top: 3px;
+  color: #b98aff;
+  font-family: Vazirmatn, IRANSans, Tahoma, sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .16em;
+}
+#root aside [class*="logo"], #root aside [class*="brand"] {
+  border-color: rgba(139,53,255,.42) !important;
+  box-shadow: 0 0 24px rgba(139,53,255,.14);
+}
