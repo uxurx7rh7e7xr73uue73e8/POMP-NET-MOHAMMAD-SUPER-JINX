@@ -5,21 +5,11 @@ DATA_DIR=/var/lib/pasarguard
 CERT_DIR="$DATA_DIR/certs"
 CERT="$CERT_DIR/railway-cert.pem"
 KEY="$CERT_DIR/railway-key.pem"
-APP_PORT=8000
-PUBLIC_PORT="${PORT:-8000}"
+APP_PORT=8001
+PUBLIC_PORT=8000
 
 mkdir -p "$CERT_DIR"
 chmod 700 "$CERT_DIR"
-
-if [ ! -s "$CERT" ] || [ ! -s "$KEY" ]; then
-  echo "[POMP NET] Creating internal self-signed certificate for Railway-to-app traffic."
-  openssl req -x509 -newkey rsa:2048 -nodes -days 825 \
-    -keyout "$KEY" -out "$CERT" \
-    -subj "/CN=pasarguard-internal" \
-    -addext "subjectAltName=DNS:localhost,IP:127.0.0.1" >/dev/null 2>&1
-  chmod 600 "$KEY"
-  chmod 644 "$CERT"
-fi
 
 if ! awk -v p="$DATA_DIR" '$2 == p { found=1 } END { exit !found }' /proc/mounts; then
   echo "[POMP NET] FATAL: no mounted Railway Volume found at $DATA_DIR."
@@ -29,6 +19,16 @@ fi
 if [ ! -w "$DATA_DIR" ]; then
   echo "[POMP NET] FATAL: $DATA_DIR is mounted but not writable."
   exit 1
+fi
+
+if [ ! -s "$CERT" ] || [ ! -s "$KEY" ]; then
+  echo "[POMP NET] Creating internal self-signed certificate for Railway-to-app traffic."
+  openssl req -x509 -newkey rsa:2048 -nodes -days 825 \
+    -keyout "$KEY" -out "$CERT" \
+    -subj "/CN=pasarguard-internal" \
+    -addext "subjectAltName=DNS:localhost,IP:127.0.0.1" >/dev/null 2>&1
+  chmod 600 "$KEY"
+  chmod 644 "$CERT"
 fi
 
 cat >/etc/nginx/conf.d/default.conf <<NGINX
