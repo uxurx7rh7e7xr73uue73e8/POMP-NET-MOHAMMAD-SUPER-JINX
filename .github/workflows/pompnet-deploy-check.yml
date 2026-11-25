@@ -96,15 +96,26 @@ jobs:
 
       - name: Build the actual Railway Docker image
         run: docker build --pull --tag pompnet-mohammad:ci .
+      - name: Build pinned SideRail image for integration test
+        run: docker build --pull --file siderail/Dockerfile --tag pompnet-siderail-staging:test .
 
-      # Start the exact image as Railway will, then exercise the public HTTP routes.
+      # Start the exact images as isolated services, then exercise the bridge and public routes.
       # This catches startup, Nginx, Marzban and Xray failures before a deploy is considered green.
       - name: Runtime smoke test (panel + Xray)
         shell: bash
         run: |
           set -Eeuo pipefail
-          docker run -d --name pompnet-smoke -e ADMIN_PASSWORD=CI-only-test-password -e POMPNET_3XUI_BRIDGE=0 -p 18080:8080 pompnet-mohammad:ci
-          cleanup() { docker logs pompnet-smoke || true; docker rm -f pompnet-smoke >/dev/null 2>&1 || true; }
+          docker network create pompnet-smoke-net >/dev/null
+          docker volume create siderail-smoke-volume >/dev/null
+          docker run -d --name siderail-smoke --network pompnet-smoke-net -e NODE_ENV=production -e PORT=8080 -e SIDERAIL_DATA_DIR=/data -e CORE_DIR=/data/core -e CORE_VERSION=v26.9.9 -e CORE_API_PORT=10085 -e CORE_INBOUND_BASE_PORT=20000 -e JWT_SECRET=ci-only-siderail-$(openssl rand -hex 32) -v siderail-smoke-volume:/data -p 18081:8080 pompnet-siderail-staging:test
+          side_ready=0
+          for i in $(seq 1 120); do
+            if curl -fsS http://127.0.0.1:18081/healthz >/dev/null; then side_ready=1; break; fi
+            sleep 2
+          done
+          [ "$side_ready" = "1" ] || { echo "SideRail service failed to start"; exit 1; }
+          docker run -d --name pompnet-smoke --network pompnet-smoke-net -e ADMIN_PASSWORD=CI-only-test-password -e POMPNET_3XUI_BRIDGE=0 -e SIDERAIL_INTERNAL_URL=http://siderail-smoke:8080 -e SIDERAIL_OWNER_USERNAME=ci-owner -e SIDERAIL_OWNER_PASSWORD=CI-only-strong-password -p 18080:8080 pompnet-mohammad:ci
+          cleanup() { docker logs pompnet-smoke || true; docker logs siderail-smoke || true; docker rm -f pompnet-smoke siderail-smoke >/dev/null 2>&1 || true; docker volume rm siderail-smoke-volume >/dev/null 2>&1 || true; docker network rm pompnet-smoke-net >/dev/null 2>&1 || true; }
           trap cleanup EXIT
 
           ready=0
@@ -137,8 +148,18 @@ jobs:
           [ "$bridge_code" = "401" ] || { echo "SideRail bridge route returned unexpected HTTP $bridge_code (expected auth challenge)"; exit 1; }
           admin_token=$(curl -fsS -X POST http://127.0.0.1:18080/api/admin/token -H 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'username=ADMIN_tanel9990' --data-urlencode 'password=CI-only-test-password' --data-urlencode 'grant_type=password' | python3 -c 'import json,sys; print(json.load(sys.stdin)["access_token"])')
           owner_bridge_code=$(curl -sS -o /tmp/siderail-bridge.json -w '%{http_code}' -H "Authorization: Bearer $admin_token" http://127.0.0.1:18080/jinx-api/siderail/status)
-          [ "$owner_bridge_code" = "503" ] || { cat /tmp/siderail-bridge.json; echo "Authenticated SideRail bridge returned HTTP $owner_bridge_code (expected 503 only because staging URL is unset)"; exit 1; }
-          grep -q 'siderail_not_configured' /tmp/siderail-bridge.json
+          [ "$owner_bridge_code" = "200" ] || { cat /tmp/siderail-bridge.json; echo "Authenticated SideRail bridge returned HTTP $owner_bridge_code"; exit 1; }
+          grep -q '"setup":true' /tmp/siderail-bridge.json
+          side_user_json=$(curl -fsS -X POST http://127.0.0.1:18080/jinx-api/siderail/users -H "Authorization: Bearer $admin_token" -H 'Content-Type: application/json' -d '{"email":"pompnet-bridge-smoke","dataLimit":1,"expireDays":0,"inboundIds":[1]}')
+          side_sub_token=$(printf '%s' "$side_user_json" | python3 -c 'import json,sys; print(json.load(sys.stdin)["sub_token"])')
+          curl -fsS -D /tmp/side-sub-headers -o /tmp/side-sub-body "http://127.0.0.1:18080/sub/$side_sub_token"
+          grep -qi '^Subscription-Userinfo:' /tmp/side-sub-headers
+          python3 - <<'PY'
+          import base64
+          raw = base64.b64decode(open("/tmp/side-sub-body","rb").read()).decode()
+          assert "vless://" in raw, "SideRail subscription did not return a real VLESS share link"
+          print("PASS: POMP NET API bridge created a SideRail user and the old /sub/{token} URL served its SideRail subscription.")
+          PY
           legacy_sub_code=$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:18080/sub/invalid-legacy-token)
           [ "$legacy_sub_code" = "404" ] || { echo "Legacy subscription fallback returned HTTP $legacy_sub_code (expected 404 for nonexistent token)"; exit 1; }
 
