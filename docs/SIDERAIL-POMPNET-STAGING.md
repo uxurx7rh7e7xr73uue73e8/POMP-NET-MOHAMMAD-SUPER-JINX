@@ -2,7 +2,7 @@
 
 ## SideRail feature set included in the staged runtime
 
-The container builds the complete upstream SideRail application (server API and React web app), rather than a mock or a reduced rewrite. The upstream feature modules include:
+The container builds the complete upstream SideRail application (server API and React web app), rather than a mock or a reduced rewrite. It applies the Persian RTL translation patch and the POMP NET visual theme before building the frontend. The upstream feature modules include:
 
 - Owner setup, login, cookie/JWT authentication, admin accounts, per-page permissions, admin expiry and data quotas.
 - Dashboard/system metrics, CPU/RAM/storage, uptime, server traffic, per-inbound traffic and usage history.
@@ -13,7 +13,7 @@ The container builds the complete upstream SideRail application (server API and 
 - Activity log, Telegram notifications and daily backup delivery, backup export/import, core restart and automatic core restart behavior.
 - Fragment and ECH client options where supported by the upstream source.
 
-The POMP NET visual overlay changes the palette to black/neon-purple/blue while retaining the upstream SideRail author identity, license notice, watermark and attribution. The upstream UI's language selector currently offers English, Russian and Chinese; a complete Persian translation has not been added yet.
+The POMP NET visual overlay changes the palette to black/neon-purple/blue while retaining the upstream SideRail author identity, license notice, watermark and attribution. A Persian (`fa`) language option and RTL document direction are injected during the frontend build. The main dashboard, user management, inbounds, routing, settings, bot, activity and subscription flows have Persian translations; less common labels inherit English until translated.
 
 ## What this branch contains
 
