@@ -2,7 +2,7 @@
 # Builds the exact upstream revision; keeps upstream LICENSE and attribution intact.
 FROM node:24-alpine AS build
 ARG SIDERAIL_COMMIT=6d794ce2303a01ecc412941a4f38fd00a3bda65b
-RUN apk add --no-cache git
+RUN apk add --no-cache git python3
 WORKDIR /build
 RUN git clone https://github.com/icubaby/SideRail.git upstream \
  && cd upstream \
