@@ -7,7 +7,7 @@ export ADMIN_USERNAME="${ADMIN_USERNAME:-ADMIN_tanel9990}"
 export ALLOW_INSECURE_ADMIN_PASSWORD="${ALLOW_INSECURE_ADMIN_PASSWORD:-0}"
 export RESET_ADMIN_PASSWORD="${RESET_ADMIN_PASSWORD:-0}"
 
-echo "=== ⚡ POMP NET MOHAMMAD | SUPER JINX ==="
+echo "=== ⚡ POMP NET MOHAMMAD | 𝗦𝗨𝗣𝗘𝗥 𝗝𝗜𝗡𝗫 ==="
 
 # Staging bridge is opt-in. Without its secrets, preserve the original Marzban
 # API/subscription routes; never leave Nginx pointing at a missing bridge.
