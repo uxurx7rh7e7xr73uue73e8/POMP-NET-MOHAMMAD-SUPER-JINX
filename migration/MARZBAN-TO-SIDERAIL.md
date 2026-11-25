@@ -44,7 +44,7 @@ python3 migration/marzban_to_siderail_backup.py \
   --output /secure/siderail-import.json
 ```
 
-The converter preserves supported user IDs, credentials, subscription token values, expiry, data limit, current used traffic, enabled/disabled state, notes, and inbound assignments. Current used traffic is represented as download usage because the Marzban export field is a combined counter; upload/download split and online/IP history cannot be reconstructed from that export. Admin accounts/password hashes are intentionally not migrated.
+The converter preserves supported user IDs, credentials, subscription token values, expiry, data limit, current used traffic, enabled/disabled state, notes, and inbound assignments. Once imported, the POMP NET `/sub/{token}` compatibility gateway tries SideRail first for imported tokens and falls back to Marzban on a SideRail 404; thus old token URLs remain unchanged for supported migrated users. Current used traffic is represented as download usage because the Marzban export field is a combined counter; upload/download split and online/IP history cannot be reconstructed from that export. Admin accounts/password hashes are intentionally not migrated.
 
 It rejects duplicate IDs/tokens, missing mappings, unsupported protocols/transports and differing per-protocol credentials because SideRail stores one client credential per user.
 
@@ -62,4 +62,4 @@ SideRail's upstream `POST /api/backup/import` implementation deletes the target 
 
 This conversion cannot be called production-ready until the live Marzban export and actual Xray inbound configuration have been inspected. In particular, SideRail's supported protocol/transport matrix is narrower than a typical Marzban deployment. Unsupported Reality/gRPC/TCP or non-supported protocols need a separately implemented and tested SideRail core/model extension, or those clients must remain on the existing engine.
 
-The Railway project cannot currently be provisioned by the connected account while the Railway trial is expired. No SideRail API import, live Xray handshake, subscription fetch, or production cutover is claimed.
+The Railway project cannot currently be provisioned by the connected account while the Railway trial is expired; no separate `/data` volume is live. No SideRail API import, live Xray handshake, subscription fetch, or production cutover is claimed.
