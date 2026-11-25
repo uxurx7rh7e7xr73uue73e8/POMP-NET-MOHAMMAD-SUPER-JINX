@@ -30,7 +30,7 @@ except Exception as exc:
 # Explicit allowlist: do not accidentally export passwords, API keys, or hashes.
 SAFE_FIELDS = {
     "id", "username", "status", "expire", "data_limit", "used_traffic",
-    "data_limit_reset_strategy", "proxies", "inbounds", "note", "admin_id",
+    "data_limit_reset_strategy", "ip_limit", "proxies", "inbounds", "note", "admin_id",
     "created_at", "modified_at", "online_at", "sub_updated_at",
     "subscription_url", "token", "uuid",
 }
