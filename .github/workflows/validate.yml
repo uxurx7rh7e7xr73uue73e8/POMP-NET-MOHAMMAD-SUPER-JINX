@@ -23,7 +23,7 @@ jobs:
           bash -n tests/runtime-smoke.sh
           bash -n setup-vps.sh
 
-      - name: Validate native Marzban SideRail integration
+      - name: Validate native SideRail primary UI routing
         run: |
           node --check pompnet-siderail.js
           python - <<'PY'
@@ -31,13 +31,14 @@ jobs:
           nginx = Path("nginx.conf").read_text(encoding="utf-8")
           docker = Path("Dockerfile").read_text(encoding="utf-8")
           js = Path("pompnet-siderail.js").read_text(encoding="utf-8")
-          assert 'location = / { return 302 /dashboard/; }' in nginx
-          assert 'location ^~ /dashboard/' in nginx
-          assert 'sub_filter \'</body>\'' in nginx
-          assert 'COPY pompnet-siderail.js /opt/jinx/pompnet-siderail.js' in docker
-          assert 'localStorage.getItem("token")' in js
-          assert 'api(\'/users\',\'POST\'' in js
-          print("Native Marzban UI route and authenticated SideRail module wiring OK")
+          assert 'location = / { proxy_pass http://siderail_native/;' in nginx
+          assert 'location ^~ /api/' in nginx
+          assert 'location ^~ /sub/' in nginx
+          assert 'location = /healthz' in nginx
+          assert '127.0.0.1:8092' in nginx
+          assert 'COPY --from=siderail-build /build/upstream/apps/web/dist /opt/siderail/apps/web/dist' in docker
+          assert 'SIDERAIL_INTERNAL_URL="http://127.0.0.1:8092"' in Path("start.sh").read_text(encoding="utf-8")
+          print("Native SideRail SPA, API and subscription routing OK")
           PY
 
       - name: Validate Python syntax
@@ -71,7 +72,5 @@ jobs:
       - name: Build Docker image
         run: docker build --pull -t pompnet-super-jinx:ci .
 
-      - name: Runtime integration test (login, user, subscription, Xray, persistence)
-        run: |
-          sed -e 's|\$BASE/dashboard/|\$BASE/pompnet/|' -e 's|data-page="users"|id="srCreateForm"|' tests/runtime-smoke.sh > /tmp/pompnet-runtime-smoke.sh
-          bash /tmp/pompnet-runtime-smoke.sh pompnet-super-jinx:ci
+      - name: Native SideRail runtime smoke test
+        run: bash tests/native-siderail-smoke.sh pompnet-super-jinx:ci
