@@ -155,7 +155,17 @@ td,th{border-bottom:1px solid #ffffff0b}
    <div class="field"><label>نام کاربری / ایمیل</label><input id="srEmail" required maxlength="100"></div>
    <div class="field"><label>حجم (GB) · صفر نامحدود</label><input id="srLimit" type="number" min="0" value="30"></div>
    <div class="field"><label>اعتبار (روز) · صفر بدون انقضا</label><input id="srDays" type="number" min="0" value="30"></div>
-   <div class="field"><label>توضیحات</label><input id="srComment" maxlength="200"></div>
+   <div class="field"><label>شناسه UUID (اختیاری)</label><input id="srUuid" maxlength="64" placeholder="خودکار"></div>
+   <div class="field"><label>رمز Trojan (اختیاری)</label><input id="srPassword" maxlength="128"></div>
+   <div class="field"><label>Fingerprint</label><input id="srFingerprint" value="chrome"></div>
+   <div class="field"><label>ALPN</label><input id="srAlpn" placeholder="h2,http/1.1"></div>
+   <div class="field"><label>محدودیت IP (صفر نامحدود)</label><input id="srIpLimit" type="number" min="0" value="0"></div>
+   <div class="field"><label>انقضای اشتراک (روز، صفر پیش‌فرض)</label><input id="srSubDays" type="number" min="0" value="0"></div>
+   <div class="field"><label>Telegram ID</label><input id="srTelegram" maxlength="64"></div>
+   <div class="field"><label>Traffic Reset</label><select id="srTrafficReset"><option value="never">هرگز</option><option value="daily">روزانه</option><option value="weekly">هفتگی</option><option value="monthly">ماهانه</option></select></div>
+   <div class="field wide"><label>Fragment (JSON اختیاری)</label><input id="srFragment" placeholder='{"tcp":[]} '></div>
+   <div class="field wide"><label>ECH Config (اختیاری)</label><input id="srEch" maxlength="2048"></div>
+   <div class="field wide"><label>توضیحات</label><input id="srComment" maxlength="200"></div>
    <div class="field wide"><label>اینباندهای فعال</label><div id="srInboundPicks" class="protocol-picks">ابتدا اینباندها را بارگذاری کنید.</div></div>
   </div><button class="btn" id="srCreateBtn">＋ ساخت کاربر واقعی</button><div id="srCreateMsg" class="msg"></div></form>
  </div>
@@ -317,7 +327,7 @@ $("srCreateForm").onsubmit=async e=>{
  try{
  const inboundIds=[...document.querySelectorAll('input[name="srInbound"]:checked')].map(x=>Number(x.value));
  if(!inboundIds.length)throw Error("حداقل یک inbound فعال انتخاب کنید.");
- await sr("/users",{method:"POST",body:{email:$("srEmail").value.trim(),dataLimit:Number($("srLimit").value||0),expireDays:Number($("srDays").value||0),comment:$("srComment").value.trim(),inboundIds}});
+ await sr("/users",{method:"POST",body:{email:$("srEmail").value.trim(),uuid:$("srUuid").value.trim()||undefined,password:$("srPassword").value||undefined,fingerprint:$("srFingerprint").value.trim()||undefined,alpn:$("srAlpn").value.trim()||undefined,fragment:$("srFragment").value.trim()||undefined,echConfig:$("srEch").value.trim()||undefined,dataLimit:Number($("srLimit").value||0),ipLimit:Number($("srIpLimit").value||0),expireDays:Number($("srDays").value||0),subExpireDays:Number($("srSubDays").value||0),trafficReset:$("srTrafficReset").value,telegramId:$("srTelegram").value.trim()||undefined,comment:$("srComment").value.trim(),inboundIds}});
  $("srCreateMsg").style.color="var(--green)";$("srCreateMsg").textContent="کاربر با موفقیت ساخته شد.";e.target.reset();$("srLimit").value=30;$("srDays").value=30;await loadSideRail();
  }catch(e){$("srCreateMsg").style.color="var(--red)";$("srCreateMsg").textContent="خطا: "+e.message}finally{$("srCreateBtn").disabled=false}
 };
