@@ -36,10 +36,11 @@ RUN mkdir -p /opt/jinx/fonts \
       ; rm -rf /tmp/vz /tmp/vz.zip ) || echo "font download skipped, using system font" \
  && ls /opt/jinx/fonts
 COPY pompnet_telegram_bot.py /opt/pompnet_telegram_bot.py
+COPY doctor.html /opt/jinx/doctor.html
 COPY start.sh /start.sh
 
 # fix Windows line endings, just in case
-RUN sed -i 's/\r$//' /start.sh /opt/*.py /opt/*.json /opt/jinx/jinx.css /opt/jinx/jinx.js /opt/jinx/pompnet-motion.css /opt/jinx/pompnet-motion.js /opt/jinx/donate.html /opt/jinx/donate-config.js /opt/jinx/templates/subscription/index.html /opt/jinx/sub.golden.html /opt/jinx/donate.golden.html /opt/jinx/donate-config.golden.js /etc/nginx/ws.inc /etc/nginx/gate.inc /etc/nginx/conf.d/marzban.conf /opt/jinx/nginx.conf.tpl \
+RUN sed -i 's/\r$//' /start.sh /opt/*.py /opt/*.json /opt/jinx/jinx.css /opt/jinx/jinx.js /opt/jinx/pompnet-motion.css /opt/jinx/pompnet-motion.js /opt/jinx/donate.html /opt/jinx/donate-config.js /opt/jinx/templates/subscription/index.html /opt/jinx/sub.golden.html /opt/jinx/donate.golden.html /opt/jinx/donate-config.golden.js /opt/jinx/doctor.html /etc/nginx/ws.inc /etc/nginx/gate.inc /etc/nginx/conf.d/marzban.conf /opt/jinx/nginx.conf.tpl \
  && chmod +x /start.sh && chmod -R a+rX /opt/jinx
 
 ENV PORT=8080 \
