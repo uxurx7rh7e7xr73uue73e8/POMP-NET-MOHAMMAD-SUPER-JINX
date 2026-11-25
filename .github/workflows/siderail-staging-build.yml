@@ -11,17 +11,6 @@ on:
       - "pompnet-dashboard.html"
       - "nginx.conf"
       - ".github/workflows/siderail-staging-build.yml"
-  push:
-    branches:
-      - siderail-pompnet-staging
-    paths:
-      - "siderail/**"
-      - "vendor/SideRail"
-      - "jinx_api.py"
-      - "pompnet-dashboard.html"
-      - "nginx.conf"
-      - ".github/workflows/siderail-staging-build.yml"
-
 permissions:
   contents: read
 
