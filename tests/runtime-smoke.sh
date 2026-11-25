@@ -129,6 +129,21 @@ ENGINE_CREATE="$(curl --fail --silent --show-error -X POST "$BASE/pompnet-engine
 echo "$ENGINE_CREATE" | python -c 'import json,sys; d=json.load(sys.stdin); assert d["ok"] and len(d["links"])==3 and d["subscription_url"]; print("[smoke] independent Xray created three real protocol credentials: OK")'
 ENGINE_SUB_PATH="$(printf '%s' "$ENGINE_CREATE" | python -c 'import json,sys,urllib.parse; print(urllib.parse.urlsplit(json.load(sys.stdin)["subscription_url"]).path)')"
 curl --fail --silent --show-error "$BASE$ENGINE_SUB_PATH" | python -c 'import base64,sys; s=base64.b64decode(sys.stdin.buffer.read()).decode(); assert all(x in s for x in ("vless://","vmess://","trojan://")); print("[smoke] independent Xray subscription serves all three links: OK")'
+python - "$BASE" <<'PYWS'
+import http.client, sys
+from urllib.parse import urlsplit
+u = urlsplit(sys.argv[1])
+for path in ("/pompnet/vless", "/pompnet/vmess", "/pompnet/trojan"):
+    c = http.client.HTTPConnection(u.hostname, u.port, timeout=12)
+    c.request("GET", path, headers={
+        "Host": u.netloc, "Upgrade": "websocket", "Connection": "Upgrade",
+        "Sec-WebSocket-Key": "dGhlIHNhbXBsZSBub25jZQ==", "Sec-WebSocket-Version": "13"
+    })
+    r = c.getresponse()
+    assert r.status == 101, f"{path}: expected WebSocket 101, got {r.status}"
+    c.close()
+print("[smoke] all three Nginx -> independent Xray WebSocket handshakes: OK")
+PYWS
 
 USER_JSON="$(curl --fail --silent --show-error --retry 10 --retry-all-errors --retry-delay 2 \
   -X POST "$BASE/api/user" \
