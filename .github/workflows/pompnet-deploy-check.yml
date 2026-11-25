@@ -135,6 +135,10 @@ jobs:
           curl -fsS http://127.0.0.1:18080/pompnet/ | grep -q 'مدیریت واقعی SideRail' || { echo "SideRail page missing from POMP NET dashboard"; exit 1; }
           bridge_code=$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:18080/jinx-api/siderail/status)
           [ "$bridge_code" = "401" ] || { echo "SideRail bridge route returned unexpected HTTP $bridge_code (expected auth challenge)"; exit 1; }
+          admin_token=$(curl -fsS -X POST http://127.0.0.1:18080/api/admin/token -H 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'username=ADMIN_tanel9990' --data-urlencode 'password=CI-only-test-password' --data-urlencode 'grant_type=password' | python3 -c 'import json,sys; print(json.load(sys.stdin)["access_token"])')
+          owner_bridge_code=$(curl -sS -o /tmp/siderail-bridge.json -w '%{http_code}' -H "Authorization: Bearer $admin_token" http://127.0.0.1:18080/jinx-api/siderail/status)
+          [ "$owner_bridge_code" = "503" ] || { cat /tmp/siderail-bridge.json; echo "Authenticated SideRail bridge returned HTTP $owner_bridge_code (expected 503 only because staging URL is unset)"; exit 1; }
+          grep -q 'siderail_not_configured' /tmp/siderail-bridge.json
           legacy_sub_code=$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:18080/sub/invalid-legacy-token)
           [ "$legacy_sub_code" = "404" ] || { echo "Legacy subscription fallback returned HTTP $legacy_sub_code (expected 404 for nonexistent token)"; exit 1; }
 
