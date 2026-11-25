@@ -11,6 +11,10 @@ on:
       - "pompnet-dashboard.html"
       - "nginx.conf"
       - ".github/workflows/siderail-staging-build.yml"
+concurrency:
+  group: siderail-staging-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
