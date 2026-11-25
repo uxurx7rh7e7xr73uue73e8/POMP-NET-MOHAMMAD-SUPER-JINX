@@ -7,6 +7,7 @@ on:
       - "vendor/SideRail"
       - "migration/marzban_to_siderail_backup.py"
       - "migration/test_marzban_to_siderail_backup.py"
+      - "jinx_api.py"
       - ".github/workflows/siderail-staging-build.yml"
   push:
     branches:
@@ -25,6 +26,8 @@ jobs:
     steps:
       - name: Checkout POMP NET source
         uses: actions/checkout@v4
+      - name: Compile Python bridge and migration tools
+        run: python3 -m py_compile jinx_api.py migration/marzban_to_siderail_backup.py migration/export_marzban_users.py
       - name: Run migration converter safety tests
         run: python3 -m unittest migration/test_marzban_to_siderail_backup.py -v
       - name: Set up Docker Buildx
