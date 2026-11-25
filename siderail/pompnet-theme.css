@@ -1,0 +1,42 @@
+/* POMP NET visual integration layer for the official SideRail UI.
+   Upstream SideRail attribution and signature are intentionally preserved. */
+:root {
+  --main: #8b35ff;
+  --overlay: rgba(0, 0, 0, .88);
+  --bg: #050509;
+  --bw: #11101a;
+  --blank: #fff;
+  --border: #30204b;
+  --text: #f3edff;
+  --mtext: #fff;
+  --ring: #8b35ff;
+  --ring-offset: #050509;
+  --shadow: 0 0 0 1px rgba(139,53,255,.24), 0 8px 28px rgba(0,0,0,.38);
+}
+.dark {
+  --main: #8b35ff;
+  --overlay: rgba(0,0,0,.9);
+  --bg: #050509;
+  --bw: #11101a;
+  --blank: #fff;
+  --border: #30204b;
+  --text: #f3edff;
+  --mtext: #fff;
+  --ring: #8b35ff;
+  --ring-offset: #050509;
+  --shadow: 0 0 0 1px rgba(139,53,255,.22), 0 8px 28px rgba(0,0,0,.4);
+}
+html, body, #root { min-height: 100%; background: #050509; }
+body { color: #f3edff; font-family: Vazirmatn, IRANSans, Tahoma, sans-serif; }
+.bg-main { background-color: #8b35ff !important; }
+.text-main { color: #a96aff !important; }
+.border-border { border-color: #30204b !important; }
+.bg-bw { background-color: rgba(17,16,26,.96) !important; }
+.bg-bg { background-color: #050509 !important; }
+.neo-shadow { box-shadow: 0 0 0 1px rgba(139,53,255,.22), 0 8px 28px rgba(0,0,0,.4) !important; }
+.rounded-base { border-radius: 14px !important; }
+button, a, input, select, textarea { transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease; }
+input:focus, select:focus, textarea:focus { outline: 2px solid #8b35ff !important; outline-offset: 1px; }
+@media (max-width: 1023px) {
+  main { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
+}
