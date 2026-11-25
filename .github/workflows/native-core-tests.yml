@@ -5,6 +5,15 @@ on:
     branches: [pompnet-xray-core-native]
     paths:
       - "native_core/**"
+      - "Dockerfile"
+      - "README.md"
+      - "pompnet-dashboard.html"
+      - "sub.html"
+      - "jinx.js"
+      - "doctor.html"
+      - "donate.html"
+      - "donate-config.js"
+      - "assets/**"
       - ".github/workflows/native-core-tests.yml"
   pull_request:
     branches: [main, pompnet-sanaei-core-integration]
@@ -26,3 +35,5 @@ jobs:
       - name: Native core persistence and config tests
         working-directory: native_core
         run: python -m unittest -v test_pompnet_core.py
+      - name: Build complete application image
+        run: docker build --pull -t pompnet-native-core:ci .
