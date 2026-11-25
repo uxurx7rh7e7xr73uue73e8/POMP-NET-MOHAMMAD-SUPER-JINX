@@ -7,7 +7,7 @@ An explicit inbound map is required because SideRail supports only VLESS/VMess/
 Trojan over WS/XHTTP/HTTPUpgrade; it cannot represent arbitrary Marzban inbounds.
 """
 from __future__ import annotations
-import argparse, json, os, sys, tempfile, time
+import argparse, datetime as dt, json, os, sys, tempfile, time
 from pathlib import Path
 
 SUPPORTED_PROTOCOLS = {"vless", "vmess", "trojan"}
@@ -20,6 +20,11 @@ def load_json(path):
 def epoch_ms(value):
     if value in (None, 0, "", "0"):
         return None
+    if isinstance(value, str) and not value.strip().isdigit():
+        parsed = dt.datetime.fromisoformat(value.replace("Z", "+00:00"))
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=dt.timezone.utc)
+        return int(parsed.timestamp() * 1000)
     n = int(value)
     return n * 1000 if n < 10_000_000_000 else n
 
