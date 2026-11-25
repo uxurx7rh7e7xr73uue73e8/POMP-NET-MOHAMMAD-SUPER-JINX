@@ -7,6 +7,10 @@ on:
     branches: [main, pompnet-xray-core-native, siderail-pompnet-staging]
   workflow_dispatch:
 
+concurrency:
+  group: pompnet-deploy-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
