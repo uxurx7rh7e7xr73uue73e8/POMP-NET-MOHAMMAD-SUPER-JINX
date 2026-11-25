@@ -1,0 +1,21 @@
+name: POMP NET PasarGuard Railway build
+
+on:
+  push:
+    branches: [pompnet-pasarguard-core-v1]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  railway-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate Railway startup script
+        run: sh -n start-railway.sh
+      - name: Validate Railway configuration
+        run: python -m json.tool railway.json >/dev/null
+      - name: Build PasarGuard Railway image
+        run: docker build --pull -t pompnet-pasarguard-railway:ci .
