@@ -1059,12 +1059,76 @@ class H(BaseHTTPRequestHandler):
             self.wfile.write(payload)
 
     def subscription(self, path, query=""):
-        # Preserve the historical /sub/{token} address. Only SideRail-shaped
-        # token routes are tried; a 404 means this is an old Marzban token.
+        # Keep the historical /sub/{token} address. SideRail tokens are resolved first;
+        # old Marzban/3X-UI tokens retain their original fallback without data loss.
         side_path = bool(re.fullmatch(r"/sub/[A-Za-z0-9_-]{8,128}(?:/(?:json|clash|singbox))?", path))
         base = siderail_base()
         if side_path and base:
-            # SideRail is private API/core only; never send its browser subscription UI.
+            ua = self.headers.get("User-Agent", "")
+            wants_page = bool(re.search(r"Mozilla|Chrome|Safari|Firefox|Edg|OPR", ua, re.I)) and not re.search(r"(?:^|[?&])format=", query)
+            if wants_page and path.count("/") == 2:
+                # Render the existing POMP NET subscription page from real SideRail data.
+                # The upstream browser SPA is never exposed to subscribers.
+                target = base + path + "/json"
+                headers = {"Host": self.headers.get("Host", ""),
+                           "X-Forwarded-Proto": self.headers.get("X-Forwarded-Proto", "https"),
+                           "User-Agent": "POMP-NET-Subscription"}
+                try:
+                    req = urllib.request.Request(target, headers=headers, method="GET")
+                    with urllib.request.urlopen(req, timeout=20) as upstream:
+                        data = json.loads(upstream.read().decode("utf-8"))
+                    user = data.get("user") or {}
+                    status = "active" if user.get("active") else ("disabled" if not user.get("enabled") else "limited")
+                    origin = ("https://" if self.headers.get("X-Forwarded-Proto", "https") == "https" else "http://") + (self.headers.get("Host") or "")
+                    view = {
+                        "username": user.get("email", ""),
+                        "status": status,
+                        "used": int(user.get("total") or 0),
+                        "limit": int(user.get("dataLimit") or 0),
+                        "expire": int((user.get("expireAt") or 0) / 1000),
+                        "reset": "never",
+                        "online": "online" if user.get("online") else "",
+                        "hold": 0,
+                        "links": [x.get("link", "") for x in data.get("links", []) if isinstance(x, dict) and x.get("link")],
+                        "sub": origin + path,
+                    }
+                    html = None
+                    for file_path in ("/opt/jinx/templates/subscription/index.html", "/opt/jinx/sub.golden.html"):
+                        try:
+                            candidate = open(file_path, "r", encoding="utf-8").read()
+                            if "</html>" in candidate and 'id="jinx-data"' in candidate:
+                                html = candidate
+                                break
+                        except Exception:
+                            pass
+                    if html is None:
+                        raise RuntimeError("pompnet_subscription_template_missing")
+                    safe_json = json.dumps(view, ensure_ascii=False).replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
+                    html, count = re.subn(
+                        r'(<script id="jinx-data" type="application/json">).*?(</script>)',
+                        lambda m: m.group(1) + safe_json + m.group(2),
+                        html, count=1, flags=re.S
+                    )
+                    if count != 1:
+                        raise RuntimeError("pompnet_subscription_data_slot_missing")
+                    payload = html.encode("utf-8")
+                    self.send_response(200)
+                    self.send_header("Content-Type", "text/html; charset=utf-8")
+                    self.send_header("Cache-Control", "no-store")
+                    self.send_header("X-Content-Type-Options", "nosniff")
+                    self.send_header("Referrer-Policy", "no-referrer")
+                    self.send_header("Content-Length", str(len(payload)))
+                    self.end_headers()
+                    self.wfile.write(payload)
+                    return
+                except urllib.error.HTTPError as e:
+                    if e.code != 404:
+                        return self._subscription_response(e.code, e.headers, e.read())
+                    # Unknown SideRail token: retain the legacy Marzban/3X-UI behavior.
+                except Exception as e:
+                    print("[siderail-sub-page] " + type(e).__name__, flush=True)
+                    return self.send(503, {"error": "pompnet_subscription_unavailable"})
+            # Native clients receive the real subscription payload, never the upstream browser UI.
             raw_query = query + ("&" if query else "") + "raw=1"
             target = base + path + "?" + raw_query
             headers = {"Host": self.headers.get("Host", ""),
@@ -1075,8 +1139,7 @@ class H(BaseHTTPRequestHandler):
             req = urllib.request.Request(target, headers=headers, method="GET")
             try:
                 with urllib.request.urlopen(req, timeout=20) as upstream:
-                    payload = upstream.read()
-                    return self._subscription_response(upstream.status, upstream.headers, payload)
+                    return self._subscription_response(upstream.status, upstream.headers, upstream.read())
             except urllib.error.HTTPError as e:
                 payload = e.read()
                 if e.code != 404:
@@ -1085,7 +1148,6 @@ class H(BaseHTTPRequestHandler):
             except Exception as e:
                 print("[siderail-sub] upstream unavailable: " + type(e).__name__, flush=True)
                 return self.send(503, {"error": "siderail_subscription_unavailable"})
-        # Exact legacy fallback. Keep the existing optional 3X-UI adapter path.
         legacy_port = "8091" if os.environ.get("POMPNET_3XUI_BRIDGE") == "1" else "8000"
         target = "http://127.0.0.1:" + legacy_port + path + (("?" + query) if query else "")
         headers = {"Host": self.headers.get("Host", ""),
