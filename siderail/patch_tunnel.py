@@ -5,15 +5,7 @@ s = p.read_text(encoding="utf-8")
 
 anchor = 'const xhttpProxy = httpProxy.createProxyServer({ ws: false, xfwd: true });\nxhttpProxy.on("error", () => {});'
 replacement = '''const xhttpProxy = httpProxy.createProxyServer({ ws: false, xfwd: true });
-xhttpProxy.on("error", () => {});
-
-
-      }
-    };
-    if (upstreamSocket.connecting) upstreamSocket.once("connect", save);
-    else save();
-  });
-});'''
+xhttpProxy.on("error", () => {});'''
 if anchor not in s:
     raise SystemExit("WebSocket proxy insertion anchor not found")
 s = s.replace(anchor, replacement, 1)
