@@ -40,4 +40,6 @@ jobs:
         run: docker build --pull -t pompnet-super-jinx:ci .
 
       - name: Runtime integration test (login, user, subscription, Xray, persistence)
-        run: bash tests/runtime-smoke.sh pompnet-super-jinx:ci
+        run: |
+          sed 's|\$BASE/dashboard/|\$BASE/pompnet/|' tests/runtime-smoke.sh > /tmp/pompnet-runtime-smoke.sh
+          bash /tmp/pompnet-runtime-smoke.sh pompnet-super-jinx:ci
