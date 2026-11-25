@@ -11,7 +11,9 @@ RUN git clone https://github.com/icubaby/SideRail.git upstream \
 WORKDIR /build/upstream
 ENV npm_config_audit=false npm_config_fund=false
 COPY siderail/pompnet-theme.css /tmp/pompnet-theme.css
-RUN cat /tmp/pompnet-theme.css >> apps/web/src/index.css
+COPY siderail/patch_i18n.py /tmp/patch_i18n.py
+RUN cat /tmp/pompnet-theme.css >> apps/web/src/index.css \
+ && python3 /tmp/patch_i18n.py
 RUN npm ci --prefer-offline --no-audit --no-fund
 RUN npm run build
 RUN npm prune --omit=dev
