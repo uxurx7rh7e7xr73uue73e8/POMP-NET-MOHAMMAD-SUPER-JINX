@@ -40,7 +40,8 @@ jobs:
           assert 'data-page="siderail"' in html and 'id="page-siderail"' in html
           assert 'loadSideRail()' in html and '/jinx-api/siderail' in html
           assert 'def subscription(self, path' in api and 'siderail_base()' in api
-          assert 'location ^~ /sub/' in nginx and 'proxy_pass http://127.0.0.1:8090;' in nginx
+          assert 'location ^~ /sub/' in nginx and 'proxy_pass http://jinx_sub_gateway;' in nginx
+          assert 'SIDERAIL_INTERNAL_URL' in Path('start.sh').read_text(encoding='utf-8') and 'LEGACY_SUB_PORT' in Path('start.sh').read_text(encoding='utf-8')
           print("SideRail dashboard, API bridge and legacy subscription gateway routes are present.")
           PY
           python - <<'PY'
