@@ -40,3 +40,15 @@ input:focus, select:focus, textarea:focus { outline: 2px solid #8b35ff !importan
 @media (max-width: 1023px) {
   main { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
 }
+
+/* Keep upstream SideRail name visible and pair it with the POMP NET host brand. */
+.truncate.font-heading.text-lg.tracking-tight::after {
+  content: "POMP NET MOHAMMAD";
+  display: block;
+  margin-top: 2px;
+  color: #a96aff;
+  font-family: Vazirmatn, IRANSans, Tahoma, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+}
