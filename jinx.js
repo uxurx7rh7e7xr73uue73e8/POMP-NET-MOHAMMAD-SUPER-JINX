@@ -1736,7 +1736,7 @@
    var nav=document.querySelector('nav,[role="navigation"],aside');
    if(!nav) return; // login screen has no authenticated panel navigation
    var box=document.createElement('div'); box.className='pompnet-panel-credit'; box.setAttribute('role','note');
-   box.innerHTML='<span class="pnpc-dot"></span><b>کدنویسی و توسعه توسط تیم POMP NET MOHAMMAD</b><i>✦</i><span>با همراهی SUPER JINX</span>';
+   box.innerHTML='<span class="pnpc-dot"></span><b>کدنویسی و توسعه توسط تیم POMP NET MOHAMMAD</b><i>✦</i><span>هسته و زیرساخت POMP NET MOHAMMAD</span>';
    var main=document.querySelector('main,[role="main"]') || document.querySelector('.chakra-container') || nav.parentElement || document.body;
    var head=main.querySelector && main.querySelector('header');
    if(head && head.parentNode===main) head.insertAdjacentElement('afterend',box);
@@ -1818,7 +1818,7 @@
     var host=document.querySelector("main")||document.querySelector("#root")||document.querySelector("#app");
     if(!host) return;
     var box=document.createElement("div");box.id="pompnet-brand-credit";
-    box.innerHTML='<b>کدنویسی و توسعه توسط تیم POMP NET MOHAMMAD</b><span>✦</span><span>با مشارکت SUPER JINX · هسته و زیرساخت اختصاصی پنل</span>';
+    box.innerHTML='<b>کدنویسی و توسعه توسط تیم POMP NET MOHAMMAD</b><span>✦</span><span>هسته و زیرساخت اختصاصی POMP NET MOHAMMAD</span>';
     host.insertBefore(box,host.firstElementChild||null);
   }
   function run(){try{mount()}catch(e){}}

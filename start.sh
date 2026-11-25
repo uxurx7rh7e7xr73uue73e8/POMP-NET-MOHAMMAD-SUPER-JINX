@@ -7,7 +7,7 @@ export ADMIN_USERNAME="${ADMIN_USERNAME:-ADMIN_tanel9990}"
 export ALLOW_INSECURE_ADMIN_PASSWORD="${ALLOW_INSECURE_ADMIN_PASSWORD:-0}"
 export RESET_ADMIN_PASSWORD="${RESET_ADMIN_PASSWORD:-0}"
 
-echo "=== ⚡ POMP NET MOHAMMAD | SUPER JINX ==="
+echo "=== ⚡ POMP NET MOHAMMAD | 𝗦𝗨𝗣𝗘𝗥 𝗝𝗜𝗡𝗫 ==="
 
 # Staging bridge is opt-in. Without its secrets, preserve the original Marzban
 # API/subscription routes; never leave Nginx pointing at a missing bridge.
@@ -111,6 +111,13 @@ with open(tmp, "w", encoding="utf-8") as f:
 os.replace(tmp, dst)
 print("[lock] fallback config paths synchronized with Nginx", flush=True)
 PY
+fi
+
+# Validate the exact config produced above with the bundled Xray binary.
+# Do not start the web panel if Xray rejects the config: that would publish dead links.
+if ! python /opt/xray_preflight.py; then
+  echo "[start] FATAL: Xray config preflight failed; refusing to publish non-working VPN links."
+  exit 1
 fi
 
 # Never use documentation placeholders such as panel.example.com in generated subscriptions.

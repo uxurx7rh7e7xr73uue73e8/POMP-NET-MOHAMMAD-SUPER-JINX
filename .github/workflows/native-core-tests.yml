@@ -1,0 +1,44 @@
+name: POMP NET native Xray core tests
+
+on:
+  push:
+    branches: [pompnet-xray-core-native]
+    paths:
+      - "native_core/**"
+      - "migration/audit_marzban_db.py"
+      - "migration/test_audit_marzban_db.py"
+      - "Dockerfile"
+      - "README.md"
+      - "pompnet-dashboard.html"
+      - "sub.html"
+      - "jinx.js"
+      - "doctor.html"
+      - "donate.html"
+      - "donate-config.js"
+      - "assets/**"
+      - ".github/workflows/native-core-tests.yml"
+  pull_request:
+    branches: [main, pompnet-sanaei-core-integration]
+    paths:
+      - "native_core/**"
+      - ".github/workflows/native-core-tests.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-core-unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Python syntax
+        run: python -m py_compile native_core/pompnet_core.py native_core/test_pompnet_core.py
+      - name: Native core persistence and config tests
+        working-directory: native_core
+        run: python -m unittest -v test_pompnet_core.py
+      - name: Read-only migration audit tests
+        working-directory: migration
+        run: python -m unittest -v test_audit_marzban_db.py
+      - name: Build complete application image
+        run: docker build --pull -t pompnet-native-core:ci .

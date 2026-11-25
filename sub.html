@@ -8,7 +8,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'">
 <meta name="theme-color" content="#050507">
 <meta name="color-scheme" content="dark light">
-<title>POMP NET MOHAMMAD — SUPER JINX</title>
+<title>POMP NET MOHAMMAD</title>
 <style>
 @font-face{font-family:"Vazirmatn";src:url("/jinx-fonts/Vazirmatn-Regular.woff2") format("woff2");font-weight:400;font-display:swap}
 @font-face{font-family:"Vazirmatn";src:url("/jinx-fonts/Vazirmatn-Medium.woff2") format("woff2");font-weight:500;font-display:swap}
@@ -359,7 +359,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #8B35FF;outline-offset:3p
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
 
 
-/* POMP NET MOHAMMAD subscription identity: brand first, SUPER JINX as the compact edition mark */
+/* POMP NET MOHAMMAD subscription identity: brand first, POMP NET MOHAMMAD as the compact edition mark */
 :root{--a:#8b35ff;--a2:#c7a6ff;--gold:#8b35ff;--gold2:#5c36d8;--c:#168cff}
 [data-theme=dark]{--bg:#050509;--dev:#0b0b15;--t1:#f7f4ff;--t2:#aaa2bd;--line:rgba(139,53,255,.16);--line2:rgba(139,53,255,.3)}
 [data-theme=light]{--a:#7130d6;--a2:#8b35ff;--gold:#7130d6;--gold2:#168cff}
@@ -409,7 +409,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #168c
 </head>
 <body>
 <div class="amb" aria-hidden="true"><span class="neb"></span><i class="a1"></i><i class="a2"></i><i class="a3"></i><i class="a4"></i><span class="floor"></span><span class="dust"></span><span class="gr"></span></div>
-<div class="intro" id="jx-intro" aria-hidden="true"><svg class="ig" viewBox="0 0 64 64" fill="none"><path class="sg-hex" d="M32 3 57 17.5v29L32 61 7 46.5v-29Z" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path class="sg-j" d="M38 16v20.5a8.5 8.5 0 0 1-17 0" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/><path class="sg-bolt" d="M33 24 27 33h6l-3 8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="intro-brand"><b>POMP NET MOHAMMAD</b><small>SUPER JINX</small></div></div>
+<div class="intro" id="jx-intro" aria-hidden="true"><svg class="ig" viewBox="0 0 64 64" fill="none"><path class="sg-hex" d="M32 3 57 17.5v29L32 61 7 46.5v-29Z" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path class="sg-j" d="M38 16v20.5a8.5 8.5 0 0 1-17 0" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/><path class="sg-bolt" d="M33 24 27 33h6l-3 8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="intro-brand"><b>POMP NET MOHAMMAD</b><small>POMP NET MOHAMMAD</small></div></div>
 <script>try{if(sessionStorage.getItem("jx-seen"))document.documentElement.classList.add("seen");sessionStorage.setItem("jx-seen","1")}catch(e){}</script>
 <script>try{localStorage.removeItem("jx-view")}catch(e){}</script>
 <script id="jinx-data" type="application/json">{"username": {{ user.username|tojson }}, "status": {{ user.status|string|tojson }}, "used": {{ (user.used_traffic or 0)|tojson }}, "limit": {{ (user.data_limit or 0)|tojson }}, "expire": {{ (user.expire or 0)|tojson }}, "reset": {{ (user.data_limit_reset_strategy|string)|tojson }}, "online": {{ ((user.online_at|string) if user.online_at else "")|tojson }}, "hold": {{ (user.on_hold_expire_duration or 0)|tojson }}, "links": {{ (user.links or [])|tojson }}, "sub": {{ (user.subscription_url or "")|tojson }}}</script>
@@ -649,14 +649,14 @@ function cfgName(r) { r = String(r || ""); var p = r.split(" \u2726 "); if (p.le
 /* ---------- v7 texts on top of the base texts ---------- */
 function JinxText(fa) {
   var b = JinxTextBase(fa), x = fa ? {
-    pass: "JINX PASS", access: "SUPER JINX · اشتراک اختصاصی", holder: "صاحب اشتراک", serial: "شماره‌ی پاس", left2: "باقی‌مانده", exp2: "انقضا", cd: "زمان",
+    pass: "POMP NET PASS", access: "POMP NET MOHAMMAD · اشتراک اختصاصی", holder: "صاحب اشتراک", serial: "شماره‌ی پاس", left2: "باقی‌مانده", exp2: "انقضا", cd: "زمان",
     reactor: "هسته‌ی مصرف", dataRing: "حجم", timeRing: "زمان", ofTotal: "از", telemetry: "وضعیت زنده",
     portal: "عضویت در کانال", portalD: "سرورهای جدید، اطلاعیه‌ها و پشتیبانی", portalGo: "ورود به کانال",
     dPass: "پاس", dCfg: "کانفیگ", dApps: "برنامه", dCare: "پشتیبان", care: "JinX Care", careSub: "ربات پشتیبان خودکار",
     sig: "طراحی و ساخت اختصاصی", tapCopy: "برای کپی بزن", freq: "فرکانس‌ها",
     rt: { relay: "رله ایران", cdn: "CDN", direct: "مستقیم", frag: "فرگمنت", reality: "ریالیتی", other: "کانفیگ" }
   } : {
-    pass: "JINX PASS", access: "SUPER JINX · PRIVATE ACCESS", holder: "Pass holder", serial: "Pass no.", left2: "Remaining", exp2: "Expires", cd: "Time",
+    pass: "POMP NET PASS", access: "POMP NET MOHAMMAD · PRIVATE ACCESS", holder: "Pass holder", serial: "Pass no.", left2: "Remaining", exp2: "Expires", cd: "Time",
     reactor: "Usage core", dataRing: "Data", timeRing: "Time", ofTotal: "of", telemetry: "Live status",
     portal: "Join our channel", portalD: "New servers, announcements and support", portalGo: "Open channel",
     dPass: "Pass", dCfg: "Configs", dApps: "Apps", dCare: "Care", care: "JinX Care", careSub: "Automatic support bot",
@@ -715,7 +715,7 @@ function JinxRender(D, o) {
        '<div class="tools"><button type="button" class="ib" data-a="lang" aria-label="Language">' + (m.fa ? "EN" : "FA") + '</button>' +
        '<button type="button" class="ib" data-a="theme" aria-label="Theme">' + I(o.theme === "light" ? "moon" : "sun") + '</button></div></header>';
 
-  h += '<div class="pn-sub-credit" role="note"><span></span><b>کدنویسی و توسعه توسط تیم POMP NET MOHAMMAD</b><i>✦</i>با همراهی SUPER JINX</div>';
+  h += '<div class="pn-sub-credit" role="note"><span></span><b>POMP NET MOHAMMAD · 𝗦𝗨𝗣𝗘𝗥 𝗝𝗜𝗡𝗫</b><i>✦</i>برند و امضای اختصاصی</div>';
   h += '<div class="cols"><div class="col cl">';
   /* the pass */
   h += '<section class="pass-wrap' + A + '" id="s-pass"' + rise() + '><div class="pass st-' + m.status + '" id="jx-pass">' +
@@ -831,7 +831,7 @@ function isDesk() { try { return window.matchMedia("(min-width:900px)").matches;
   var root = document.documentElement;
 
   /* ---------- data ---------- */
-  var raw = $("jinx-data").textContent, D = null, DEMO = false;
+  var raw = $("jinx-data").textContent, D = null;
   try { D = JSON.parse(raw); } catch (e) { D = null; }
   /* Fail closed: never invent sample users, fake VPN links, or a fake 74 ms ping. */
   if (!D || typeof D !== "object" || raw.indexOf("{" + "{") >= 0 || !Array.isArray(D.links)) {
@@ -851,7 +851,7 @@ function isDesk() { try { return window.matchMedia("(min-width:900px)").matches;
   var M = null;   /* current model (exact values used by every button) */
   function opts(animate) {
     return { now: Date.now(), loadedAt: st.loadedAt, origin: location.origin, here: location.href.split("#")[0].split("?")[0],
-      lang: st.lang, theme: st.theme, tab: st.tab, op: st.op, demo: DEMO, cfg: JINX_CONFIG, ping: st.ping, animate: animate };
+      lang: st.lang, theme: st.theme, tab: st.tab, op: st.op, demo: false, cfg: JINX_CONFIG, ping: st.ping, animate: animate };
   }
   var fa = function () { return st.lang === "fa"; };
   var tr = function (f, e) { return fa() ? f : e; };
@@ -987,7 +987,6 @@ function isDesk() { try { return window.matchMedia("(min-width:900px)").matches;
   }
   var pingTry = 0, lastHealth = null;
   function measure(cb) {
-    if (DEMO) { st.ping = 74; st.pings = [82, 77, 79, 74, 76, 73, 75, 74]; setPing(); drawSpark(); if (cb) cb(); return; }
     var best = Infinity, n = 0;
     var once = function () {
       probe("/jinx-api/health", 4000).then(function (r) {
@@ -1234,7 +1233,7 @@ function isDesk() { try { return window.matchMedia("(min-width:900px)").matches;
       if (!appOk() && !CARE.safe) { if (boot(false)) CARE.healed++; }
       add(CARE.safe ? "warn" : "ok", tr("نمایش صفحه", "Page rendering"), CARE.safe ? tr("حالت ایمن فعال است", "Safe mode is on") : CARE.healed ? tr("خطا پیدا و خودکار رفع شد", "An error was found and fixed") : tr("سالم", "Healthy"));
       /* 2. data */
-      add(DEMO ? "warn" : "ok", tr("اطلاعات اشتراک", "Subscription data"), DEMO ? tr("پیش‌نمایش با داده‌ی نمونه", "Preview with sample data") : tr("از پنل دریافت شد", "Received from the panel"));
+      add("ok", tr("اطلاعات اشتراک", "Subscription data"), tr("از پنل دریافت شد", "Received from the panel"));
       /* 3. status */
       var stt = M ? M.status : "active", bad = stt === "expired" || stt === "limited" || stt === "disabled";
       add(bad ? "bad" : M && M.near ? "warn" : "ok", tr("وضعیت اشتراک", "Subscription status"),
@@ -1275,9 +1274,8 @@ function isDesk() { try { return window.matchMedia("(min-width:900px)").matches;
         add(p == null || p < 0 ? "bad" : p <= 150 ? "ok" : p <= 400 ? "warn" : "bad", tr("سرور و پینگ", "Server and ping"),
           p == null || p < 0 ? tr("پاسخ نداد؛ تلاش دوباره خودکار است", "No answer; auto-retrying") : p + " ms" + (p > 400 ? tr(" · کانفیگ دیگری را امتحان کن", " · try another config") : ""));
         var skew = 0;
-        if (!DEMO && lastHealth && lastHealth.date) { var sd = Date.parse(lastHealth.date); if (isFinite(sd)) skew = Math.abs(Date.now() - sd) / 1000; }
+        if (lastHealth && lastHealth.date) { var sd = Date.parse(lastHealth.date); if (isFinite(sd)) skew = Math.abs(Date.now() - sd) / 1000; }
         add(skew > 90 ? "bad" : "ok", tr("ساعت دستگاه", "Device clock"), skew > 90 ? tr("ساعت گوشی دقیق نیست؛ روی خودکار بگذار", "Clock is off; set it to automatic") : tr("دقیق", "Accurate"));
-        if (DEMO) { add("ok", tr("سرویس QR", "QR service"), tr("پیش‌نمایش", "Preview")); finish(out); return; }
         probe("/jinx-api/qr?d=jinx", 4000).then(function (r) {
           add(r.ok ? "ok" : "warn", tr("سرویس QR", "QR service"), r.ok ? tr("سالم", "Healthy") : tr("در دسترس نیست؛ از کپی استفاده کن", "Unavailable; use copy"));
           finish(out);

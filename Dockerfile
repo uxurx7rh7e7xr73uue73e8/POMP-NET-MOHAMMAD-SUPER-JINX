@@ -18,6 +18,7 @@ COPY nginx.conf /etc/nginx/conf.d/marzban.conf
 COPY nginx.conf /opt/jinx/nginx.conf.tpl
 COPY xray_config.json locked_inbound.json lock.py enforce_hosts.py ensure_admin.py doctor.py jinx_api.py /opt/
 COPY migration/pompnet_3xui_bridge.py /opt/pompnet_3xui_bridge.py
+COPY migration/audit_marzban_db.py /opt/audit_marzban_db.py
 COPY migration/import_marzban_to_3xui.py /opt/import_marzban_to_3xui.py
 COPY jinx.css jinx.js donate.html donate-config.js bot.html /opt/jinx/
 COPY pompnet-dashboard.html /opt/jinx/pompnet-dashboard.html
@@ -39,6 +40,9 @@ RUN mkdir -p /opt/jinx/fonts \
  && ls /opt/jinx/fonts
 COPY pompnet_telegram_bot.py /opt/pompnet_telegram_bot.py
 COPY doctor.html /opt/jinx/doctor.html
+COPY xray_preflight.py /opt/xray_preflight.py
+# Package the independent manager without activating a second Xray process.
+COPY native_core/pompnet_core.py /opt/pompnet_core.py
 COPY start.sh /start.sh
 
 # fix Windows line endings, just in case
