@@ -17,33 +17,46 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Validate legacy maintenance scripts (not used by the SideRail runtime)
+      - name: Validate legacy maintenance scripts
         run: |
           bash -n start.sh
           bash -n setup-vps.sh
 
-      - name: Verify the official, unmodified SideRail runtime is selected
+      - name: Verify production runtime, branding patches and HTTPS subscription routing
         run: |
           python - <<'PY'
           from pathlib import Path
           docker = Path("Dockerfile").read_text(encoding="utf-8")
-          railway = Path("railway.json").read_text(encoding="utf-8")
-          assert "https://github.com/icubaby/SideRail.git" in docker
-          assert "6d794ce2303a01ecc412941a4f38fd00a3bda65b" in docker
-          assert "npm run build" in docker
-          assert "patch_brand.py" not in docker
-          assert "patch_i18n.py" not in docker
-          assert "pompnet-theme.css" not in docker
-          assert "apps/web/dist ./public" in docker
-          assert "upstream/LICENSE ./LICENSE" in docker
-          assert "upstream/NOTICE ./NOTICE" in docker
-          assert '"healthcheckPath": "/healthz"' in railway
-          print("PASS: root runtime builds the pinned upstream SideRail source without UI/brand patches and retains LICENSE/NOTICE.")
+          caddy = Path("Caddyfile").read_text(encoding="utf-8")
+          compose = Path("compose.yaml").read_text(encoding="utf-8")
+          required_docker = [
+              "https://github.com/icubaby/SideRail.git",
+              "6d794ce2303a01ecc412941a4f38fd00a3bda65b",
+              "pompnet-theme.css",
+              "patch_i18n.py",
+              "patch_tunnel.py",
+              "patch_subscription.py",
+              "patch_brand.py",
+              "npm run build",
+              "apps/server/dist ./apps/server/dist",
+              "apps/web/dist ./public",
+              "upstream/LICENSE ./LICENSE",
+              "upstream/NOTICE ./NOTICE",
+          ]
+          for item in required_docker:
+              assert item in docker, f"Missing production Dockerfile requirement: {item}"
+          assert "handle /sub/*" in caddy, "Caddy must preserve and proxy the real /sub/* endpoint"
+          assert "reverse_proxy pompnet:8080" in caddy
+          assert '"443:443"' in compose, "Public TCP/443 must be published"
+          assert 'SIDERAIL_DATA_DIR: /var/lib/marzban/siderail' in compose
+          assert 'pompnet_data:/var/lib/marzban' in compose
+          print("PASS: pinned SideRail runtime, POMP NET patches, persistent volume and HTTPS/443 subscription route are configured.")
           PY
 
-      - name: Validate Python maintenance and migration utilities
+      - name: Validate Python maintenance, migration and build-patch utilities
         run: |
           python -m py_compile doctor.py enforce_hosts.py ensure_admin.py jinx_api.py lock.py pompnet_telegram_bot.py migration/marzban_to_siderail_backup.py
+          python -m py_compile siderail/patch_i18n.py siderail/patch_tunnel.py siderail/patch_subscription.py siderail/patch_brand.py
 
       - name: Validate JSON and Compose configuration
         run: |
@@ -54,8 +67,8 @@ jobs:
           docker compose config --quiet
           rm -f .env
 
-      - name: Build official SideRail production image
+      - name: Build production image with POMP NET branding
         run: docker build --pull -t pompnet-super-jinx:ci .
 
-      - name: Runtime validation
-        run: echo "Full API, Xray and transport smoke tests are tracked separately; image build alone is not a live deployment."
+      - name: Runtime validation scope
+        run: echo "Image build and configuration checks run here. Live TLS, real user-token subscription and client connectivity must still be verified on the deployed server."
