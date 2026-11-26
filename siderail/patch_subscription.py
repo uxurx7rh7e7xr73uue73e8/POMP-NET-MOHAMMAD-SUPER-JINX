@@ -16,7 +16,7 @@ replacements = [
     ),
     (
         '<div className="font-heading text-2xl leading-tight">SideRail</div>\n              <div className="truncate text-sm font-base text-text/60">{user.email}</div>',
-        '<div className="font-heading text-xl leading-tight sm:text-2xl">POMP NET MOHAMMAD</div>\n              <div className="mt-1 text-[10px] font-heading font-bold tracking-[.18em] text-main">SUPER JINX · SECURE SUBSCRIPTION</div>\n              <div className="mt-1 truncate text-sm font-base text-text/60">{user.email}</div>',
+        '<div className="font-heading text-xl leading-tight sm:text-2xl">POMP NET MOHAMMAD</div>\n              <div className="mt-1 text-[10px] font-heading font-bold tracking-[.18em] text-main">SUPER JINX · POWERED BY SideRail</div>\n              <div className="mt-1 truncate text-sm font-base text-text/60">{user.email}</div>',
         "subscription brand header",
     ),
     ('accent="#a3e635"', 'accent="#8b35ff"', "download stat accent"),
