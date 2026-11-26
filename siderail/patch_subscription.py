@@ -19,6 +19,11 @@ replacements = [
         '<div className="font-heading text-xl leading-tight sm:text-2xl">POMP NET MOHAMMAD</div>\n              <div className="mt-1 text-[10px] font-heading font-bold tracking-[.18em] text-main">SUPER JINX · POWERED BY SideRail</div>\n              <div className="mt-1 truncate text-sm font-base text-text/60">{user.email}</div>',
         "subscription brand header",
     ),
+    (
+        '<div className="flex min-w-0 items-center gap-2 rounded-base border-2 border-border bg-bg/40 px-3 py-2">\n                <span className="truncate font-mono text-xs text-text/80">{subUrl}</span>\n                <CopyButton value={subUrl} icon className="ml-auto" />\n              </div>',
+        '<div className="flex min-w-0 items-center gap-2 rounded-base border-2 border-border bg-bg/40 px-3 py-2">\n                <span className="truncate font-mono text-xs text-text/80">{subUrl}</span>\n                <CopyButton value={subUrl} icon className="ml-auto" />\n              </div>\n              <div className="flex flex-wrap items-center justify-between gap-2 rounded-base border border-[#8b35ff]/35 bg-[#8b35ff]/10 px-3 py-2 text-[11px]">\n                <span className="font-heading font-bold text-[#c5a5ff]">اشتراک زنده و اختصاصی کاربر</span>\n                <span className="font-mono text-[#70baff]">HTTPS · PORT 443</span>\n              </div>',
+        "live HTTPS 443 subscription status",
+    ),
     ('accent="#a3e635"', 'accent="#8b35ff"', "download stat accent"),
     ('accent="#7dd3fc"', 'accent="#168cff"', "upload stat accent"),
     ('accent="#38bdf8"', 'accent="#8b35ff"', "expiry stat accent"),
