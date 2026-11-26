@@ -35,10 +35,10 @@ replacements = [
 ]
 
 for old, new, label in replacements:
-    if old not in s:
-        raise SystemExit(f"Subscription patch anchor missing: {label}")
-    if new not in s:
+    if old in s:
         s = s.replace(old, new, 1)
+    elif new not in s:
+        raise SystemExit(f"Subscription patch anchor missing: {label}")
 
 p.write_text(s, encoding="utf-8")
 print("POMP NET / SUPER JINX subscription UI patch applied")
