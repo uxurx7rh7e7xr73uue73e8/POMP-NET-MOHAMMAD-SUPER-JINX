@@ -13,9 +13,11 @@ ENV npm_config_audit=false npm_config_fund=false
 COPY siderail/pompnet-theme.css /tmp/pompnet-theme.css
 COPY siderail/patch_i18n.py /tmp/patch_i18n.py
 COPY siderail/patch_tunnel.py /tmp/patch_tunnel.py
+COPY siderail/patch_subscription.py /tmp/patch_subscription.py
 RUN cat /tmp/pompnet-theme.css >> apps/web/src/index.css \
  && python3 /tmp/patch_i18n.py \
- && python3 /tmp/patch_tunnel.py
+ && python3 /tmp/patch_tunnel.py \
+ && python3 /tmp/patch_subscription.py
 RUN npm ci --prefer-offline --no-audit --no-fund
 RUN npm run build
 RUN npm prune --omit=dev
