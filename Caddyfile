@@ -1,9 +1,20 @@
 {$PANEL_DOMAIN} {
     encode zstd gzip
-    reverse_proxy pompnet:8080
+
+    # Primary subscription endpoint: HTTPS on the standard public port 443.
+    # Keep the original /sub/{token} path intact; SideRail validates the real token.
+    handle /sub/* {
+        reverse_proxy pompnet:8080
+    }
+
+    # The same authenticated panel serves the root and its existing API routes.
+    handle {
+        reverse_proxy pompnet:8080
+    }
 }
 
-# Secure subscription endpoint on the requested dedicated port.
+# Backward-compatible dedicated subscription listener.
+# Port 2096 is optional; port 443 above is the canonical endpoint.
 https://{$PANEL_DOMAIN}:2096 {
     encode zstd gzip
     reverse_proxy pompnet:8080
