@@ -585,3 +585,6 @@ python /opt/audit_marzban_db.py --db /var/lib/marzban/db.sqlite3 --output /tmp/p
 راهنمای پورت، دامنه، TLS و endpointهای اشتراک: [POMPNET-443-SUBSCRIPTIONS.md](docs/POMPNET-443-SUBSCRIPTIONS.md).
 
 **توجه:** 443 پورت پیش‌فرض HTTPS است و معمولاً در URL نوشته نمی‌شود. پورت داخلی سرویس 8080 است. پورت 2096 در Caddy برای سازگاری باقی مانده، اما Compose فعلی آن را به اینترنت publish نمی‌کند؛ endpoint رسمی این نسخه 443 است. Build و اتصال زنده با توکن واقعی هنوز باید پس از Deploy بررسی شوند.
+
+
+**Build path مهم:** فایل اصلی `Dockerfile` که در Compose/Railway استفاده می‌شود اکنون لایه‌های `pompnet-theme.css`، ترجمه RTL، پوسته صفحه اشتراک و برند کانفیگ‌ها را هنگام ساخت image روی سورس upstream اعمال می‌کند؛ بنابراین تغییرات فقط در Dockerfile فرعی باقی نمانده‌اند. نتیجه نهایی پس از اجرای Build باید بررسی شود.
