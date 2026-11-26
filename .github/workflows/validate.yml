@@ -46,6 +46,9 @@ jobs:
           for item in required_docker:
               assert item in docker, f"Missing production Dockerfile requirement: {item}"
           assert "handle /sub/*" in caddy, "Caddy must preserve and proxy the real /sub/* endpoint"
+          subscription_patch = Path("siderail/patch_subscription.py").read_text(encoding="utf-8")
+          assert "اشتراک زنده و اختصاصی کاربر" in subscription_patch
+          assert "HTTPS · PORT 443" in subscription_patch
           assert "reverse_proxy pompnet:8080" in caddy
           assert '"443:443"' in compose, "Public TCP/443 must be published"
           assert 'SIDERAIL_DATA_DIR: /var/lib/marzban/siderail' in compose
