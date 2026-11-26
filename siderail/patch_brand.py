@@ -11,10 +11,10 @@ export function configName(user: UserWithInbounds, flag?: string): string {
     ? `${toBoldAscii("SideRail")} ${f} - ${toBoldAscii(user.email)}`
     : `${toBoldAscii("SideRail")} - ${toBoldAscii(user.email)}`;
 }'''
-new = '''/** Config / subscription name: Mohammad Pomp Net | SUPER JINX <flag> - <client name>. */
+new = '''/** Config / subscription name: POMP NET MOHAMMAD | SideRail | SUPER JINX <flag> - <client name>. */
 export function configName(user: UserWithInbounds, flag?: string): string {
   const f = (flag || "").trim();
-  const prefix = toBoldAscii("Mohammad Pomp Net | SUPER JINX");
+  const prefix = toBoldAscii("POMP NET MOHAMMAD | SideRail | SUPER JINX");
   return f
     ? `${prefix} ${f} - ${toBoldAscii(user.email)}`
     : `${prefix} - ${toBoldAscii(user.email)}`;
@@ -27,7 +27,7 @@ links.write_text(s, encoding="utf-8")
 sub = Path("apps/server/src/sub.ts")
 s = sub.read_text(encoding="utf-8")
 old_title = 'Buffer.from(`SideRail ${data.user.email}`).toString("base64")'
-new_title = 'Buffer.from(`Mohammad Pomp Net | SUPER JINX ${data.user.email}`).toString("base64")'
+new_title = 'Buffer.from(`POMP NET MOHAMMAD | SideRail | SUPER JINX ${data.user.email}`).toString("base64")'
 if s.count(old_title) != 2:
     raise SystemExit(f"Expected 2 subscription profile-title occurrences, found {s.count(old_title)}.")
 s = s.replace(old_title, new_title)
@@ -36,9 +36,9 @@ sub.write_text(s, encoding="utf-8")
 formats = Path("apps/server/src/sub-formats.ts")
 s = formats.read_text(encoding="utf-8")
 old_clash = 'yaml.push(`  - name: SideRail`);'
-new_clash = 'yaml.push(`  - name: Mohammad Pomp Net | SUPER JINX`);'
+new_clash = 'yaml.push(`  - name: POMP NET MOHAMMAD | SideRail | SUPER JINX`);'
 old_singbox = 'tag: "SideRail",'
-new_singbox = 'tag: "Mohammad Pomp Net | SUPER JINX",'
+new_singbox = 'tag: "POMP NET MOHAMMAD | SideRail | SUPER JINX",'
 if s.count(old_clash) != 1 or s.count(old_singbox) != 1:
     raise SystemExit("Expected Clash and sing-box group labels were not found exactly once.")
 s = s.replace(old_clash, new_clash, 1).replace(old_singbox, new_singbox, 1)
